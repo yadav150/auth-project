@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mockly – Competitive Exam Practice</title>
     <link rel="stylesheet" href="Style.css">
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -16,6 +19,10 @@
                 <a href="#home">Home</a>
                 <a href="#exams">Competitive Exams</a>
             </nav>
+            <div class="nav-actions">
+                <button class="btn btn-outline" id="btnLogin">Login</button>
+                <button class="btn btn-primary" id="btnSignup">Sign Up</button>
+            </div>
             <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
                 <span class="hamburger-inner"><span></span><span></span><span></span></span>
             </button>
@@ -23,6 +30,10 @@
         <div class="mobile-menu" id="mobileMenu">
             <a href="#home">Home</a>
             <a href="#exams">Competitive Exams</a>
+            <div class="mobile-actions">
+                <button class="btn btn-outline" id="btnLoginMobile">Login</button>
+                <button class="btn btn-primary" id="btnSignupMobile">Sign Up</button>
+            </div>
         </div>
     </header>
 
@@ -47,51 +58,17 @@
                     <p>Click on any exam to start preparing with topic‑wise mock tests.</p>
                 </div>
                 <div class="exams-grid">
-                    <!-- Exam cards – just names and buttons, no data loaded -->
-                    <div class="exam-card">
-                        <h3>SSC GD</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>ADRE 2.0</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>Assam Police</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>SSC MTS</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>SSC CGL</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>SSC CHSL</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>RRB NTPC</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>RRB Group D</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>RRB ALP</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>APSC Prelims</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
-                    <div class="exam-card">
-                        <h3>UPSC Prelims</h3>
-                        <button class="btn btn-primary btn-full">Start Preparation</button>
-                    </div>
+                    <div class="exam-card"><h3>SSC GD</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>ADRE 2.0</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>Assam Police</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>SSC MTS</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>SSC CGL</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>SSC CHSL</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>RRB NTPC</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>RRB Group D</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>RRB ALP</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>APSC Prelims</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
+                    <div class="exam-card"><h3>UPSC Prelims</h3><button class="btn btn-primary btn-full">Start Preparation</button></div>
                 </div>
             </div>
         </section>
@@ -122,98 +99,99 @@
         </div>
     </footer>
 
-    <script src="Script.js" defer></script>
-
     <!-- ========== LOGIN / SIGNUP MODAL ========== -->
-<div class="modal-overlay" id="modalOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <button class="modal-close" id="modalClose" aria-label="Close dialog">&times;</button>
+    <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <button class="modal-close" id="modalClose" aria-label="Close dialog">&times;</button>
 
-        <!-- LOGIN FORM -->
-        <div id="loginForm">
-            <h3 id="modalTitle">Login</h3>
-            <div class="form-group">
-                <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
-            </div>
-            <div class="form-group">
-                <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password">
-            </div>
-            <!-- CAPTCHA -->
-            <div class="form-group captcha-group">
-                <label>Security Check</label>
-                <div class="captcha-box">
-                    <span id="captchaQuestionLogin">3 + 5 = ?</span>
-                    <input type="text" id="captchaInputLogin" placeholder="Answer" autocomplete="off">
+            <!-- LOGIN FORM -->
+            <div id="loginForm">
+                <h3 id="modalTitle">Login</h3>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
                 </div>
-            </div>
-            <button class="btn btn-primary btn-full" id="loginSubmitBtn">Login</button>
-            <div class="google-btn-wrap">
-                <button class="btn google-btn" id="googleSignInBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="..."/></svg>
-                    Sign in with Google
-                </button>
-            </div>
-            <p class="modal-toggle">
-                <a href="#" id="forgotPasswordLink">Forgot password?</a>
-            </p>
-            <p class="modal-toggle">Don't have an account? <button id="switchToSignup">Sign Up</button></p>
-        </div>
-
-        <!-- SIGNUP FORM -->
-        <div id="signupForm" class="form-hidden">
-            <h3>Sign Up</h3>
-            <div class="form-group">
-                <label for="signupName">Full Name</label>
-                <input type="text" id="signupName" placeholder="Your full name" autocomplete="name">
-            </div>
-            <div class="form-group">
-                <label for="signupEmail">Email</label>
-                <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email">
-            </div>
-            <div class="form-group">
-                <label for="signupPassword">Password</label>
-                <input type="password" id="signupPassword" placeholder="Create a password" autocomplete="new-password">
-            </div>
-            <div class="form-group">
-                <label for="signupConfirm">Confirm Password</label>
-                <input type="password" id="signupConfirm" placeholder="Re-enter password" autocomplete="new-password">
-            </div>
-            <!-- CAPTCHA -->
-            <div class="form-group captcha-group">
-                <label>Security Check</label>
-                <div class="captcha-box">
-                    <span id="captchaQuestionSignup">7 + 2 = ?</span>
-                    <input type="text" id="captchaInputSignup" placeholder="Answer" autocomplete="off">
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password">
                 </div>
+                <!-- CAPTCHA -->
+                <div class="form-group captcha-group">
+                    <label>Security Check</label>
+                    <div class="captcha-box">
+                        <span id="captchaQuestionLogin">3 + 5 = ?</span>
+                        <input type="text" id="captchaInputLogin" placeholder="Answer" autocomplete="off">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-full" id="loginSubmitBtn">Login</button>
+                <div class="google-btn-wrap">
+                    <button class="btn google-btn" id="googleSignInBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="..."/></svg>
+                        Sign in with Google
+                    </button>
+                </div>
+                <p class="modal-toggle">
+                    <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                </p>
+                <p class="modal-toggle">Don't have an account? <button id="switchToSignup">Sign Up</button></p>
             </div>
-            <button class="btn btn-primary btn-full" id="signupSubmitBtn">Create Account</button>
-            <div class="google-btn-wrap">
-                <button class="btn google-btn" id="googleSignUpBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24">...</svg>
-                    Sign up with Google
-                </button>
-            </div>
-            <p class="modal-toggle">Already have an account? <button id="switchToLogin">Login</button></p>
-        </div>
 
-        <!-- FORGOT PASSWORD FORM -->
-        <div id="forgotForm" class="form-hidden">
-            <h3>Reset Password</h3>
-            <p style="margin-bottom:1.5rem; font-size:0.9rem; color:var(--text-muted);">
-                Enter your email address and we'll send you a link to reset your password.
-            </p>
-            <div class="form-group">
-                <label for="forgotEmail">Email</label>
-                <input type="email" id="forgotEmail" placeholder="you@example.com" autocomplete="email">
+            <!-- SIGNUP FORM -->
+            <div id="signupForm" class="form-hidden">
+                <h3>Sign Up</h3>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Your full name" autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirm">Confirm Password</label>
+                    <input type="password" id="signupConfirm" placeholder="Re-enter password" autocomplete="new-password">
+                </div>
+                <!-- CAPTCHA -->
+                <div class="form-group captcha-group">
+                    <label>Security Check</label>
+                    <div class="captcha-box">
+                        <span id="captchaQuestionSignup">7 + 2 = ?</span>
+                        <input type="text" id="captchaInputSignup" placeholder="Answer" autocomplete="off">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-full" id="signupSubmitBtn">Create Account</button>
+                <div class="google-btn-wrap">
+                    <button class="btn google-btn" id="googleSignUpBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24">...</svg>
+                        Sign up with Google
+                    </button>
+                </div>
+                <p class="modal-toggle">Already have an account? <button id="switchToLogin">Login</button></p>
             </div>
-            <button class="btn btn-primary btn-full" id="forgotSubmitBtn">Send Reset Email</button>
-            <p id="forgotMessage" style="text-align:center; margin-top:0.75rem; font-size:0.9rem;"></p>
-            <p class="modal-toggle"><button id="backToLogin">← Back to Login</button></p>
+
+            <!-- FORGOT PASSWORD FORM -->
+            <div id="forgotForm" class="form-hidden">
+                <h3>Reset Password</h3>
+                <p style="margin-bottom:1.5rem; font-size:0.9rem; color:var(--text-muted);">
+                    Enter your email address and we'll send you a link to reset your password.
+                </p>
+                <div class="form-group">
+                    <label for="forgotEmail">Email</label>
+                    <input type="email" id="forgotEmail" placeholder="you@example.com" autocomplete="email">
+                </div>
+                <button class="btn btn-primary btn-full" id="forgotSubmitBtn">Send Reset Email</button>
+                <p id="forgotMessage" style="text-align:center; margin-top:0.75rem; font-size:0.9rem;"></p>
+                <p class="modal-toggle"><button id="backToLogin">← Back to Login</button></p>
+            </div>
         </div>
     </div>
-</div>
-    
+
+    <!-- Firebase + Custom Scripts -->
+    <script src="firebase.js"></script>
+    <script src="Script.js" defer></script>
 </body>
 </html>
