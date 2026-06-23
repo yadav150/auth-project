@@ -1,10 +1,3 @@
-/****************************************************
- * Firebase Authentication (Compat SDK)
- * Replace the config object with your own credentials.
- * This file must be loaded AFTER the Firebase compat scripts.
- ****************************************************/
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC3RBe6AlCewKXkcVS4cDEXLDbClTvBgBY",
   authDomain: "mockly2-fe6bc.firebaseapp.com",
@@ -15,57 +8,43 @@ const firebaseConfig = {
   measurementId: "G-VGL50BKX19"
 };
 
-// Initialize Firebase (using compat)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// ========== AUTHENTICATION FUNCTIONS ==========
-
-// Sign up with email, password, and display name
+// Email/Password signup
 async function signupUser(email, password, displayName) {
-  try {
-    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    // Update the user's profile with the display name
-    await userCredential.user.updateProfile({ displayName: displayName });
-    return userCredential.user;
-  } catch (error) {
-    console.error("Signup error:", error);
-    throw error; // Re-throw to handle in the UI
-  }
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+    await cred.user.updateProfile({ displayName });
+    return cred.user;
 }
 
-// Login with email and password
+// Email/Password login
 async function loginUser(email, password) {
-  try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    return userCredential.user;
-  } catch (error) {
-    console.error("Login error:", error);
-    throw error;
-  }
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+    return cred.user;
+}
+
+// Google Sign-In
+async function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await auth.signInWithPopup(provider);
+    return result.user;
 }
 
 // Logout
 async function logoutUser() {
-  try {
     await auth.signOut();
-    if (typeof navigate === 'function') navigate('home');
-  } catch (error) {
-    console.error("Logout error:", error);
-  }
+    window.location.reload(); // quick refresh to reset UI
 }
 
-// Listen to auth state changes and update UI accordingly
+// Auth state listener
 function initAuthListener(callback) {
-  auth.onAuthStateChanged((user) => {
-    if (callback && typeof callback === 'function') {
-      callback(user);
-    }
-  });
+    auth.onAuthStateChanged(user => callback(user));
 }
 
-// Make functions globally available (they will be called from Script.js)
+// Expose globally
 window.signupUser = signupUser;
 window.loginUser = loginUser;
+window.signInWithGoogle = signInWithGoogle;
 window.logoutUser = logoutUser;
 window.initAuthListener = initAuthListener;
