@@ -1,215 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mockly - MCQ Mock Tests</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs (loaded before firebase.js) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockly – MCQ Practice Quizzes</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDKs (loaded before firebase.js) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <nav class="navbar">
-      <a class="logo" onclick="navigate('home')">Mock<span class="dot">ly</span></a>
-      <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home" onclick="navigate('home')">Home</a></li>
-        <li><a href="#topics" onclick="navigate('topics')">Topics</a></li>
-        <li><a href="#mock-tests" onclick="navigate('mock-tests')">Mock Tests</a></li>
-        <li><a href="#leaderboard" onclick="navigate('leaderboard')">Leaderboard</a></li>
-        <li><a href="#about" onclick="navigate('about')">About</a></li>
-        <li><a href="#login" class="btn-outline-nav" id="navLogin" onclick="navigate('login')">Login</a></li>
-        <li><a href="#signup" class="btn-nav" id="navSignup" onclick="navigate('signup')">Sign Up</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header>
+        <nav class="navbar">
+            <a class="logo" onclick="navigate('home')">Mock<span class="dot">ly</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" onclick="navigate('home')">Home</a></li>
+                <li><a href="#login" class="btn-outline-nav" id="navLogin" onclick="navigate('login')">Login</a></li>
+                <li><a href="#signup" class="btn-nav" id="navSignup" onclick="navigate('signup')">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <!-- MAIN CONTENT -->
-  <main>
-    <!-- HOME PAGE -->
-    <section class="page active" id="page-home">
-      <!-- Hero -->
-      <div class="hero">
-        <h1>Master Any Subject with <span>Mockly</span></h1>
-        <p>Practice with high-quality MCQ mock tests designed by experts. Track your progress, climb the leaderboard, and ace your exams with confidence.</p>
-        <div class="hero-btns">
-          <button class="btn btn-primary btn-lg" onclick="navigate('mock-tests')">Start a Mock Test</button>
-          <button class="btn btn-outline btn-lg" onclick="navigate('topics')">Browse Topics</button>
+    <main>
+        <!-- HOME PAGE -->
+        <section class="page active" id="page-home">
+            <div class="home-hero">
+                <h1>Practice MCQ Quizzes by Topic</h1>
+            </div>
+            <div class="topic-grid" id="topicGrid"></div>
+        </section>
+
+        <!-- LOGIN PAGE -->
+        <section class="page" id="page-login">
+            <div class="form-page">
+                <h2>Login</h2>
+                <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+                <div id="loginError" class="error-msg"></div>
+                <button class="btn btn-primary btn-full" onclick="handleLogin()">Log In</button>
+                <p class="alt-link">No account? <a href="#signup" onclick="navigate('signup')">Sign Up</a></p>
+            </div>
+        </section>
+
+        <!-- SIGNUP PAGE -->
+        <section class="page" id="page-signup">
+            <div class="form-page">
+                <h2>Create Account</h2>
+                <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="John Doe"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="Min. 8 characters"></div>
+                <div class="form-group"><label>Confirm Password</label><input type="password" id="signupConfirm" placeholder="Re-enter password"></div>
+                <div id="signupError" class="error-msg"></div>
+                <button class="btn btn-primary btn-full" onclick="handleSignup()">Sign Up</button>
+                <p class="alt-link">Already have an account? <a href="#login" onclick="navigate('login')">Log In</a></p>
+            </div>
+        </section>
+
+        <!-- ABOUT PAGE -->
+        <section class="page" id="page-about">
+            <div class="content-page">
+                <h2>About Mockly</h2>
+                <p>Mockly offers focused MCQ practice across a variety of subjects. Choose a topic, answer timed questions, and see instant results to track your progress.</p>
+            </div>
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section class="page" id="page-contact">
+            <div class="form-page">
+                <h2>Contact</h2>
+                <div class="form-group"><label>Name</label><input type="text" placeholder="Your name"></div>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
+                <div class="form-group"><label>Message</label><textarea placeholder="Your message..."></textarea></div>
+                <button class="btn btn-primary btn-full" onclick="alert('✅ Message sent! (demo)')">Send</button>
+            </div>
+        </section>
+
+        <!-- LEADERBOARD PAGE -->
+        <section class="page" id="page-leaderboard">
+            <div class="content-page">
+                <h2>Top Performers</h2>
+                <div class="table-wrap"><table class="lb-table" id="fullLbTable"></table></div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD PAGE -->
+        <section class="page" id="page-dashboard">
+            <div class="content-page">
+                <h2>Dashboard</h2>
+                <p id="dashboardWelcome">Welcome back!</p>
+                <div class="dashboard-stats">
+                    <div class="stat-box"><span class="stat-val">24</span><span class="stat-lbl">Tests</span></div>
+                    <div class="stat-box"><span class="stat-val">82%</span><span class="stat-lbl">Avg Score</span></div>
+                    <div class="stat-box"><span class="stat-val">#14</span><span class="stat-lbl">Rank</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEST PAGE -->
+        <section class="page" id="page-test">
+            <div class="test-container" id="testContainer"></div>
+        </section>
+
+        <!-- RESULTS PAGE -->
+        <section class="page" id="page-results">
+            <div class="results-container" id="resultsContainer"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#home" onclick="navigate('home')">Home</a>
+            <a href="#about" onclick="navigate('about')">About</a>
+            <a href="#contact" onclick="navigate('contact')">Contact</a>
+            <a href="#leaderboard" onclick="navigate('leaderboard')">Leaderboard</a>
         </div>
-      </div>
+        <p class="copyright">© 2025 Mockly</p>
+    </footer>
 
-      <!-- Search -->
-      <div class="search-section">
-        <div class="search-wrap">
-          <input type="text" id="searchInput" placeholder="Search topics, tests, or skills..." onkeydown="if(event.key==='Enter')performSearch()">
-          <button onclick="performSearch()">🔍 Search</button>
-        </div>
-      </div>
-
-      <!-- Topics Grid -->
-      <div class="section-heading"><h2>Popular Topics</h2><p>Choose from a wide range of curated topics</p></div>
-      <div class="card-grid" id="topicsGrid"></div>
-      <div style="text-align:center;margin-bottom:28px;">
-        <button class="btn btn-outline" onclick="navigate('topics')">View All Topics →</button>
-      </div>
-
-      <!-- Featured Mock Tests -->
-      <div class="section-heading"><h2>Featured Mock Tests</h2><p>Ready to challenge yourself? Start a test now.</p></div>
-      <div class="card-grid" id="featuredTestsGrid"></div>
-      <div style="text-align:center;margin-bottom:28px;">
-        <button class="btn btn-outline" onclick="navigate('mock-tests')">View All Mock Tests →</button>
-      </div>
-
-      <!-- Why Choose Mockly -->
-      <div class="why-section">
-        <div class="section-heading"><h2>Why Choose Mockly?</h2></div>
-        <div class="why-grid">
-          <div class="why-item"><div class="why-icon">📋</div><h4>Realistic MCQs</h4><p>Questions crafted to mirror actual exam patterns.</p></div>
-          <div class="why-item"><div class="why-icon">⏱️</div><h4>Timed Tests</h4><p>Simulate real exam pressure with countdown timers.</p></div>
-          <div class="why-item"><div class="why-icon">📊</div><h4>Instant Results</h4><p>Detailed performance breakdowns immediately after submission.</p></div>
-          <div class="why-item"><div class="why-icon">🏆</div><h4>Leaderboard</h4><p>Compete with peers and track your ranking globally.</p></div>
-        </div>
-      </div>
-
-      <!-- Leaderboard Preview -->
-      <div class="leaderboard-preview">
-        <div class="section-heading"><h2>Top Performers</h2></div>
-        <div style="overflow-x:auto;">
-          <table class="lb-table" id="lbPreviewTable"></table>
-        </div>
-        <div style="text-align:center;margin-top:16px;">
-          <button class="btn btn-outline btn-sm" onclick="navigate('leaderboard')">Full Leaderboard →</button>
-        </div>
-      </div>
-
-      <!-- Testimonials -->
-      <div class="section-heading"><h2>What Our Users Say</h2></div>
-      <div class="testimonial-grid" id="testimonialsGrid"></div>
-
-      <!-- CTA -->
-      <div class="cta-section">
-        <h2>Ready to Boost Your Scores?</h2>
-        <p>Join thousands of learners who trust Mockly.</p>
-        <button class="btn btn-lg" onclick="navigate('signup')">Create Free Account</button>
-      </div>
-    </section>
-
-    <!-- LOGIN PAGE -->
-    <section class="page" id="page-login">
-      <div class="form-page">
-        <h2>Welcome Back</h2>
-        <p class="subtitle">Log in to your Mockly account</p>
-        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
-        <div id="loginError" style="color:#d32f2f;font-size:0.85rem;margin-bottom:10px;"></div>
-        <button class="btn btn-primary" onclick="handleLogin()">Log In</button>
-        <p class="alt-link">Don't have an account? <a href="#signup" onclick="navigate('signup')">Sign Up</a></p>
-      </div>
-    </section>
-
-    <!-- SIGNUP PAGE -->
-    <section class="page" id="page-signup">
-      <div class="form-page">
-        <h2>Create Account</h2>
-        <p class="subtitle">Join Mockly and start practicing</p>
-        <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="John Doe"></div>
-        <div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="Min. 8 characters"></div>
-        <div class="form-group"><label>Confirm Password</label><input type="password" id="signupConfirm" placeholder="Re-enter password"></div>
-        <div id="signupError" style="color:#d32f2f;font-size:0.85rem;margin-bottom:10px;"></div>
-        <button class="btn btn-primary" onclick="handleSignup()">Sign Up</button>
-        <p class="alt-link">Already have an account? <a href="#login" onclick="navigate('login')">Log In</a></p>
-      </div>
-    </section>
-
-    <!-- TOPICS PAGE -->
-    <section class="page" id="page-topics">
-      <div class="section-heading"><h2>All Topics</h2><p>Browse our complete library of MCQ topics</p></div>
-      <div class="card-grid" id="allTopicsGrid"></div>
-    </section>
-
-    <!-- MOCK TESTS PAGE -->
-    <section class="page" id="page-mock-tests">
-      <div class="section-heading"><h2>Mock Tests</h2><p>Select a test and challenge yourself</p></div>
-      <div class="card-grid" id="allMockTestsGrid"></div>
-    </section>
-
-    <!-- LEADERBOARD PAGE -->
-    <section class="page" id="page-leaderboard">
-      <div class="content-page">
-        <h2>🏆 Leaderboard</h2>
-        <p>Top performers across all mock tests. Keep practicing to climb the ranks!</p>
-        <div style="overflow-x:auto;"><table class="lb-table" id="fullLbTable"></table></div>
-      </div>
-    </section>
-
-    <!-- ABOUT PAGE -->
-    <section class="page" id="page-about">
-      <div class="content-page">
-        <h2>About Mockly</h2>
-        <p>Mockly is a modern platform for MCQ-based mock test practice, designed to help students and professionals prepare effectively for exams. We offer a wide range of topics, realistic timed tests, instant performance analytics, and a competitive leaderboard.</p>
-        <p>Our mission is to make quality test preparation accessible to everyone, everywhere.</p>
-      </div>
-    </section>
-
-    <!-- CONTACT PAGE -->
-    <section class="page" id="page-contact">
-      <div class="form-page">
-        <h2>Contact Us</h2>
-        <p class="subtitle">We'd love to hear from you</p>
-        <div class="form-group"><label>Name</label><input type="text" placeholder="Your name"></div>
-        <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
-        <div class="form-group"><label>Message</label><textarea placeholder="Tell us what's on your mind..."></textarea></div>
-        <button class="btn btn-primary" onclick="alert('✅ Message sent! (Frontend demo)')">Send Message</button>
-      </div>
-    </section>
-
-    <!-- DASHBOARD PAGE -->
-    <section class="page" id="page-dashboard">
-      <div class="section-heading"><h2>My Dashboard</h2><p id="dashboardWelcome">Welcome back!</p></div>
-      <div class="dashboard-grid">
-        <div class="dash-stat-card"><div class="big-num">24</div><div class="lbl">Tests Taken</div></div>
-        <div class="dash-stat-card"><div class="big-num">82%</div><div class="lbl">Avg. Score</div></div>
-        <div class="dash-stat-card"><div class="big-num">#14</div><div class="lbl">Leaderboard Rank</div></div>
-        <div class="dash-stat-card"><div class="big-num">156</div><div class="lbl">Questions Answered</div></div>
-      </div>
-      <div style="text-align:center;margin-bottom:28px;">
-        <button class="btn btn-primary" onclick="navigate('mock-tests')">Take Another Test</button>
-        <button class="btn btn-outline" style="margin-left:10px;" onclick="navigate('leaderboard')">View Leaderboard</button>
-      </div>
-    </section>
-
-    <!-- TEST PAGE -->
-    <section class="page" id="page-test">
-      <div class="test-container" id="testContainer"></div>
-    </section>
-
-    <!-- RESULTS PAGE -->
-    <section class="page" id="page-results">
-      <div class="results-container" id="resultsContainer"></div>
-    </section>
-  </main>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-links">
-      <a href="#home" onclick="navigate('home')">Home</a>
-      <a href="#topics" onclick="navigate('topics')">Topics</a>
-      <a href="#mock-tests" onclick="navigate('mock-tests')">Mock Tests</a>
-      <a href="#leaderboard" onclick="navigate('leaderboard')">Leaderboard</a>
-      <a href="#about" onclick="navigate('about')">About</a>
-      <a href="#contact" onclick="navigate('contact')">Contact</a>
-    </div>
-    <p class="copyright">&copy; 2025 Mockly. All rights reserved.</p>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="firebase.js"></script>
-  <script src="script.js"></script>
+    <script src="firebase.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
