@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockly - MCQ Mock Tests</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --text-light: #555;
+            --text-muted: #777;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #eef3ff;
+            --header-bg: #2d2d2d;
+            --header-text: #e0e0e0;
+            --footer-bg: #2d2d2d;
+            --footer-text: #b0b0b0;
+            --border: #e5e7eb;
+            --card-bg: #fff;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+            --radius: 10px;
+            --radius-sm: 6px;
+            --transition: 0.2s ease;
+            --max-width: 1200px;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: #f8f9fb;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        / ========== HEADER / NAVBAR ========== /
+        header {
+            background: var(--header-bg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+        .navbar {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 60px;
+        }
+        .logo {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .logo .dot {
+            color: var(--accent);
+            display: inline-block;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .nav-links .btn-nav {
+            background: var(--accent);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .nav-links .btn-nav:hover {
+            background: var(--accent-hover);
+            color: #fff;
+        }
+        .nav-links .btn-outline-nav {
+            border: 1.5px solid #888;
+            color: #ddd;
+            background: transparent;
+            padding: 7px 17px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .nav-links .btn-outline-nav:hover {
+            border-color: #fff;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 6px;
+            z-index: 1001;
+        }
+        .hamburger span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: #fff;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        / ========== MAIN CONTENT ========== /
+        main {
+            flex: 1;
+            max-width: var(--max-width);
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        / ========== HERO ========== /
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: #fff;
+            border-radius: var(--radius);
+            margin: 30px 0 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .hero h1 span {
+            color: var(--accent);
+        }
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            max-width: 650px;
+            margin: 0 auto 28px;
+            line-height: 1.7;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: var(--transition);
+            font-family: var(--font);
+            letter-spacing: 0.01em;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent-light);
+        }
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+        .btn-lg {
+            padding: 14px 34px;
+            font-size: 1rem;
+        }
+
+        / ========== SEARCH BAR ========== /
+        .search-section {
+            margin: 0 0 28px;
+        }
+        .search-wrap {
+            display: flex;
+            gap: 0;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1.5px solid var(--border);
+            background: #fff;
+        }
+        .search-wrap input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            font-size: 1rem;
+            outline: none;
+            font-family: var(--font);
+            background: transparent;
+        }
+        .search-wrap button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            font-family: var(--font);
+            white-space: nowrap;
+        }
+        .search-wrap button:hover {
+            background: var(--accent-hover);
+        }
+
+        / ========== SECTION HEADINGS ========== /
+        .section-heading {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+        .section-heading h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+        .section-heading p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+
+        / ========== GRID CARDS ========== /
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+        .card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: #d0d5e0;
+        }
+        .card .icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        .card .meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .card .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .badge-easy {
+            background: #d4edda;
+            color: #155724;
+        }
+        .badge-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .badge-hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .card .btn {
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        / ========== WHY SECTION ========== /
+        .why-section {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .why-item {
+            text-align: center;
+            padding: 16px;
+        }
+        .why-item .why-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .why-item h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .why-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        / ========== LEADERBOARD PREVIEW ========== /
+        .leaderboard-preview {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .lb-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .lb-table th,
+        .lb-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .lb-table th {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .lb-table .rank {
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .lb-table .rank.gold {
+            color: #d4a017;
+        }
+        .lb-table .rank.silver {
+            color: #888;
+        }
+        .lb-table .rank.bronze {
+            color: #b87333;
+        }
+
+        / ========== TESTIMONIALS ========== /
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+        .testimonial-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .testimonial-card .quote {
+            font-style: italic;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .testimonial-card .author {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .testimonial-card .author-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .stars {
+            color: #f5a623;
+            margin-bottom: 6px;
+        }
+
+        / ========== CTA SECTION ========== /
+        .cta-section {
+            text-align: center;
+            padding: 48px 24px;
+            background: var(--accent);
+            border-radius: var(--radius);
+            color: #fff;
+            margin-bottom: 32px;
+        }
+        .cta-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .cta-section p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        .cta-section .btn {
+            background: #fff;
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .cta-section .btn:hover {
+            background: #f0f4ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        / ========== FOOTER ========== /
+        footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 32px 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+        footer .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        footer .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        footer .footer-links a:hover {
+            color: #fff;
+        }
+        footer .copyright {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        / ========== FORMS (Login, SignUp, Contact) ========== /
+        .form-page {
+            max-width: 460px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 36px 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .form-page h2 {
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 1.5rem;
+        }
+        .form-page .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-family: var(--font);
+            transition: var(--transition);
+            background: #fafbfc;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+            background: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-page .btn {
+            width: 100%;
+            margin-top: 8px;
+        }
+        .form-page .alt-link {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .form-page .alt-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .form-page .alt-link a:hover {
+            text-decoration: underline;
+        }
+
+        / ========== TEST PAGE ========== /
+        .test-container {
+            max-width: 780px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 28px 30px;
+        }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .test-header .test-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .test-header .timer {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+            background: var(--accent-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            min-width: 70px;
+            text-align: center;
+        }
+        .timer.warning {
+            color: #d32f2f;
+            background: #fdecea;
+            animation: pulse 0.8s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        .progress-bar-wrap {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .question-block {
+            margin-bottom: 20px;
+        }
+        .question-block .q-num {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        .question-block .q-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .options-list li {
+            padding: 13px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            background: #fafbfc;
+            user-select: none;
+        }
+        .options-list li:hover {
+            border-color: #bcc5d4;
+            background: #f5f6f9;
+        }
+        .options-list li.selected {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .test-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .test-nav button {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .btn-prev {
+            background: #e9ecef;
+            color: #333;
+        }
+        .btn-prev:hover {
+            background: #d5dbe3;
+        }
+        .btn-next {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-next:hover {
+            background: var(--accent-hover);
+        }
+        .btn-submit {
+            background: #16a34a;
+            color: #fff;
+        }
+        .btn-submit:hover {
+            background: #15803d;
+        }
+        .btn-prev:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        / ========== RESULTS PAGE ========== /
+        .results-container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 32px;
+            text-align: center;
+        }
+        .results-container .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 8px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .results-container .score-circle.fail {
+            border-color: #d32f2f;
+            color: #d32f2f;
+        }
+        .results-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .stat-box {
+            background: #f8f9fb;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            min-width: 100px;
+            border: 1px solid var(--border);
+        }
+        .stat-box .stat-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .stat-box .stat-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .review-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .review-item {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .review-item.correct {
+            border-left: 4px solid #16a34a;
+            background: #f6fdf8;
+        }
+        .review-item.incorrect {
+            border-left: 4px solid #d32f2f;
+            background: #fef9f9;
+        }
+
+        / ========== DASHBOARD ========== /
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin: 30px 0;
+        }
+        .dash-stat-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .dash-stat-card .big-num {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .dash-stat-card .lbl {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        / ========== ABOUT & CONTACT PAGES ========== /
+        .content-page {
+            max-width: 750px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .content-page h2 {
+            margin-bottom: 12px;
+        }
+        .content-page p {
+            margin-bottom: 12px;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        / ========== RESPONSIVE ========== /
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--header-bg);
+                padding: 16px 24px;
+                gap: 4px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+                border-top: 1px solid #444;
+            }
+            .nav-links.show {
+                display: flex;
+            }
+            .nav-links a {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 12px;
+            }
+            .test-container {
+                padding: 16px;
+            }
+            .form-page {
+                padding: 24px 18px;
+                margin: 20px 12px;
+            }
+        }
+        @media (max-width: 500px) {
+            .navbar {
+                padding: 0 14px;
+            }
+            .hero {
+                padding: 36px 14px 28px;
+                margin-top: 16px;
+            }
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            .results-stats {
+                gap: 10px;
+            }
+            .test-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section-heading h2 {
+                font-size: 1.4rem;
+            }
+            .lb-table th,
+            .lb-table td {
+                padding: 8px 6px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header>
+        <nav class="navbar">
+            <a class="logo" onclick="navigate('home')">Mock<span class="dot">ly</span></a>
+            <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" onclick="navigate('home')">Home</a></li>
+                <li><a href="#topics" onclick="navigate('topics')">Topics</a></li>
+                <li><a href="#mock-tests" onclick="navigate('mock-tests')">Mock Tests</a></li>
+                <li><a href="#leaderboard" onclick="navigate('leaderboard')">Leaderboard</a></li>
+                <li><a href="#about" onclick="navigate('about')">About</a></li>
+                <li><a href="#login" class="btn-outline-nav" onclick="navigate('login')">Login</a></li>
+                <li><a href="#signup" class="btn-nav" onclick="navigate('signup')">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main>
+
+        <!-- HOME PAGE -->
+        <section class="page active" id="page-home">
+            <!-- Hero -->
+            <div class="hero">
+                <h1>Master Any Subject with <span>Mockly</span></h1>
+                <p>Practice with high-quality MCQ mock tests designed by experts. Track your progress, climb the leaderboard, and ace your exams with confidence.</p>
+                <div class="hero-btns">
+                    <button class="btn btn-primary btn-lg" onclick="navigate('mock-tests')">Start a Mock Test</button>
+                    <button class="btn btn-outline btn-lg" onclick="navigate('topics')">Browse Topics</button>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-section">
+                <div class="search-wrap">
+                    <input type="text" id="searchInput" placeholder="Search topics, tests, or skills... (e.g., JavaScript, Python)" onkeydown="if(event.key==='Enter')performSearch()">
+                    <button onclick="performSearch()">ðŸ” Search</button>
+                </div>
+            </div>
+
+            <!-- Topics Grid -->
+            <div class="section-heading"><h2>Popular Topics</h2><p>Choose from a wide range of curated topics</p></div>
+            <div class="card-grid" id="topicsGrid"></div>
+            <div style="text-align:center;margin-bottom:28px;">
+                <button class="btn btn-outline" onclick="navigate('topics')">View All Topics â†’</button>
+            </div>
+
+            <!-- Featured Mock Tests -->
+            <div class="section-heading"><h2>Featured Mock Tests</h2><p>Ready to challenge yourself? Start a test now.</p></div>
+            <div class="card-grid" id="featuredTestsGrid"></div>
+            <div style="text-align:center;margin-bottom:28px;">
+                <button class="btn btn-outline" onclick="navigate('mock-tests')">View All Mock Tests â†’</button>
+            </div>
+
+            <!-- Why Choose Mockly -->
+            <div class="why-section">
+                <div class="section-heading"><h2>Why Choose Mockly?</h2></div>
+                <div class="why-grid">
+                    <div class="why-item"><div class="why-icon">ðŸ“‹</div><h4>Realistic MCQs</h4><p>Questions crafted to mirror actual exam patterns and difficulty levels.</p></div>
+                    <div class="why-item"><div class="why-icon">â±ï¸</div><h4>Timed Tests</h4><p>Simulate real exam pressure with built-in countdown timers.</p></div>
+                    <div class="why-item"><div class="why-icon">ðŸ“Š</div><h4>Instant Results</h4><p>Get detailed performance breakdowns immediately after submission.</p></div>
+                    <div class="why-item"><div class="why-icon">ðŸ†</div><h4>Leaderboard</h4><p>Compete with peers and track your ranking globally.</p></div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Preview -->
+            <div class="leaderboard-preview">
+                <div class="section-heading"><h2>Top Performers</h2></div>
+                <div style="overflow-x:auto;">
+                    <table class="lb-table" id="lbPreviewTable"></table>
+                </div>
+                <div style="text-align:center;margin-top:16px;">
+                    <button class="btn btn-outline btn-sm" onclick="navigate('leaderboard')">Full Leaderboard â†’</button>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="section-heading"><h2>What Our Users Say</h2></div>
+            <div class="testimonial-grid" id="testimonialsGrid"></div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+                <h2>Ready to Boost Your Scores?</h2>
+                <p>Join thousands of learners who trust Mockly for their exam preparation.</p>
+                <button class="btn btn-lg" onclick="navigate('signup')">Create Free Account</button>
+            </div>
+        </section>
+
+        <!-- LOGIN PAGE -->
+        <section class="page" id="page-login">
+            <div class="form-page">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Log in to your Mockly account</p>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com" id="loginEmail"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" id="loginPassword"></div>
+                <button class="btn btn-primary" onclick="handleLogin()">Log In</button>
+                <p class="alt-link">Don't have an account? <a href="#signup" onclick="navigate('signup')">Sign Up</a></p>
+            </div>
+        </section>
+
+        <!-- SIGNUP PAGE -->
+        <section class="page" id="page-signup">
+            <div class="form-page">
+                <h2>Create Account</h2>
+                <p class="subtitle">Join Mockly and start practicing</p>
+                <div class="form-group"><label>Full Name</label><input type="text" placeholder="John Doe" id="signupName"></div>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com" id="signupEmail"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="Min. 8 characters" id="signupPassword"></div>
+                <div class="form-group"><label>Confirm Password</label><input type="password" placeholder="Re-enter password" id="signupConfirm"></div>
+                <button class="btn btn-primary" onclick="handleSignup()">Sign Up</button>
+                <p class="alt-link">Already have an account? <a href="#login" onclick="navigate('login')">Log In</a></p>
+            </div>
+        </section>
+
+        <!-- TOPICS PAGE -->
+        <section class="page" id="page-topics">
+            <div class="section-heading"><h2>All Topics</h2><p>Browse our complete library of MCQ topics</p></div>
+            <div class="card-grid" id="allTopicsGrid"></div>
+        </section>
+
+        <!-- MOCK TESTS PAGE -->
+        <section class="page" id="page-mock-tests">
+            <div class="section-heading"><h2>Mock Tests</h2><p>Select a test and challenge yourself</p></div>
+            <div class="card-grid" id="allMockTestsGrid"></div>
+        </section>
+
+        <!-- LEADERBOARD PAGE -->
+        <section class="page" id="page-leaderboard">
+            <div class="content-page">
+                <h2>ðŸ† Leaderboard</h2>
+                <p>Top performers across all mock tests. Keep practicing to climb the ranks!</p>
+                <div style="overflow-x:auto;"><table class="lb-table" id="fullLbTable"></table></div>
+            </div>
+        </section>
+
+        <!-- ABOUT PAGE -->
+        <section class="page" id="page-about">
+            <div class="content-page">
+                <h2>About Mockly</h2>
+                <p>Mockly is a modern platform for MCQ-based mock test practice, designed to help students and professionals prepare effectively for exams. We offer a wide range of topics, realistic timed tests, instant performance analytics, and a competitive leaderboard to keep you motivated.</p>
+                <p>Our mission is to make quality test preparation accessible to everyone, everywhere â€” no paywalls, no friction. Just focused practice.</p>
+                <p><strong>Founded:</strong> 2024 &nbsp;|&nbsp; <strong>Users:</strong> 50,000+ &nbsp;|&nbsp; <strong>Questions:</strong> 10,000+</p>
+            </div>
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section class="page" id="page-contact">
+            <div class="form-page">
+                <h2>Contact Us</h2>
+                <p class="subtitle">We'd love to hear from you</p>
+                <div class="form-group"><label>Name</label><input type="text" placeholder="Your name"></div>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
+                <div class="form-group"><label>Message</label><textarea placeholder="Tell us what's on your mind..."></textarea></div>
+                <button class="btn btn-primary" onclick="alert('âœ… Message sent! (Frontend demo)')">Send Message</button>
+            </div>
+        </section>
+
+        <!-- DASHBOARD PAGE -->
+        <section class="page" id="page-dashboard">
+            <div class="section-heading"><h2>My Dashboard</h2><p>Welcome back! Here's your progress overview.</p></div>
+            <div class="dashboard-grid">
+                <div class="dash-stat-card"><div class="big-num">24</div><div class="lbl">Tests Taken</div></div>
+                <div class="dash-stat-card"><div class="big-num">82%</div><div class="lbl">Avg. Score</div></div>
+                <div class="dash-stat-card"><div class="big-num">#14</div><div class="lbl">Leaderboard Rank</div></div>
+                <div class="dash-stat-card"><div class="big-num">156</div><div class="lbl">Questions Answered</div></div>
+            </div>
+            <div style="text-align:center;margin-bottom:28px;">
+                <button class="btn btn-primary" onclick="navigate('mock-tests')">Take Another Test</button>
+                <button class="btn btn-outline" style="margin-left:10px;" onclick="navigate('leaderboard')">View Leaderboard</button>
+            </div>
+        </section>
+
+        <!-- TEST PAGE -->
+        <section class="page" id="page-test">
+            <div class="test-container" id="testContainer"></div>
+        </section>
+
+        <!-- RESULTS PAGE -->
+        <section class="page" id="page-results">
+            <div class="results-container" id="resultsContainer"></div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <div class="footer-links">
+            <a href="#home" onclick="navigate('home')">Home</a>
+            <a href="#topics" onclick="navigate('topics')">Topics</a>
+            <a href="#mock-tests" onclick="navigate('mock-tests')">Mock Tests</a>
+            <a href="#leaderboard" onclick="navigate('leaderboard')">Leaderboard</a>
+            <a href="#about" onclick="navigate('about')">About</a>
+            <a href="#contact" onclick="navigate('contact')">Contact</a>
+        </div>
+        <p class="copyright">&copy; 2025 Mockly. All rights reserved. Built for learners everywhere.</p>
+    </footer>
+
+    <script>
+        // ==================== SAMPLE DATA ====================
+        const topicsData = [
+            { id: 1, name: 'JavaScript Fundamentals', icon: 'JS', count: 120, difficulty: 'Medium' },
+            { id: 2, name: 'Python Programming', icon: 'Py', count: 150, difficulty: 'Easy' },
+            { id: 3, name: 'Data Structures & Algorithms', icon: 'DA', count: 200, difficulty: 'Hard' },
+            { id: 4, name: 'React.js', icon: 'Re', count: 90, difficulty: 'Medium' },
+            { id: 5, name: 'Node.js', icon: 'No', count: 85, difficulty: 'Medium' },
+            { id: 6, name: 'SQL & Databases', icon: 'SQ', count: 110, difficulty: 'Easy' },
+            { id: 7, name: 'System Design', icon: 'SD', count: 60, difficulty: 'Hard' },
+            { id: 8, name: 'Operating Systems', icon: 'OS', count: 95, difficulty: 'Hard' },
+        ];
+
+        const mockTestsData = [
+            { id: 1, name: 'JavaScript Advanced Mock', topic: 'JavaScript', questions: 30, duration: 30,
+                difficulty: 'Hard' },
+            { id: 2, name: 'Python Basics Challenge', topic: 'Python', questions: 25, duration: 25, difficulty: 'Easy' },
+            { id: 3, name: 'DSA Mastery Test', topic: 'DSA', questions: 40, duration: 45, difficulty: 'Hard' },
+            { id: 4, name: 'React Components Quiz', topic: 'React.js', questions: 20, duration: 20, difficulty: 'Medium' },
+            { id: 5, name: 'SQL Query Challenge', topic: 'SQL', questions: 35, duration: 35, difficulty: 'Medium' },
+            { id: 6, name: 'Node.js Backend Mock', topic: 'Node.js', questions: 28, duration: 30, difficulty: 'Medium' },
+        ];
+
+        const leaderboardData = [
+            { rank: 1, name: 'Arjun Sharma', score: 98.5, tests: 42 },
+            { rank: 2, name: 'Priya Patel', score: 96.2, tests: 38 },
+            { rank: 3, name: 'Rohan Gupta', score: 94.8, tests: 55 },
+            { rank: 4, name: 'Sneha Reddy', score: 92.1, tests: 31 },
+            { rank: 5, name: 'Vikram Singh', score: 90.7, tests: 47 },
+            { rank: 6, name: 'Ananya Iyer', score: 89.3, tests: 29 },
+            { rank: 7, name: 'Karan Mehta', score: 87.5, tests: 36 },
+            { rank: 8, name: 'Divya Nair', score: 85.9, tests: 44 },
+        ];
+
+        const testimonialsData = [
+            { quote: 'Mockly helped me crack my JavaScript interview! The timed tests are incredibly realistic.',
+                author: 'Amit K.', role: 'Frontend Developer', stars: 5 },
+            { quote: 'The leaderboard keeps me motivated. I practice every single day now.', author: 'Neha S.',
+                role: 'CS Student', stars: 5 },
+            { quote: 'Clean interface, no distractions. Exactly what I needed for focused prep.', author: 'Rahul M.',
+                role: 'Data Analyst', stars: 4 },
+        ];
+
+        const sampleQuestions = [
+            { q: 'What does the â€œtypeofâ€ operator return for an array in JavaScript?', options: ['"array"', '"object"',
+                    '"list"', '"undefined"'
+                ], correct: 1 },
+            { q: 'Which method is used to add an element to the end of an array in JavaScript?', options: ['push()',
+                    'pop()', 'shift()', 'unshift()'
+                ], correct: 0 },
+            { q: 'What is the output of â€œconsole.log(2 + "2")â€ in JavaScript?', options: ['4', '"22"', '22',
+                    'TypeError'], correct: 1 },
+            { q: 'Which keyword is used to declare a constant in JavaScript?', options: ['var', 'let', 'const',
+                    'static'], correct: 2 },
+            { q: 'What does â€œJSON.parse()â€ do?', options: [
+                    'Converts a JavaScript object to a JSON string',
+                    'Parses a JSON string and returns a JavaScript object',
+                    'Validates JSON syntax only', 'Compresses JSON data'
+                ], correct: 1 },
+        ];
+
+        // ==================== STATE ====================
+        let currentPage = 'home';
+        let testState = {
+            active: false,
+            questions: [],
+            currentIndex: 0,
+            answers: {},
+            timerSeconds: 0,
+            timerInterval: null,
+            testName: '',
+            totalQuestions: 0,
+            totalTime: 0,
+        };
+
+        // ==================== NAVIGATION ====================
+        function navigate(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Show target page
+            const target = document.getElementById('page-' + pageName);
+            if (target) {
+                target.classList.add('active');
+                currentPage = pageName;
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Update active nav link
+                document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+                const navLink = document.querySelector(â€œ.nav-links a[href="#${pageName}"]â€);
+                if (navLink) navLink.classList.add('active');
+                // Close mobile menu
+                closeMenu();
+                // Update hash
+                window.location.hash = pageName;
+                // Page-specific init
+                if (pageName === 'topics') renderAllTopics();
+                if (pageName === 'mock-tests') renderAllMockTests();
+                if (pageName === 'leaderboard') renderFullLeaderboard();
+                if (pageName === 'home') renderHomePartial();
+            }
+        }
+
+        function toggleMenu() {
+            const nav = document.getElementById('navLinks');
+            const hamburger = document.getElementById('hamburger');
+            nav.classList.toggle('show');
+            hamburger.classList.toggle('open');
+        }
+
+        function closeMenu() {
+            const nav = document.getElementById('navLinks');
+            const hamburger = document.getElementById('hamburger');
+            nav.classList.remove('show');
+            hamburger.classList.remove('open');
+        }
+
+        // Handle hash changes
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.replace('#', '') || 'home';
+            navigate(hash);
+        });
+
+        // Initial load
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.replace('#', '') || 'home';
+            navigate(hash);
+            renderHomePartial();
+        });
+
+        // ==================== RENDER FUNCTIONS ====================
+        function getDifficultyBadge(difficulty) {
+            const cls = difficulty === 'Easy' ? 'badge-easy' : difficulty === 'Medium' ? 'badge-medium' :
+                'badge-hard';
+            return â€œ<span class="badge ${cls}">${difficulty}</span>â€;
+        }
+
+        function renderTopicsGrid(containerId, data, limit = null) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const items = limit ? data.slice(0, limit) : data;
+            container.innerHTML = items.map(t => `
+            <div class="card" onclick="navigate('mock-tests')">
+              <div class="icon-circle">${t.icon}</div>
+              <h3>${t.name}</h3>
+              <p class="meta">${t.count} questions Â· ${getDifficultyBadge(t.difficulty)}</p>
+              <button class="btn btn-outline btn-sm" style="margin-top:10px;">Explore â†’</button>
+            </div>
+          `).join('');
+        }
+
+        function renderMockTestCards(containerId, data, limit = null) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const items = limit ? data.slice(0, limit) : data;
+            container.innerHTML = items.map(t => `
+            <div class="card">
+              <h3>${t.name}</h3>
+              <p class="meta">ðŸ“ ${t.questions} Questions Â· â±ï¸ ${t.duration} min Â· ${getDifficultyBadge(t.difficulty)}</p>
+              <p class="meta" style="margin-top:2px;">ðŸ“‚ ${t.topic}</p>
+              <button class="btn btn-primary btn-sm" onclick="startTest('${t.name}', ${t.questions}, ${t.duration})">Start Test</button>
+            </div>
+          `).join('');
+        }
+
+        function renderLeaderboardTable(containerId, data, limit = null) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const items = limit ? data.slice(0, limit) : data;
+            const rankClass = (r) => r === 1 ? 'gold' : r === 2 ? 'silver' : r === 3 ? 'bronze' : '';
+            container.innerHTML = `
+            <thead><tr><th>Rank</th><th>Name</th><th>Score</th><th>Tests</th></tr></thead>
+            <tbody>${items.map(lb => `
+              <tr>
+                <td class="rank ${rankClass(lb.rank)}">#${lb.rank}</td>
+                <td><strong>${lb.name}</strong></td>
+                <td>${lb.score}%</td>
+                <td>${lb.tests}</td>
+              </tr>`).join('')}</tbody>
+          `;
+        }
+
+        function renderTestimonials() {
+            const container = document.getElementById('testimonialsGrid');
+            if (!container) return;
+            container.innerHTML = testimonialsData.map(t => `
+            <div class="testimonial-card">
+              <div class="stars">${'â˜…'.repeat(t.stars)}${'â˜†'.repeat(5-t.stars)}</div>
+              <p class="quote">"${t.quote}"</p>
+              <p class="author">${t.author}</p>
+              <p class="author-role">${t.role}</p>
+            </div>
+          `).join('');
+        }
+
+        function renderHomePartial() {
+            renderTopicsGrid('topicsGrid', topicsData, 4);
+            renderMockTestCards('featuredTestsGrid', mockTestsData, 3);
+            renderLeaderboardTable('lbPreviewTable', leaderboardData, 5);
+            renderTestimonials();
+        }
+
+        function renderAllTopics() {
+            renderTopicsGrid('allTopicsGrid', topicsData);
+        }
+
+        function renderAllMockTests() {
+            renderMockTestCards('allMockTestsGrid', mockTestsData);
+        }
+
+        function renderFullLeaderboard() {
+            renderLeaderboardTable('fullLbTable', leaderboardData);
+        }
+
+        // ==================== SEARCH ====================
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!query) return;
+            // Search topics
+            const foundTopic = topicsData.find(t => t.name.toLowerCase().includes(query));
+            if (foundTopic) {
+                navigate('topics');
+                setTimeout(() => {
+                    const grid = document.getElementById('allTopicsGrid');
+                    if (grid) {
+                        const cards = grid.querySelectorAll('.card');
+                        cards.forEach(c => {
+                            if (c.textContent.toLowerCase().includes(query)) {
+                                c.style.border = '2px solid var(--accent)';
+                                c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        });
+                    }
+                }, 350);
+                return;
+            }
+            const foundTest = mockTestsData.find(t => t.name.toLowerCase().includes(query) || t.topic.toLowerCase()
+                .includes(query));
+            if (foundTest) {
+                navigate('mock-tests');
+                return;
+            }
+            alert('No results found for "' + query + '". Try "JavaScript", "Python", or "SQL".');
+        }
+
+        // ==================== LOGIN / SIGNUP (Frontend Demo) ====================
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value.trim();
+            if (!email || !pass) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            alert('âœ… Login successful! (Frontend demo â€” no backend connected)\nWelcome, ' + email);
+            navigate('dashboard');
+        }
+
+        function handleSignup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const pass = document.getElementById('signupPassword').value.trim();
+            const confirm = document.getElementById('signupConfirm').value.trim();
+            if (!name || !email || !pass || !confirm) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            if (pass !== confirm) {
+                alert('Passwords do not match.');
+                return;
+            }
+            if (pass.length < 8) {
+                alert('Password must be at least 8 characters.');
+                return;
+            }
+            alert('âœ… Account created! (Frontend demo â€” no backend connected)\nWelcome, ' + name + '!');
+            navigate('dashboard');
+        }
+
+        // ==================== TEST LOGIC ====================
+        function startTest(testName, totalQuestions, totalTime) {
+            // Generate questions (cycle through sample if needed)
+            const questions = [];
+            for (let i = 0; i < totalQuestions; i++) {
+                const sq = sampleQuestions[i % sampleQuestions.length];
+                questions.push({
+                    q: sq.q,
+                    options: [...sq.options],
+                    correct: sq.correct,
+                });
+            }
+            testState = {
+                active: true,
+                questions: questions,
+                currentIndex: 0,
+                answers: {},
+                timerSeconds: totalTime * 60,
+                timerInterval: null,
+                testName: testName,
+                totalQuestions: totalQuestions,
+                totalTime: totalTime,
+            };
+            navigate('test');
+            renderTestQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(testState.timerInterval);
+            testState.timerInterval = setInterval(() => {
+                testState.timerSeconds--;
+                updateTimerDisplay();
+                if (testState.timerSeconds <= 0) {
+                    clearInterval(testState.timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timerEl = document.getElementById('testTimer');
+            if (!timerEl) return;
+            const mins = Math.floor(testState.timerSeconds / 60);
+            const secs = testState.timerSeconds % 60;
+            timerEl.textContent = â€œ${mins}:${secs.toString().padStart(2, '0')}â€;
+            if (testState.timerSeconds < 60) {
+                timerEl.classList.add('warning');
+            } else {
+                timerEl.classList.remove('warning');
+            }
+        }
+
+        function renderTestQuestion() {
+            const container = document.getElementById('testContainer');
+            if (!container) return;
+            const idx = testState.currentIndex;
+            const q = testState.questions[idx];
+            const progress = ((idx + 1) / testState.totalQuestions) * 100;
+            const selectedAnswer = testState.answers[idx];
+            container.innerHTML = `
+            <div class="test-header">
+              <span class="test-title">ðŸ“ ${testState.testName}</span>
+              <span class="timer" id="testTimer">${formatTime(testState.timerSeconds)}</span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width:${progress}%;"></div>
+            </div>
+            <div class="question-block">
+              <p class="q-num">Question ${idx + 1} of ${testState.totalQuestions}</p>
+              <p class="q-text">${q.q}</p>
+              <ul class="options-list">
+                ${q.options.map((opt, oi) => `
+                  <li class="${selectedAnswer === oi ? 'selected' : ''}" onclick="selectAnswer(${oi})">
+                    ${String.fromCharCode(65 + oi)}. ${opt}
+                  </li>`).join('')}
+              </ul>
+            </div>
+            <div class="test-nav">
+              <button class="btn-prev" ${idx === 0 ? 'disabled' : ''} onclick="prevQuestion()">â† Previous</button>
+              <span style="font-weight:600;align-self:center;font-size:0.9rem;">${idx + 1}/${testState.totalQuestions}</span>
+              ${idx < testState.totalQuestions - 1
+                ? â€œ<button class="btn-next" onclick="nextQuestion()">Next â†’</button>â€
+                : â€œ<button class="btn-submit" onclick="submitTest()">âœ“ Submit Test</button>â€}
+            </div>
+          `;
+            updateTimerDisplay();
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return â€œ${m}:${s.toString().padStart(2, '0')}â€;
+        }
+
+        function selectAnswer(optionIndex) {
+            testState.answers[testState.currentIndex] = optionIndex;
+            renderTestQuestion();
+        }
+
+        function nextQuestion() {
+            if (testState.currentIndex < testState.totalQuestions - 1) {
+                testState.currentIndex++;
+                renderTestQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (testState.currentIndex > 0) {
+                testState.currentIndex--;
+                renderTestQuestion();
+            }
+        }
+
+        function submitTest() {
+            clearInterval(testState.timerInterval);
+            testState.active = false;
+            // Calculate results
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+            const reviewItems = [];
+            testState.questions.forEach((q, i) => {
+                const userAnswer = testState.answers[i];
+                const isCorrect = userAnswer === q.correct;
+                if (userAnswer === undefined || userAnswer === null) {
+                    unansweredCount++;
+                    reviewItems.push({ q: q.q, user: 'Not answered', correctAns: q.options[q.correct],
+                        isCorrect: false, skipped: true });
+                } else if (isCorrect) {
+                    correctCount++;
+                    reviewItems.push({ q: q.q, user: q.options[userAnswer], correctAns: q.options[q.correct],
+                        isCorrect: true, skipped: false });
+                } else {
+                    incorrectCount++;
+                    reviewItems.push({ q: q.q, user: q.options[userAnswer], correctAns: q.options[q.correct],
+                        isCorrect: false, skipped: false });
+                }
+            });
+            const total = testState.totalQuestions;
+            const score = Math.round((correctCount / total) * 100);
+            const timeTakenSec = (testState.totalTime * 60) - testState.timerSeconds;
+            const timeTakenMin = Math.floor(timeTakenSec / 60);
+            const timeTakenRemSec = timeTakenSec % 60;
+
+            // Store results for display
+            window._lastResults = {
+                score,
+                correctCount,
+                incorrectCount,
+                unansweredCount,
+                total,
+                timeTaken: â€œ${timeTakenMin}m ${timeTakenRemSec}sâ€,
+                reviewItems,
+                testName: testState.testName,
+            };
+            navigate('results');
+            renderResults();
+        }
+
+        function renderResults() {
+            const container = document.getElementById('resultsContainer');
+            const r = window._lastResults;
+            if (!container || !r) {
+                container.innerHTML =
+                    '<p style="text-align:center;padding:40px;">No results available. <a href="#mock-tests" onclick="navigate(\'mock-tests\')">Take a test</a>.</p>';
+                return;
+            }
+            const passed = r.score >= 60;
+            container.innerHTML = `
+            <h2>ðŸ“Š Test Results</h2>
+            <p style="color:var(--text-muted);">${r.testName}</p>
+            <div class="score-circle ${passed ? '' : 'fail'}">${r.score}%</div>
+            <p style="font-weight:600;font-size:1.1rem;">${passed ? 'ðŸŽ‰ Great job!' : 'ðŸ’ª Keep practicing!'}</p>
+            <div class="results-stats">
+              <div class="stat-box"><div class="stat-val" style="color:#16a34a;">${r.correctCount}</div><div class="stat-lbl">Correct</div></div>
+              <div class="stat-box"><div class="stat-val" style="color:#d32f2f;">${r.incorrectCount}</div><div class="stat-lbl">Incorrect</div></div>
+              <div class="stat-box"><div class="stat-val" style="color:#888;">${r.unansweredCount}</div><div class="stat-lbl">Skipped</div></div>
+              <div class="stat-box"><div class="stat-val">${r.timeTaken}</div><div class="stat-lbl">Time Taken</div></div>
+            </div>
+            <div class="review-list">
+              <h3 style="text-align:left;margin-bottom:8px;">Question Review</h3>
+              ${r.reviewItems.map((ri, i) => `
+                <div class="review-item ${ri.isCorrect ? 'correct' : 'incorrect'}">
+                  <strong>Q${i+1}:</strong> ${ri.q}<br>
+                  <span style="font-size:0.8rem;">Your answer: <strong>${ri.user}</strong> ${ri.skipped ? 'âš ï¸' : ''} | Correct: <strong>${ri.correctAns}</strong></span>
+                </div>`).join('')}
+            </div>
+            <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="navigate('mock-tests')">Take Another Test</button>
+              <button class="btn btn-outline" onclick="navigate('dashboard')">Go to Dashboard</button>
+            </div>
+          `;
+        }
+
+        // Close mobile menu on outside click
+        document.addEventListener('click', (e) => {
+            const nav = document.getElementById('navLinks');
+            const hamburger = document.getElementById('hamburger');
+            if (nav.classList.contains('show') && !e.target.closest('.navbar') && !e.target.closest(
+                    '.hamburger')) {
+                closeMenu();
+            }
+        });
+
+        // Keyboard shortcut for test navigation
+        document.addEventListener('keydown', (e) => {
+            if (!testState.active) return;
+            if (e.key === 'ArrowRight') nextQuestion();
+            if (e.key === 'ArrowLeft') prevQuestion();
+            if (e.key >= '1' && e.key <= '4') {
+                const optIndex = parseInt(e.key) - 1;
+                if (optIndex < testState.questions[testState.currentIndex].options.length) {
+                    selectAnswer(optIndex);
+                }
+            }
+            if (e.key === 'Enter' && e.ctrlKey && testState.currentIndex === testState.totalQuestions - 1) {
+                submitTest();
+            }
+        });
+    </script>
+</body>
+</html>
