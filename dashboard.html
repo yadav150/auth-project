@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mockly – Dashboard</title>
+    <title>Mockly – My Dashboard</title>
     <link rel="stylesheet" href="Style.css">
     <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -21,36 +21,44 @@
     </header>
 
     <main id="main-content">
-        <section class="section dashboard-page" aria-labelledby="dashboard-heading">
-            <div class="container">
-                <div class="section-header">
-                    <h2 id="dashboard-heading">My Dashboard</h2>
-                    <p id="dashboardWelcome">Welcome back!</p>
-                </div>
-                <div class="dashboard-grid">
-                    <div class="dash-stat-card">
-                        <span class="dash-stat-icon">📝</span>
-                        <span class="dash-stat-value" id="dashTestsTaken">0</span>
-                        <span class="dash-stat-label">Tests Taken</span>
-                    </div>
-                    <div class="dash-stat-card">
-                        <span class="dash-stat-icon">📊</span>
-                        <span class="dash-stat-value" id="dashAvgScore">0%</span>
-                        <span class="dash-stat-label">Average Score</span>
-                    </div>
-                    <div class="dash-stat-card">
-                        <span class="dash-stat-icon">🏆</span>
-                        <span class="dash-stat-value" id="dashRank">#0</span>
-                        <span class="dash-stat-label">Leaderboard Rank</span>
-                    </div>
-                    <div class="dash-stat-card">
-                        <span class="dash-stat-icon">❓</span>
-                        <span class="dash-stat-value" id="dashQuestions">0</span>
-                        <span class="dash-stat-label">Questions Answered</span>
+        <section class="section dashboard-page">
+            <div class="dashboard-container">
+                <!-- Profile -->
+                <div class="profile-section">
+                    <div class="avatar-circle" id="avatarInitials">?</div>
+                    <div class="profile-info">
+                        <h2 id="dashboardName">Student</h2>
+                        <p id="dashboardEmail">email@example.com</p>
                     </div>
                 </div>
-                <div class="dashboard-actions">
-                    <a href="index.html#topics" class="btn btn-primary">Start a Test</a>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-value" id="dashTestsTaken">12</div>
+                        <div class="stat-label">Tests Taken</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" id="dashAvgScore">78%</div>
+                        <div class="stat-label">Avg Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value" id="dashRank">#23</div>
+                        <div class="stat-label">Rank</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">❓</div>
+                        <div class="stat-value" id="dashQuestions">480</div>
+                        <div class="stat-label">Questions</div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions">
+                    <a href="index.html#exams" class="btn btn-primary">Start a New Test</a>
                     <a href="index.html#leaderboard" class="btn btn-outline">View Leaderboard</a>
                 </div>
             </div>
@@ -61,31 +69,26 @@
         <div class="container">
             <div class="footer-bottom">
                 <span>&copy; 2026 Mockly</span>
-                <div class="footer-bottom-links">
-                    <a href="index.html">Home</a>
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
-                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Firebase + Dashboard logic -->
+    <!-- Firebase + Dashboard Script -->
     <script src="firebase.js"></script>
     <script>
-        // Wait for Firebase to be ready
         firebase.auth().onAuthStateChanged((user) => {
             if (!user) {
-                // Not logged in – redirect to home
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Display user info
-            const welcomeEl = document.getElementById('dashboardWelcome');
-            if (welcomeEl) {
-                welcomeEl.textContent = `Welcome back, ${user.displayName || user.email}!`;
-            }
+            const displayName = user.displayName || user.email.split('@')[0];
+            const email = user.email;
+            const initial = displayName.charAt(0).toUpperCase();
+
+            document.getElementById('avatarInitials').textContent = initial;
+            document.getElementById('dashboardName').textContent = displayName;
+            document.getElementById('dashboardEmail').textContent = email;
 
             // Dummy stats (replace with real data later)
             document.getElementById('dashTestsTaken').textContent = '12';
@@ -93,7 +96,6 @@
             document.getElementById('dashRank').textContent = '#23';
             document.getElementById('dashQuestions').textContent = '480';
 
-            // Logout button
             document.getElementById('btnLogout').addEventListener('click', async () => {
                 await firebase.auth().signOut();
                 window.location.href = 'index.html';
