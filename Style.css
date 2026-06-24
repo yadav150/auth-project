@@ -131,9 +131,15 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
     .hero-buttons .btn { width:100%; text-align:center; }
 }
 /* ===== DASHBOARD ENHANCEMENTS ===== */
+
+/* Make logout & home buttons always visible */
+.nav-actions-visible {
+    display: flex !important;
+}
+
 .dashboard-page {
     background: var(--bg);
-    min-height: calc(100vh - 64px - 200px); /* header + footer approx */
+    min-height: calc(100vh - 64px - 200px);
     display: flex;
     align-items: flex-start;
 }
@@ -168,7 +174,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
     flex-shrink: 0;
     border: 3px solid var(--accent);
     color: var(--accent);
-    overflow: hidden;   /* ensure SVG doesn't bleed */
+    overflow: hidden;
 }
 .avatar-circle .avatar-silhouette {
     width: 56px;
@@ -272,7 +278,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
     min-width: 180px;
 }
 
-/* Logout Popup (fade-in animation) */
+/* Logout Popup */
 .logout-popup-overlay {
     display: none;
     position: fixed;
