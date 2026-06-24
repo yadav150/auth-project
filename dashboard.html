@@ -15,7 +15,8 @@
         <div class="nav-inner">
             <a href="index.html" class="nav-logo" aria-label="Mockly Home">Mock<span>ly</span></a>
             <div class="nav-actions">
-                <button class="btn btn-outline" id="btnLogout">Logout</button>
+                <a href="index.html" class="btn btn-outline">Home</a>
+                <button class="btn btn-primary" id="btnLogout">Logout</button>
             </div>
         </div>
     </header>
@@ -23,7 +24,8 @@
     <main id="main-content">
         <section class="section dashboard-page">
             <div class="dashboard-container">
-                <!-- Profile -->
+
+                <!-- Profile Section -->
                 <div class="profile-section">
                     <div class="avatar-circle" id="avatarInitials">?</div>
                     <div class="profile-info">
@@ -32,35 +34,57 @@
                     </div>
                 </div>
 
-                <!-- Stats -->
+                <!-- Stats Grid -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon">📝</div>
-                        <div class="stat-value" id="dashTestsTaken">12</div>
+                        <div class="stat-value" id="dashTestsTaken">0</div>
                         <div class="stat-label">Tests Taken</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">📊</div>
-                        <div class="stat-value" id="dashAvgScore">78%</div>
+                        <div class="stat-value" id="dashAvgScore">0%</div>
                         <div class="stat-label">Avg Score</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">🏆</div>
-                        <div class="stat-value" id="dashRank">#23</div>
+                        <div class="stat-value" id="dashRank">#0</div>
                         <div class="stat-label">Rank</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">❓</div>
-                        <div class="stat-value" id="dashQuestions">480</div>
+                        <div class="stat-value" id="dashQuestions">0</div>
                         <div class="stat-label">Questions</div>
                     </div>
                 </div>
 
-                <!-- Actions -->
-                <div class="actions">
+                <!-- Recent Tests Table -->
+                <div class="recent-tests-section">
+                    <h3>Recent Tests</h3>
+                    <div class="table-wrap">
+                        <table class="recent-table" id="recentTestsTable">
+                            <thead>
+                                <tr>
+                                    <th>Exam</th>
+                                    <th>Date</th>
+                                    <th>Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="noRecentTests" style="display:none; text-align:center; color:var(--text-muted);">No tests taken yet. <a href="index.html#exams">Start one now!</a></p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="dashboard-actions">
                     <a href="index.html#exams" class="btn btn-primary">Start a New Test</a>
                     <a href="index.html#leaderboard" class="btn btn-outline">View Leaderboard</a>
                 </div>
+
             </div>
         </section>
     </main>
@@ -73,34 +97,9 @@
         </div>
     </footer>
 
-    <!-- Firebase + Dashboard Script -->
+    <!-- Firebase shared config & auth functions -->
     <script src="firebase.js"></script>
-    <script>
-        firebase.auth().onAuthStateChanged((user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            const displayName = user.displayName || user.email.split('@')[0];
-            const email = user.email;
-            const initial = displayName.charAt(0).toUpperCase();
-
-            document.getElementById('avatarInitials').textContent = initial;
-            document.getElementById('dashboardName').textContent = displayName;
-            document.getElementById('dashboardEmail').textContent = email;
-
-            // Dummy stats (replace with real data later)
-            document.getElementById('dashTestsTaken').textContent = '12';
-            document.getElementById('dashAvgScore').textContent = '78%';
-            document.getElementById('dashRank').textContent = '#23';
-            document.getElementById('dashQuestions').textContent = '480';
-
-            document.getElementById('btnLogout').addEventListener('click', async () => {
-                await firebase.auth().signOut();
-                window.location.href = 'index.html';
-            });
-        });
-    </script>
+    <!-- Dashboard specific logic -->
+    <script src="js/dash-script.js"></script>
 </body>
 </html>
