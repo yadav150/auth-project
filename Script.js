@@ -1,6 +1,6 @@
 /*********************************************
  * Mockly – Competitive Exam Prep
- * Firebase Auth + CAPTCHA (modal works now)
+ * Firebase Auth + CAPTCHA (signup fixed)
  *********************************************/
 
 let loginCaptchaAnswer = '';
@@ -29,16 +29,19 @@ function refreshCaptchas() {
   if (signupInput) signupInput.value = '';
 }
 
-// Global openModal – call this from anywhere
+// Global function to open the modal with the correct form
 function openModal(type = 'login') {
   const overlay = document.getElementById('modalOverlay');
   const loginForm = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
 
+  if (!overlay || !loginForm || !signupForm) return;
+
   overlay.classList.add('active');
   overlay.setAttribute('aria-hidden', 'false');
   refreshCaptchas();
 
+  // Hide both forms first
   loginForm.style.display = 'none';
   signupForm.style.display = 'none';
 
@@ -51,8 +54,11 @@ function openModal(type = 'login') {
 
 function closeModal() {
   const overlay = document.getElementById('modalOverlay');
+  if (!overlay) return;
   overlay.classList.remove('active');
   overlay.setAttribute('aria-hidden', 'true');
+
+  // Clear all input fields
   ['loginEmail','loginPassword','captchaInputLogin',
    'signupName','signupEmail','signupPassword','signupConfirm','captchaInputSignup'].forEach(id => {
      const el = document.getElementById(id);
@@ -60,43 +66,47 @@ function closeModal() {
   });
 }
 
+// ========== DOM READY ==========
 document.addEventListener('DOMContentLoaded', () => {
   // Mobile menu
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('active');
-  });
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('active');
+    });
+  }
 
-  // Smooth scroll
+  // Smooth scroll for internal links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const target = document.querySelector(this.getAttribute('href'));
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
-        hamburger.classList.remove('open');
-        mobileMenu.classList.remove('active');
+        if (hamburger) hamburger.classList.remove('open');
+        if (mobileMenu) mobileMenu.classList.remove('active');
       }
     });
   });
 
-  // Modal listeners (close buttons, overlay click)
-  document.getElementById('modalClose').addEventListener('click', closeModal);
-  document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  // ----- Modal event listeners (only once) -----
+  document.getElementById('modalClose')?.addEventListener('click', closeModal);
+  document.getElementById('modalOverlay')?.addEventListener('click', (e) => {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
   });
 
-  // Form switching
-  document.getElementById('switchToSignup').addEventListener('click', () => openModal('signup'));
-  document.getElementById('switchToLogin').addEventListener('click', () => openModal('login'));
+  // Switch between forms
+  document.getElementById('switchToSignup')?.addEventListener('click', () => openModal('signup'));
+  document.getElementById('switchToLogin')?.addEventListener('click', () => openModal('login'));
 
-  // Login submit
-  document.getElementById('loginSubmitBtn').addEventListener('click', async () => {
+  // ----- Login submit -----
+  document.getElementById('loginSubmitBtn')?.addEventListener('click', async () => {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
     const captcha = document.getElementById('captchaInputLogin').value.trim();
+
     if (!email || !password) return alert('Please fill all fields.');
     if (captcha !== loginCaptchaAnswer) {
       alert('Incorrect CAPTCHA');
@@ -109,13 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { alert('Login failed: ' + e.message); }
   });
 
-  // Signup submit
-  document.getElementById('signupSubmitBtn').addEventListener('click', async () => {
+  // ----- Signup submit -----
+  document.getElementById('signupSubmitBtn')?.addEventListener('click', async () => {
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value.trim();
     const confirm = document.getElementById('signupConfirm').value.trim();
     const captcha = document.getElementById('captchaInputSignup').value.trim();
+
     if (!name || !email || !password || !confirm) return alert('All fields required.');
     if (password !== confirm) return alert('Passwords do not match.');
     if (password.length < 8) return alert('Password must be at least 8 characters.');
@@ -130,43 +141,57 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { alert('Signup failed: ' + e.message); }
   });
 
-  // Google sign-in
+  // ----- Google sign‑in (works for both forms) -----
   async function googleAuth() {
     try {
       await signInWithGoogle();
       window.location.href = 'dashboard.html';
-    } catch (e) { alert('Google sign-in failed: ' + e.message); }
+    } catch (e) { alert('Google sign‑in failed: ' + e.message); }
   }
-  document.getElementById('googleSignInBtn').addEventListener('click', googleAuth);
-  document.getElementById('googleSignUpBtn').addEventListener('click', googleAuth);
+  document.getElementById('googleSignInBtn')?.addEventListener('click', googleAuth);
+  document.getElementById('googleSignUpBtn')?.addEventListener('click', googleAuth);
 
-  // Firebase auth listener – updates header buttons
+  // ----- Firebase auth state listener (updates header buttons) -----
   if (typeof initAuthListener === 'function') {
     initAuthListener(updateUIForAuth);
   } else {
-    // If Firebase didn't load, still show default buttons
+    // Fallback: still render login/signup buttons
     updateUIForAuth(null);
   }
 });
 
+// ========== UPDATE HEADER BUTTONS AFTER LOGIN/LOGOUT ==========
 function updateUIForAuth(user) {
   const navActions = document.querySelector('.nav-actions');
   const mobileActions = document.querySelector('.mobile-actions');
   if (!navActions || !mobileActions) return;
 
   if (user) {
-    navActions.innerHTML = `<button class="btn btn-outline" id="btnDashboard">Dashboard</button><button class="btn btn-primary" id="btnLogout">Logout</button>`;
-    mobileActions.innerHTML = `<button class="btn btn-outline" id="btnDashboardM">Dashboard</button><button class="btn btn-primary" id="btnLogoutM">Logout</button>`;
-    document.getElementById('btnDashboard').addEventListener('click', () => window.location.href = 'dashboard.html');
-    document.getElementById('btnDashboardM').addEventListener('click', () => window.location.href = 'dashboard.html');
-    document.getElementById('btnLogout').addEventListener('click', () => logoutUser());
-    document.getElementById('btnLogoutM').addEventListener('click', () => logoutUser());
+    // Logged in – show Dashboard + Logout
+    navActions.innerHTML = `
+      <button class="btn btn-outline" id="btnDashboard">Dashboard</button>
+      <button class="btn btn-primary" id="btnLogout">Logout</button>`;
+    mobileActions.innerHTML = `
+      <button class="btn btn-outline" id="btnDashboardM">Dashboard</button>
+      <button class="btn btn-primary" id="btnLogoutM">Logout</button>`;
+
+    document.getElementById('btnDashboard')?.addEventListener('click', () => window.location.href = 'dashboard.html');
+    document.getElementById('btnDashboardM')?.addEventListener('click', () => window.location.href = 'dashboard.html');
+    document.getElementById('btnLogout')?.addEventListener('click', () => logoutUser());
+    document.getElementById('btnLogoutM')?.addEventListener('click', () => logoutUser());
   } else {
-    navActions.innerHTML = `<button class="btn btn-outline" id="btnLogin">Login</button><button class="btn btn-primary" id="btnSignup">Sign Up</button>`;
-    mobileActions.innerHTML = `<button class="btn btn-outline" id="btnLoginMobile">Login</button><button class="btn btn-primary" id="btnSignupMobile">Sign Up</button>`;
-    document.getElementById('btnLogin').addEventListener('click', () => openModal('login'));
-    document.getElementById('btnSignup').addEventListener('click', () => openModal('signup'));
-    document.getElementById('btnLoginMobile').addEventListener('click', () => openModal('login'));
-    document.getElementById('btnSignupMobile').addEventListener('click', () => openModal('signup'));
+    // Not logged in – show Login / Sign Up (with correct modal opening)
+    navActions.innerHTML = `
+      <button class="btn btn-outline" id="btnLogin">Login</button>
+      <button class="btn btn-primary" id="btnSignup">Sign Up</button>`;
+    mobileActions.innerHTML = `
+      <button class="btn btn-outline" id="btnLoginMobile">Login</button>
+      <button class="btn btn-primary" id="btnSignupMobile">Sign Up</button>`;
+
+    // Bind the correct form openers (signup opens signup, login opens login)
+    document.getElementById('btnLogin')?.addEventListener('click', () => openModal('login'));
+    document.getElementById('btnSignup')?.addEventListener('click', () => openModal('signup'));
+    document.getElementById('btnLoginMobile')?.addEventListener('click', () => openModal('login'));
+    document.getElementById('btnSignupMobile')?.addEventListener('click', () => openModal('signup'));
   }
 }
