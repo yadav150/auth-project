@@ -340,3 +340,9 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
         grid-template-columns: 1fr;
     }
 }
+/* Override mobile hide for dashboard header */
+@media (max-width: 768px) {
+    .nav-actions-visible {
+        display: flex !important;
+    }
+}
