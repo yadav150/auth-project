@@ -14,7 +14,8 @@
     <header class="nav" role="banner">
         <div class="nav-inner">
             <a href="index.html" class="nav-logo" aria-label="Mockly Home">Mock<span>ly</span></a>
-            <div class="nav-actions">
+            <!-- IMPORTANT: nav-actions-visible keeps logout always visible -->
+            <div class="nav-actions nav-actions-visible">
                 <a href="index.html" class="btn btn-outline">Home</a>
                 <button class="btn btn-primary" id="btnLogout">Logout</button>
             </div>
@@ -28,13 +29,12 @@
                 <!-- Profile Section -->
                 <div class="profile-section">
                     <div class="avatar-circle" id="avatarCircle">
-                        <!-- Human silhouette placeholder SVG -->
                         <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor" class="avatar-silhouette">
                             <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v1.2c0 .66.54 1.2 1.2 1.2h16.8c.66 0 1.2-.54 1.2-1.2v-1.2c0-3.2-6.4-4.8-9.6-4.8z"/>
                         </svg>
                     </div>
                     <div class="profile-info">
-                        <h2 id="dashboardName">Student</h2>
+                        <h2 id="dashboardName">Hello, Student</h2>
                         <p id="dashboardEmail">email@example.com</p>
                     </div>
                 </div>
@@ -76,12 +76,12 @@
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- populated by JS -->
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
-                    <p id="noRecentTests" style="display:none; text-align:center; color:var(--text-muted);">No tests taken yet. <a href="index.html#exams">Start one now!</a></p>
+                    <p id="noRecentTests" style="display:none; text-align:center; color:var(--text-muted);">
+                        No tests taken yet. <a href="index.html#exams">Start one now!</a>
+                    </p>
                 </div>
 
                 <!-- Action Buttons -->
@@ -113,6 +113,6 @@
     <!-- Firebase shared config & auth functions -->
     <script src="firebase.js"></script>
     <!-- Dashboard specific logic -->
-    <script src="dash-script.js"></script>
+    <script src="js/dash-script.js"></script>
 </body>
 </html>
