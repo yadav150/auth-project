@@ -20,12 +20,32 @@
 <body>
 
     <!-- ============================================================
-    HEADER
+    UNIVERSAL HEADER (With Hamburger – JS from script.js)
     ============================================================ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
+            <div class="header-actions">
+                <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
         </div>
+
+        <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list">
+                <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
+                <li><a href="/auth-project/dashboard.html" class="nav-link-mobile">Dashboard</a></li>
+                <li><a href="/auth-project/login.html" class="nav-link-mobile active">Login</a></li>
+                <li><a href="/auth-project/signup.html" class="nav-link-mobile">Sign Up</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Privacy</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Terms</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
     <!-- ============================================================
@@ -86,7 +106,7 @@
     </main>
 
     <!-- ============================================================
-    FOOTER
+    FOOTER (Legal Links → 404)
     ============================================================ -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
@@ -112,7 +132,7 @@
     </footer>
 
     <!-- ============================================================
-    SCRIPTS
+    SCRIPTS (No inline hamburger JS – handled by script.js)
     ============================================================ -->
     <script src="/auth-project/js/firebase-config.js"></script>
     <script src="/auth-project/js/auth.js"></script>
