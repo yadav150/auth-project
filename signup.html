@@ -4,14 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up · Yadav Authentication Project</title>
-
-    <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="/auth-project/css/style.css" />
-
-    <!-- ===== GOOGLE FONTS ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
-
-    <!-- ===== FIREBASE SDKs ===== -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -19,9 +13,6 @@
 </head>
 <body>
 
-    <!-- ============================================================
-    UNIVERSAL HEADER (With Hamburger – JS from script.js)
-    ============================================================ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
@@ -33,11 +24,9 @@
                 </button>
             </div>
         </div>
-
         <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
             <ul class="mobile-nav-list">
                 <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
-                <li><a href="/auth-project/dashboard.html" class="nav-link-mobile">Dashboard</a></li>
                 <li><a href="/auth-project/login.html" class="nav-link-mobile">Login</a></li>
                 <li><a href="/auth-project/signup.html" class="nav-link-mobile active">Sign Up</a></li>
                 <li class="nav-divider"></li>
@@ -48,22 +37,14 @@
         </nav>
     </header>
 
-    <!-- ============================================================
-    MAIN
-    ============================================================ -->
     <main id="main-content">
-
-        <section class="section auth-section" aria-labelledby="auth-heading">
-            <div class="section-title-bar">
-                <h2 id="auth-heading">Create Account</h2>
-            </div>
+        <section class="section auth-section">
+            <div class="section-title-bar"><h2>Create Account</h2></div>
             <div class="section-body">
                 <div class="content-box">
-
                     <div class="auth-view">
                         <h3>Join Us</h3>
                         <p class="auth-subtitle">Create your account and get started.</p>
-
                         <form id="signupForm" novalidate>
                             <div class="field-group">
                                 <label for="signupName">Full Name</label>
@@ -79,9 +60,7 @@
                             </div>
                             <button type="submit" class="btn btn-primary btn-full">Create Account</button>
                         </form>
-
                         <div class="auth-divider"><span>or</span></div>
-
                         <button id="googleSignupBtn" class="btn btn-secondary btn-full btn-google">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -91,24 +70,17 @@
                             </svg>
                             Sign up with Google
                         </button>
-
                         <div class="auth-switch">
                             Already have an account? <a href="/auth-project/login.html">Sign In</a>
                         </div>
-
                         <div id="signupError" class="error-msg"></div>
                     </div>
-
                 </div>
             </div>
         </section>
-
         <div class="spacer"></div>
     </main>
 
-    <!-- ============================================================
-    FOOTER (Legal Links → 404)
-    ============================================================ -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -119,7 +91,6 @@
                 <a href="/auth-project/index.html">Home</a>
                 <a href="/auth-project/login.html">Login</a>
                 <a href="/auth-project/signup.html">Sign Up</a>
-                <a href="/auth-project/dashboard.html">Dashboard</a>
             </div>
             <div class="footer-legal">
                 <a href="/auth-project/404.html">Privacy</a>
@@ -132,12 +103,9 @@
         </div>
     </footer>
 
-    <!-- ============================================================
-    SCRIPTS (No inline hamburger JS – handled by script.js)
-    ============================================================ -->
+    <script src="/auth-project/js/script.js"></script>
     <script src="/auth-project/js/firebase-config.js"></script>
     <script src="/auth-project/js/auth.js"></script>
-    <script src="/auth-project/js/script.js"></script>
 
 </body>
 </html>
