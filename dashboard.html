@@ -13,6 +13,7 @@
 </head>
 <body>
 
+    <!-- ===== HEADER ===== -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
@@ -24,19 +25,12 @@
                 </button>
             </div>
         </div>
+        <!-- ===== MOBILE NAV (Only Global Links – NO Dashboard Links) ===== -->
         <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
             <ul class="mobile-nav-list">
                 <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
                 <li><a href="/auth-project/login.html" class="nav-link-mobile">Login</a></li>
                 <li><a href="/auth-project/signup.html" class="nav-link-mobile">Sign Up</a></li>
-                <li class="nav-divider"></li>
-                <!-- DASHBOARD MOBILE LINKS -->
-                <li><a href="#" class="nav-link-mobile mobile-tab-link" data-tab="dashboard">Dashboard</a></li>
-                <li><a href="#" class="nav-link-mobile mobile-tab-link" data-tab="settings">Settings</a></li>
-                <li><a href="#" class="nav-link-mobile mobile-tab-link" data-tab="security">Security</a></li>
-                <li><a href="#" class="nav-link-mobile mobile-tab-link" data-tab="help">Help</a></li>
-                <li class="nav-divider"></li>
-                <li><a href="#" id="logoutBtnMobile" class="nav-link-mobile logout-link">Logout</a></li>
                 <li class="nav-divider"></li>
                 <li><a href="/auth-project/404.html" class="nav-link-mobile">Privacy</a></li>
                 <li><a href="/auth-project/404.html" class="nav-link-mobile">Terms</a></li>
@@ -45,14 +39,15 @@
         </nav>
     </header>
 
+    <!-- ===== MAIN ===== -->
     <main id="main-content">
         <section class="section auth-section">
             <div class="section-title-bar"><h2>Dashboard</h2></div>
             <div class="section-body">
-                <div class="content-box">
+                <div class="content-box" style="max-width:100%;">
                     <div class="dashboard-layout">
 
-                        <!-- SIDEBAR -->
+                        <!-- ===== SIDEBAR (Dashboard Links ONLY) ===== -->
                         <aside class="dashboard-sidebar">
                             <div class="sidebar-user">
                                 <div class="sidebar-avatar" id="sidebarAvatar">U</div>
@@ -83,7 +78,7 @@
                             </nav>
                         </aside>
 
-                        <!-- CONTENT -->
+                        <!-- ===== CONTENT ===== -->
                         <main class="dashboard-content">
 
                             <!-- TAB: DASHBOARD -->
@@ -109,7 +104,6 @@
                             <!-- TAB: SETTINGS -->
                             <section id="tab-settings" class="tab-content" style="display:none;">
                                 <h2>Profile Settings</h2>
-                                <!-- Settings cards... (same as before) -->
                                 <div class="settings-card">
                                     <h4>Profile Picture</h4>
                                     <div class="avatar-upload-area">
@@ -194,7 +188,7 @@
         <div class="spacer"></div>
     </main>
 
-    <!-- MODALS -->
+    <!-- ===== MODALS ===== -->
     <div id="logoutModal" class="modal-overlay" style="display:none;">
         <div class="modal-box">
             <h3>Are you sure?</h3>
@@ -223,6 +217,7 @@
         </div>
     </div>
 
+    <!-- ===== FOOTER ===== -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -245,11 +240,25 @@
         </div>
     </footer>
 
-    <!-- SCRIPTS -->
+    <!-- ===== SCRIPTS ===== -->
     <script src="/auth-project/js/script.js"></script>
     <script src="/auth-project/js/firebase-config.js"></script>
     <script src="/auth-project/js/auth.js"></script>
     <script src="/auth-project/js/dashboard.js"></script>
+
+    <!-- ===== AUTO-LOGOUT ON BACK BUTTON ===== -->
+    <script>
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                // Page was loaded from cache (back button was pressed)
+                var user = window.auth.currentUser;
+                if (user) {
+                    window.logoutUser();
+                    window.location.href = '/auth-project/login.html';
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
