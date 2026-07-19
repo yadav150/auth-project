@@ -405,7 +405,7 @@
         deleteAccountBtn.addEventListener('click', async function() {
             var user = window.auth.currentUser;
             if (!user) return;
-            if (!confirm('⚠️ Are you sure you want to delete your account?\nThis action is PERMANENT and cannot be undone.')) return;
+            if (!confirm('Are you sure you want to delete your account?\nThis action is PERMANENT and cannot be undone.')) return;
 
             try {
                 var password = prompt('Enter your current password to confirm deletion:');
