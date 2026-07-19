@@ -1,148 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mockly – Competitive Exam Practice</title>
-    <link rel="stylesheet" href="Style.css">
-    <!-- Firebase Compat SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yadav Authentication Project</title>
+
+    <!-- ===== EXTERNAL CSS ===== -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- ===== GOOGLE FONTS ===== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+
+    <!-- ===== FIREBASE SDKs ===== -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- ========== HEADER ========== -->
-    <header class="nav" role="banner">
-        <div class="nav-inner">
-            <a href="#" class="nav-logo" aria-label="Mockly Home">Mock<span>ly</span></a>
-
-            <nav class="nav-links" aria-label="Main navigation">
-                <a href="#home">Home</a>
-                <a href="#exams">Competitive Exams</a>
-            </nav>
-
-            <div class="nav-actions">
-                <a href="login.html" class="btn btn-outline" id="btnLogin">Login</a>
-                <a href="signup.html" class="btn btn-primary" id="btnSignup">Sign Up</a>
-            </div>
-
-            <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-                <span class="hamburger-inner"><span></span><span></span><span></span></span>
-            </button>
-        </div>
-
-        <!-- Mobile menu -->
-        <div class="mobile-menu" id="mobileMenu">
-            <a href="#home">Home</a>
-            <a href="#exams">Competitive Exams</a>
-            <div class="mobile-actions">
-                <a href="login.html" class="btn btn-outline" id="btnLoginMobile">Login</a>
-                <a href="signup.html" class="btn btn-primary" id="btnSignupMobile">Sign Up</a>
+    <!-- ============================================================
+    HEADER
+    ============================================================ -->
+    <header class="site-header" role="banner">
+        <div class="header-inner">
+            <a href="/" class="site-title">Yadav Authentication Project</a>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- ========== MAIN CONTENT ========== -->
+    <!-- ============================================================
+    MAIN
+    ============================================================ -->
     <main id="main-content">
-        <!-- Hero -->
-        <section class="hero hero-wrapper" id="home" aria-labelledby="hero-heading">
-            <div class="hero-decor" aria-hidden="true"></div>
-            <div class="container hero-inner">
-                <div class="hero-content">
-                    <h1 id="hero-heading">Your Gateway to<br>Competitive Exam Success</h1>
-                    <p>Choose your target exam and start practicing with high‑quality MCQs designed specifically for Indian competitive examinations.</p>
-                    <div class="hero-buttons">
-                        <a href="#exams" class="btn btn-primary btn-lg">Browse Exams</a>
+
+        <section class="section auth-section" aria-labelledby="auth-heading">
+            <div class="section-title-bar">
+                <h2 id="auth-heading">My Account</h2>
+            </div>
+            <div class="section-body">
+                <div class="content-box">
+
+                    <!-- ===== PROJECT DESCRIPTION ===== -->
+                    <p class="project-desc">
+                        <strong>Yadav Authentication Project</strong> — a complete, secure authentication system built by <strong>Yadav Subba</strong>. 
+                        This project includes Email/Password login, Google OAuth, phone verification, profile management, 
+                        avatar upload, and a full user dashboard with activity tracking. All data is powered by Firebase.
+                    </p>
+
+                    <!-- ===== AUTH VIEWS (Login / Signup) ===== -->
+                    <div id="authContainer">
+
+                        <!-- ===== LOGIN VIEW ===== -->
+                        <div id="loginView" class="auth-view active">
+                            <h3>Welcome Back</h3>
+                            <p class="auth-subtitle">Sign in to access your dashboard.</p>
+
+                            <form id="loginForm" novalidate>
+                                <div class="field-group">
+                                    <label for="loginEmail">Email</label>
+                                    <input type="email" id="loginEmail" placeholder="you@example.com" required />
+                                </div>
+                                <div class="field-group">
+                                    <label for="loginPassword">Password</label>
+                                    <input type="password" id="loginPassword" placeholder="••••••••" required />
+                                </div>
+                                <div class="field-group row-space-between">
+                                    <a href="#" id="forgotPasswordLink" class="link-forgot">Forgot password?</a>
+                                </div>
+                                <button type="submit" class="btn btn-full">Sign In</button>
+                            </form>
+
+                            <div class="auth-divider"><span>or continue with</span></div>
+
+                            <button id="googleLoginBtn" class="btn btn-secondary btn-full btn-google">
+                                <svg viewBox="0 0 24 24" width="20" height="20">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                </svg>
+                                Sign in with Google
+                            </button>
+
+                            <div class="auth-switch">
+                                Don't have an account? <a href="#" id="showSignup">Sign Up</a>
+                            </div>
+
+                            <div id="loginError" class="error-msg"></div>
+                        </div>
+
+                        <!-- ===== SIGNUP VIEW ===== -->
+                        <div id="signupView" class="auth-view" style="display:none;">
+                            <h3>Create Account</h3>
+                            <p class="auth-subtitle">Join Yadav Authentication Project.</p>
+
+                            <form id="signupForm" novalidate>
+                                <div class="field-group">
+                                    <label for="signupName">Full Name</label>
+                                    <input type="text" id="signupName" placeholder="John Doe" required />
+                                </div>
+                                <div class="field-group">
+                                    <label for="signupEmail">Email</label>
+                                    <input type="email" id="signupEmail" placeholder="you@example.com" required />
+                                </div>
+                                <div class="field-group">
+                                    <label for="signupPassword">Password</label>
+                                    <input type="password" id="signupPassword" placeholder="Min 6 characters" required />
+                                </div>
+                                <button type="submit" class="btn btn-full">Create Account</button>
+                            </form>
+
+                            <div class="auth-divider"><span>or</span></div>
+
+                            <button id="googleSignupBtn" class="btn btn-secondary btn-full btn-google">
+                                <svg viewBox="0 0 24 24" width="20" height="20">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                </svg>
+                                Sign up with Google
+                            </button>
+
+                            <div class="auth-switch">
+                                Already have an account? <a href="#" id="showLogin">Sign In</a>
+                            </div>
+
+                            <div id="signupError" class="error-msg"></div>
+                        </div>
+
                     </div>
+
+                    <!-- ===== DASHBOARD (Logged In) ===== -->
+                    <div id="dashboardContainer" style="display:none;">
+
+                        <div class="dashboard-layout">
+
+                            <!-- ===== SIDEBAR ===== -->
+                            <aside class="dashboard-sidebar">
+                                <div class="sidebar-user">
+                                    <div class="sidebar-avatar" id="sidebarAvatar">U</div>
+                                    <div class="sidebar-name" id="sidebarName">User</div>
+                                    <div class="sidebar-email" id="sidebarEmail">user@example.com</div>
+                                </div>
+                                <nav class="sidebar-nav">
+                                    <a href="#" class="nav-link active" data-tab="dashboard">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                                        Dashboard
+                                    </a>
+                                    <a href="#" class="nav-link" data-tab="settings">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                        Settings
+                                    </a>
+                                    <a href="#" class="nav-link" data-tab="security">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                        Security
+                                    </a>
+                                    <a href="#" class="nav-link" data-tab="help">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                        Help
+                                    </a>
+                                    <a href="#" id="logoutBtnSidebar" class="nav-link logout-link">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                        Logout
+                                    </a>
+                                </nav>
+                            </aside>
+
+                            <!-- ===== CONTENT ===== -->
+                            <main class="dashboard-content">
+
+                                <!-- ===== TAB: DASHBOARD ===== -->
+                                <section id="tab-dashboard" class="tab-content active">
+                                    <div class="dashboard-header">
+                                        <h1 id="dashboardGreeting">Hi, User!</h1>
+                                        <p>Welcome to your Yadav Authentication Project dashboard.</p>
+                                    </div>
+
+                                    <div class="profile-summary-card">
+                                        <div class="summary-avatar" id="summaryAvatar">U</div>
+                                        <div class="summary-info">
+                                            <h3 id="summaryName">User</h3>
+                                            <p id="summaryRole">Member</p>
+                                            <p id="summaryJoinDate">Joined: Today</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-log">
+                                        <h4>Recent Activity</h4>
+                                        <ul id="activityList">
+                                            <li style="color:var(--text-muted);font-size:.9rem;">No recent activity.</li>
+                                        </ul>
+                                    </div>
+                                </section>
+
+                                <!-- ===== TAB: SETTINGS ===== -->
+                                <section id="tab-settings" class="tab-content" style="display:none;">
+                                    <h2>Profile Settings</h2>
+
+                                    <!-- Avatar Upload -->
+                                    <div class="settings-card">
+                                        <h4>Profile Picture</h4>
+                                        <div class="avatar-upload-area">
+                                            <div class="avatar-preview" id="avatarPreview">U</div>
+                                            <div class="avatar-actions">
+                                                <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
+                                                <button class="btn btn-secondary" id="uploadAvatarBtn">Upload</button>
+                                                <button class="btn btn-secondary btn-danger" id="removeAvatarBtn">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Personal Info -->
+                                    <div class="settings-card">
+                                        <h4>Personal Information</h4>
+                                        <form id="profileForm">
+                                            <div class="field-group">
+                                                <label for="editName">Full Name</label>
+                                                <input type="text" id="editName" placeholder="Your name" />
+                                            </div>
+                                            <div class="field-group">
+                                                <label for="editPhone">Phone</label>
+                                                <input type="tel" id="editPhone" placeholder="+91 9876543210" />
+                                            </div>
+                                            <div class="field-group">
+                                                <label for="editBio">Bio</label>
+                                                <textarea id="editBio" rows="2" placeholder="Tell us about yourself..."></textarea>
+                                            </div>
+                                            <div class="field-group">
+                                                <label for="editLocation">Location</label>
+                                                <input type="text" id="editLocation" placeholder="City, Country" />
+                                            </div>
+                                            <div class="btn-group">
+                                                <button type="submit" class="btn">Save Changes</button>
+                                                <button type="reset" class="btn btn-secondary" id="cancelProfileEdit">Cancel</button>
+                                            </div>
+                                            <div id="profileError" class="error-msg"></div>
+                                            <div id="profileSuccess" class="success-msg" style="display:none;">Profile updated!</div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Email Update -->
+                                    <div class="settings-card">
+                                        <h4>Email Address</h4>
+                                        <form id="emailForm">
+                                            <div class="field-group">
+                                                <label for="newEmail">New Email</label>
+                                                <input type="email" id="newEmail" placeholder="new@example.com" />
+                                            </div>
+                                            <div class="field-group">
+                                                <label for="emailPassword">Current Password</label>
+                                                <input type="password" id="emailPassword" placeholder="Required for verification" />
+                                            </div>
+                                            <button type="submit" class="btn">Update Email</button>
+                                            <div id="emailError" class="error-msg"></div>
+                                            <div id="emailSuccess" class="success-msg" style="display:none;">Verification email sent!</div>
+                                        </form>
+                                    </div>
+                                </section>
+
+                                <!-- ===== TAB: SECURITY ===== -->
+                                <section id="tab-security" class="tab-content" style="display:none;">
+                                    <h2>Security & Privacy</h2>
+
+                                    <!-- Change Password -->
+                                    <div class="settings-card">
+                                        <h4>Change Password</h4>
+                                        <form id="passwordForm">
+                                            <div class="field-group">
+                                                <label for="currentPassword">Current Password</label>
+                                                <input type="password" id="currentPassword" placeholder="Enter current password" />
+                                            </div>
+                                            <div class="field-group">
+                                                <label for="newPassword">New Password</label>
+                                                <input type="password" id="newPassword" placeholder="Min 6 characters" />
+                                            </div>
+                                            <div class="field-group">
+                                                <label for="confirmPassword">Confirm Password</label>
+                                                <input type="password" id="confirmPassword" placeholder="Re-enter new password" />
+                                            </div>
+                                            <button type="submit" class="btn">Update Password</button>
+                                            <div id="passwordError" class="error-msg"></div>
+                                            <div id="passwordSuccess" class="success-msg" style="display:none;">Password updated!</div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Session Management -->
+                                    <div class="settings-card">
+                                        <h4>Session Management</h4>
+                                        <p style="font-size:.9rem;color:var(--text-muted);">Revoke all sessions except this one.</p>
+                                        <button class="btn btn-secondary" id="logoutDevicesBtn">Logout from all other devices</button>
+                                        <div id="deviceError" class="error-msg"></div>
+                                    </div>
+
+                                    <!-- Danger Zone -->
+                                    <div class="settings-card danger-zone">
+                                        <h4 style="color:var(--danger);">Danger Zone</h4>
+                                        <p style="font-size:.9rem;">Permanently delete your account and all associated data.</p>
+                                        <button class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+                                        <div id="deleteError" class="error-msg"></div>
+                                    </div>
+                                </section>
+
+                                <!-- ===== TAB: HELP ===== -->
+                                <section id="tab-help" class="tab-content" style="display:none;">
+                                    <h2>Help & Support</h2>
+                                    <div class="settings-card">
+                                        <h4>Need Assistance?</h4>
+                                        <p>Built by <strong>Yadav Subba</strong>. For support, reach out via the <a href="/contact/" style="color:var(--primary);">Contact</a> page.</p>
+                                        <p>Make sure you have verified your email for full access.</p>
+                                    </div>
+                                </section>
+
+                            </main>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- Competitive Exams -->
-        <section class="section" id="exams" aria-labelledby="exams-heading">
-            <div class="container">
-                <div class="section-header">
-                    <h2 id="exams-heading">Select Your Exam</h2>
-                    <p>Click on any exam to start preparing with topic‑wise mock tests.</p>
-                </div>
-                <div class="exams-grid">
-    <div class="exam-card">
-        <h3>SSC GD</h3>
-        <a href="ssc-gd-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>ADRE 2.0</h3>
-        <a href="adre-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>Assam Police</h3>
-        <a href="assam-police-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>SSC MTS</h3>
-        <a href="ssc-mts-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>SSC CGL</h3>
-        <a href="ssc-cgl-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>SSC CHSL</h3>
-        <a href="ssc-chsl-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>RRB NTPC</h3>
-        <a href="rrb-ntpc-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>RRB Group D</h3>
-        <a href="rrb-group-d-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>RRB ALP</h3>
-        <a href="rrb-alp-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>APSC Prelims</h3>
-        <a href="apsc-prelims-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-    <div class="exam-card">
-        <h3>UPSC Prelims</h3>
-        <a href="upsc-prelims-test.html" class="btn btn-primary btn-full">Start Preparation</a>
-    </div>
-</div>
-        </section>
+        <div class="spacer"></div>
     </main>
 
-    <!-- ========== FOOTER ========== -->
-    <footer class="footer" role="contentinfo">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>About Mockly</h4>
-                    <p>Your trusted platform for competitive exam preparation with realistic MCQ tests.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#exams">Exams</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Contact</h4>
-                    <p>support@mockly.example.com<br>+91 98765 43210</p>
-                </div>
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-links">
+                <a href="/about/">About</a>
+                <a href="/contact/">Contact</a>
+                <a href="/privacy/">Privacy</a>
+                <a href="/disclaimer/">Disclaimer</a>
+                <a href="/terms/">Terms</a>
             </div>
-            <div class="footer-bottom">
-                <span>&copy; 2026 Mockly</span>
-            </div>
+            <p class="footer-copy">&copy; 2026 Yadav Authentication Project. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- Firebase + Scripts -->
-    <script src="firebase.js"></script>
-    <script src="Script.js" defer></script>
+    <!-- ============================================================
+    EXTERNAL SCRIPTS
+    ============================================================ -->
+    <script src="script.js"></script>
+
 </body>
 </html>
