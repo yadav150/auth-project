@@ -1,15 +1,11 @@
 // ============================================================
-//  DASHBOARD.JS – Yadav Authentication Project (FIXED)
-//  Fixes: No infinite reload loop, Logout confirmation modal,
-//  Google user data loading, Proper profile display.
+//  DASHBOARD.JS – Profile, Settings, Security
 // ============================================================
 
 (function() {
     'use strict';
 
-    // ============================================================
-    //  DOM REFS
-    // ============================================================
+    // ---- DOM REFS ----
     var sidebarName = document.getElementById('sidebarName');
     var sidebarEmail = document.getElementById('sidebarEmail');
     var sidebarAvatar = document.getElementById('sidebarAvatar');
@@ -50,14 +46,12 @@
     var deleteAccountBtn = document.getElementById('deleteAccountBtn');
     var deleteError = document.getElementById('deleteError');
     var deviceError = document.getElementById('deviceError');
-
-    // ---- Logout buttons ----
     var logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
 
-    // ---- MODALS ----
     var logoutModal = document.getElementById('logoutModal');
+    var logoutNoBtn = document.getElementById('logoutNoBtn');
+    var logoutYesBtn = document.getElementById('logoutYesBtn');
 
-    // ---- Tabs ----
     var navLinks = document.querySelectorAll('.sidebar-nav .nav-link:not(.logout-link)');
     var tabContents = {
         dashboard: document.getElementById('tab-dashboard'),
@@ -66,9 +60,7 @@
         help: document.getElementById('tab-help'),
     };
 
-    // ============================================================
-    //  UTILITY FUNCTIONS
-    // ============================================================
+    // ---- Utilities ----
     function getInitials(name) {
         if (!name) return '?';
         var parts = name.trim().split(' ');
@@ -98,9 +90,7 @@
         if (!el) return;
         el.textContent = msg || 'Updated successfully!';
         el.style.display = 'block';
-        setTimeout(function() {
-            el.style.display = 'none';
-        }, 5000);
+        setTimeout(function() { el.style.display = 'none'; }, 5000);
     }
 
     function showModal(modal) {
@@ -113,9 +103,6 @@
         modal.style.display = 'none';
     }
 
-    // ============================================================
-    //  UPDATE AVATAR UI
-    // ============================================================
     function updateAvatarUI(photoURL, displayName) {
         var initials = getInitials(displayName);
         var elements = [sidebarAvatar, summaryAvatar, avatarPreview];
@@ -133,9 +120,7 @@
         });
     }
 
-    // ============================================================
-    //  LOAD USER PROFILE
-    // ============================================================
+    // ---- Load Profile ----
     async function loadUserProfile(user) {
         try {
             var data = await window.getUserProfile(user.uid) || {};
@@ -147,41 +132,28 @@
             var joinDate = data.joinDate || user.metadata.creationTime || new Date().toISOString();
             var photoURL = user.photoURL || data.photoURL || null;
 
-            // Update UI
             sidebarName.textContent = displayName;
             sidebarEmail.textContent = user.email || 'No email';
             summaryName.textContent = displayName;
             summaryRole.textContent = role;
             summaryJoinDate.textContent = 'Joined: ' + formatDate(joinDate);
-
-            var firstName = displayName.split(' ')[0] || 'User';
-            dashboardGreeting.textContent = 'Hi, ' + firstName + '!';
+            dashboardGreeting.textContent = 'Hi, ' + (displayName.split(' ')[0] || 'User') + '!';
 
             updateAvatarUI(photoURL, displayName);
 
-            // Populate edit fields
             editName.value = displayName;
             editPhone.value = phone;
             editBio.value = bio;
             editLocation.value = location;
 
-            // Store for cancel
-            window._profileData = {
-                displayName: displayName,
-                phone: phone,
-                bio: bio,
-                location: location,
-                photoURL: photoURL
-            };
+            window._profileData = { displayName: displayName, phone: phone, bio: bio, location: location, photoURL: photoURL };
 
         } catch (err) {
             console.warn('Error loading profile:', err);
         }
     }
 
-    // ============================================================
-    //  LOAD ACTIVITY LOG
-    // ============================================================
+    // ---- Load Activity ----
     async function loadActivityLog(uid) {
         try {
             var logs = await window.getActivityLog(uid);
@@ -202,23 +174,19 @@
         }
     }
 
-    // ============================================================
-    //  AUTH STATE LISTENER – NO RELOAD LOOP
-    // ============================================================
-    window.initAuthListener(function(user) {
-        if (user) {
-            // Load profile and activity
-            loadUserProfile(user);
-            loadActivityLog(user.uid);
-        } else {
-            // If not logged in, redirect to login
-            window.location.href = '/auth-project/login.html';
-        }
-    });
+    // ---- Auth State ----
+    if (typeof window.initAuthListener === 'function') {
+        window.initAuthListener(function(user) {
+            if (user) {
+                loadUserProfile(user);
+                loadActivityLog(user.uid);
+            } else {
+                window.location.href = '/auth-project/login.html';
+            }
+        });
+    }
 
-    // ============================================================
-    //  PROFILE UPDATE
-    // ============================================================
+    // ---- Profile Update ----
     if (profileForm) {
         profileForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -230,40 +198,24 @@
             var bio = editBio.value.trim();
             var location = editLocation.value.trim();
 
-            if (!name) {
-                setError(profileError, 'Name is required.');
-                return;
-            }
+            if (!name) { setError(profileError, 'Name is required.'); return; }
 
             var user = window.auth.currentUser;
             if (!user) return;
 
             try {
                 await user.updateProfile({ displayName: name });
-                await window.saveUserProfile(user.uid, {
-                    name: name,
-                    phone: phone,
-                    bio: bio,
-                    location: location
-                });
+                await window.saveUserProfile(user.uid, { name: name, phone: phone, bio: bio, location: location });
 
-                // Update UI
                 sidebarName.textContent = name;
                 summaryName.textContent = name;
-                var firstName = name.split(' ')[0] || 'User';
-                dashboardGreeting.textContent = 'Hi, ' + firstName + '!';
+                dashboardGreeting.textContent = 'Hi, ' + (name.split(' ')[0] || 'User') + '!';
 
                 var photoURL = user.photoURL || window._profileData?.photoURL || null;
                 updateAvatarUI(photoURL, name);
 
                 showSuccess(profileSuccess, 'Profile updated successfully!');
-                window._profileData = {
-                    displayName: name,
-                    phone: phone,
-                    bio: bio,
-                    location: location,
-                    photoURL: photoURL
-                };
+                window._profileData = { displayName: name, phone: phone, bio: bio, location: location, photoURL: photoURL };
 
             } catch (err) {
                 setError(profileError, err.message);
@@ -283,13 +235,9 @@
         });
     }
 
-    // ============================================================
-    //  AVATAR UPLOAD / REMOVE
-    // ============================================================
+    // ---- Avatar ----
     if (uploadAvatarBtn) {
-        uploadAvatarBtn.addEventListener('click', function() {
-            avatarInput.click();
-        });
+        uploadAvatarBtn.addEventListener('click', function() { avatarInput.click(); });
     }
 
     if (avatarInput) {
@@ -336,9 +284,7 @@
         });
     }
 
-    // ============================================================
-    //  EMAIL UPDATE
-    // ============================================================
+    // ---- Email ----
     if (emailForm) {
         emailForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -373,9 +319,7 @@
         });
     }
 
-    // ============================================================
-    //  CHANGE PASSWORD
-    // ============================================================
+    // ---- Password ----
     if (passwordForm) {
         passwordForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -418,29 +362,18 @@
         });
     }
 
-    // ============================================================
-    //  LOGOUT CONFIRMATION MODAL
-    // ============================================================
-    function handleLogoutClick(e) {
-        e.preventDefault();
-        showModal(logoutModal);
-    }
-
-    // Sidebar logout
+    // ---- Logout Modal ----
     if (logoutBtnSidebar) {
-        logoutBtnSidebar.addEventListener('click', handleLogoutClick);
-    }
-
-    // ---- Logout Modal: No button ----
-    var logoutNoBtn = document.getElementById('logoutNoBtn');
-    if (logoutNoBtn) {
-        logoutNoBtn.addEventListener('click', function() {
-            hideModal(logoutModal);
+        logoutBtnSidebar.addEventListener('click', function(e) {
+            e.preventDefault();
+            showModal(logoutModal);
         });
     }
 
-    // ---- Logout Modal: Yes button ----
-    var logoutYesBtn = document.getElementById('logoutYesBtn');
+    if (logoutNoBtn) {
+        logoutNoBtn.addEventListener('click', function() { hideModal(logoutModal); });
+    }
+
     if (logoutYesBtn) {
         logoutYesBtn.addEventListener('click', function() {
             hideModal(logoutModal);
@@ -449,14 +382,10 @@
         });
     }
 
-    // ---- Close modal on outside click ----
     if (logoutModal) {
         logoutModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                hideModal(this);
-            }
+            if (e.target === this) hideModal(this);
         });
-
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
                 hideModal(logoutModal);
@@ -464,27 +393,19 @@
         });
     }
 
-    // ============================================================
-    //  LOGOUT OTHER DEVICES
-    // ============================================================
+    // ---- Other device logout ----
     if (logoutDevicesBtn) {
         logoutDevicesBtn.addEventListener('click', function() {
             alert('To revoke all other sessions, please change your password. This will automatically invalidate all other tokens.');
         });
     }
 
-    // ============================================================
-    //  DELETE ACCOUNT (Danger Zone)
-    // ============================================================
+    // ---- Delete Account ----
     if (deleteAccountBtn) {
         deleteAccountBtn.addEventListener('click', async function() {
             var user = window.auth.currentUser;
             if (!user) return;
-
-            var confirmDelete = confirm(
-                'Are you sure you want to delete your account?\nThis action is PERMANENT and cannot be undone.'
-            );
-            if (!confirmDelete) return;
+            if (!confirm('⚠️ Are you sure you want to delete your account?\nThis action is PERMANENT and cannot be undone.')) return;
 
             try {
                 var password = prompt('Enter your current password to confirm deletion:');
@@ -505,9 +426,7 @@
         });
     }
 
-    // ============================================================
-    //  TAB SWITCHING
-    // ============================================================
+    // ---- Tabs ----
     navLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
