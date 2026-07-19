@@ -6,14 +6,12 @@
     <title>Sign Up · Yadav Authentication Project</title>
     <link rel="stylesheet" href="/auth-project/css/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
+    <!-- ============================================================
+    HEADER (Same on ALL pages)
+    ============================================================ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
@@ -50,16 +48,22 @@
         </nav>
     </header>
 
-    <!-- ===== MAIN ===== -->
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
     <main id="main-content">
-        <section class="section auth-section">
-            <div class="section-title-bar"><h2>Create Account</h2></div>
+        <section class="section auth-section" aria-labelledby="auth-heading">
+            <div class="section-title-bar">
+                <h2 id="auth-heading">Create Account</h2>
+            </div>
             <div class="section-body">
                 <div class="content-box">
+
                     <div class="auth-view">
                         <h3>Join Us</h3>
                         <p class="auth-subtitle">Create your account and get started.</p>
 
+                        <!-- ===== SIGNUP FORM ===== -->
                         <form id="signupForm" novalidate>
                             <div class="field-group">
                                 <label for="signupName">Full Name</label>
@@ -94,13 +98,16 @@
 
                         <div id="signupError" class="error-msg"></div>
                     </div>
+
                 </div>
             </div>
         </section>
         <div class="spacer"></div>
     </main>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- ============================================================
+    FOOTER (Same on ALL pages)
+    ============================================================ -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -123,20 +130,10 @@
         </div>
     </footer>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
     <script src="/auth-project/js/script.js"></script>
-    <script src="/auth-project/js/firebase-config.js"></script>
-    <script src="/auth-project/js/auth.js"></script>
-
-    <!-- ===== ENSURE HAMBURGER STARTS COLLAPSED ===== -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var mobileNav = document.getElementById('mobileNav');
-            var hamburger = document.getElementById('hamburgerBtn');
-            if (mobileNav) mobileNav.classList.remove('open');
-            if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
-        });
-    </script>
 
 </body>
 </html>
