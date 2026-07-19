@@ -1,117 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mockly – Sign Up</title>
-    <link rel="stylesheet" href="Style.css">
-    <!-- Firebase Compat SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up · Yadav Authentication Project</title>
+
+    <!-- ===== CSS ===== -->
+    <link rel="stylesheet" href="/auth-project/css/style.css" />
+
+    <!-- ===== GOOGLE FONTS ===== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+
+    <!-- ===== FIREBASE SDKs ===== -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
-    <header class="nav" role="banner">
-        <div class="nav-inner">
-            <a href="index.html" class="nav-logo" aria-label="Mockly Home">Mock<span>ly</span></a>
+
+    <!-- ============================================================
+    HEADER
+    ============================================================ -->
+    <header class="site-header" role="banner">
+        <div class="header-inner">
+            <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
         </div>
     </header>
 
-    <main>
-        <section class="section">
-            <div class="container">
-                <div class="form-page">
-                    <h2>Sign Up</h2>
-                    <div class="form-group">
-                        <label for="signupName">Full Name</label>
-                        <input type="text" id="signupName" placeholder="Your full name" autocomplete="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="signupEmail">Email</label>
-                        <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="signupPassword">Password</label>
-                        <input type="password" id="signupPassword" placeholder="Create a password" autocomplete="new-password">
-                    </div>
-                    <div class="form-group">
-                        <label for="signupConfirm">Confirm Password</label>
-                        <input type="password" id="signupConfirm" placeholder="Re-enter password" autocomplete="new-password">
-                    </div>
-                    <!-- CAPTCHA -->
-                    <div class="form-group captcha-group">
-                        <label>Security Check</label>
-                        <div class="captcha-box">
-                            <span id="captchaQuestionSignup">7 + 2 = ?</span>
-                            <input type="text" id="captchaInputSignup" placeholder="Answer" autocomplete="off">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary btn-full" id="signupSubmitBtn">Create Account</button>
-                    <div class="google-btn-wrap">
-                        <button class="btn google-btn" id="googleSignUpBtn">
-                            <svg width="20" height="20" viewBox="0 0 24 24">...</svg>
+    <!-- ============================================================
+    MAIN
+    ============================================================ -->
+    <main id="main-content">
+
+        <section class="section auth-section" aria-labelledby="auth-heading">
+            <div class="section-title-bar">
+                <h2 id="auth-heading">Create Account</h2>
+            </div>
+            <div class="section-body">
+                <div class="content-box">
+
+                    <div class="auth-view">
+                        <h3>Join Us</h3>
+                        <p class="auth-subtitle">Create your account and get started.</p>
+
+                        <form id="signupForm" novalidate>
+                            <div class="field-group">
+                                <label for="signupName">Full Name</label>
+                                <input type="text" id="signupName" placeholder="John Doe" required />
+                            </div>
+                            <div class="field-group">
+                                <label for="signupEmail">Email</label>
+                                <input type="email" id="signupEmail" placeholder="you@example.com" required />
+                            </div>
+                            <div class="field-group">
+                                <label for="signupPassword">Password</label>
+                                <input type="password" id="signupPassword" placeholder="Min 6 characters" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                        </form>
+
+                        <div class="auth-divider"><span>or</span></div>
+
+                        <button id="googleSignupBtn" class="btn btn-secondary btn-full btn-google">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
                             Sign up with Google
                         </button>
+
+                        <div class="auth-switch">
+                            Already have an account? <a href="/auth-project/login.html">Sign In</a>
+                        </div>
+
+                        <div id="signupError" class="error-msg"></div>
                     </div>
-                    <p class="form-alt-link">Already have an account? <a href="login.html">Login</a></p>
+
                 </div>
             </div>
         </section>
+
+        <div class="spacer"></div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-title">Yadav Authentication Project</span>
+                <p class="footer-desc">A complete, secure authentication system built with Firebase.</p>
+            </div>
+            <div class="footer-links">
+                <a href="/auth-project/index.html">Home</a>
+                <a href="/auth-project/login.html">Login</a>
+                <a href="/auth-project/signup.html">Sign Up</a>
+                <a href="/auth-project/dashboard.html">Dashboard</a>
+            </div>
+            <div class="footer-legal">
+                <a href="/auth-project/404.html">Privacy</a>
+                <a href="/auth-project/404.html">Terms</a>
+                <a href="/auth-project/404.html">Contact</a>
+            </div>
             <div class="footer-bottom">
-                <span>&copy; 2026 Mockly</span>
+                <p class="footer-copy">&copy; 2026 Yadav Authentication Project. Built by <strong>Yadav Subba</strong>. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Firebase + Custom Script -->
-    <script src="firebase.js"></script>
-    <script>
-        let signupCaptchaAnswer = '';
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <script src="/auth-project/js/firebase-config.js"></script>
+    <script src="/auth-project/js/auth.js"></script>
+    <script src="/auth-project/js/script.js"></script>
 
-        function generateCaptcha() {
-            const a = Math.floor(Math.random() * 12) + 1;
-            const b = Math.floor(Math.random() * 12) + 1;
-            return { question: `${a} + ${b} = ?`, answer: (a + b).toString() };
-        }
-
-        function refreshCaptcha() {
-            const cap = generateCaptcha();
-            signupCaptchaAnswer = cap.answer;
-            document.getElementById('captchaQuestionSignup').textContent = cap.question;
-            document.getElementById('captchaInputSignup').value = '';
-        }
-
-        refreshCaptcha();
-
-        document.getElementById('signupSubmitBtn').addEventListener('click', async () => {
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value.trim();
-            const confirm = document.getElementById('signupConfirm').value.trim();
-            const captcha = document.getElementById('captchaInputSignup').value.trim();
-            if (!name || !email || !password || !confirm) return alert('All fields required.');
-            if (password !== confirm) return alert('Passwords do not match.');
-            if (password.length < 8) return alert('Password must be at least 8 characters.');
-            if (captcha !== signupCaptchaAnswer) {
-                alert('Incorrect CAPTCHA');
-                refreshCaptcha();
-                return;
-            }
-            try {
-                await signupUser(email, password, name);
-                window.location.href = 'dashboard.html';
-            } catch (e) { alert('Signup failed: ' + e.message); }
-        });
-
-        document.getElementById('googleSignUpBtn').addEventListener('click', async () => {
-            try {
-                await signInWithGoogle();
-                window.location.href = 'dashboard.html';
-            } catch (e) { alert('Google sign-up failed: ' + e.message); }
-        });
-    </script>
 </body>
 </html>
