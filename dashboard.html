@@ -4,14 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard · Yadav Authentication Project</title>
-
-    <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="/auth-project/css/style.css" />
-
-    <!-- ===== GOOGLE FONTS ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
-
-    <!-- ===== FIREBASE SDKs ===== -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -19,14 +13,10 @@
 </head>
 <body>
 
-    <!-- ============================================================
-    HEADER (WITH HAMBURGER – PRIMARY BLUE)
-    ============================================================ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
             <div class="header-actions">
-                <!-- ===== HAMBURGER (Mobile) ===== -->
                 <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="hamburger-line"></span>
                     <span class="hamburger-line"></span>
@@ -34,34 +24,25 @@
                 </button>
             </div>
         </div>
-
-        <!-- ===== MOBILE NAV (Hamburger Dropdown) ===== -->
         <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
             <ul class="mobile-nav-list">
-                <li><a href="/auth-project/dashboard.html" class="active">Dashboard</a></li>
-                <li><a href="#" data-tab="settings">Settings</a></li>
-                <li><a href="#" data-tab="security">Security</a></li>
-                <li><a href="#" data-tab="help">Help</a></li>
-                <li><a href="#" id="logoutBtnMobile" class="logout-link">Logout</a></li>
+                <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
+                <li><a href="/auth-project/login.html" class="nav-link-mobile">Login</a></li>
+                <li><a href="/auth-project/signup.html" class="nav-link-mobile">Sign Up</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Privacy</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Terms</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- ============================================================
-    MAIN
-    ============================================================ -->
     <main id="main-content">
-
-        <section class="section auth-section" aria-labelledby="auth-heading">
-            <div class="section-title-bar">
-                <h2 id="auth-heading">Dashboard</h2>
-            </div>
+        <section class="section auth-section">
+            <div class="section-title-bar"><h2>Dashboard</h2></div>
             <div class="section-body">
                 <div class="content-box">
-
                     <div class="dashboard-layout">
-
-                        <!-- ===== SIDEBAR (Desktop) ===== -->
                         <aside class="dashboard-sidebar">
                             <div class="sidebar-user">
                                 <div class="sidebar-avatar" id="sidebarAvatar">U</div>
@@ -74,34 +55,29 @@
                                     Dashboard
                                 </a>
                                 <a href="#" class="nav-link" data-tab="settings">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                                     Settings
                                 </a>
                                 <a href="#" class="nav-link" data-tab="security">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                                     Security
                                 </a>
                                 <a href="#" class="nav-link" data-tab="help">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                                     Help
                                 </a>
                                 <a href="#" id="logoutBtnSidebar" class="nav-link logout-link">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                                     Logout
                                 </a>
                             </nav>
                         </aside>
-
-                        <!-- ===== CONTENT ===== -->
                         <main class="dashboard-content">
-
-                            <!-- ===== TAB: DASHBOARD ===== -->
                             <section id="tab-dashboard" class="tab-content active">
                                 <div class="dashboard-header">
                                     <h1 id="dashboardGreeting">Hi, User!</h1>
                                     <p>Welcome to your Yadav Authentication Project dashboard.</p>
                                 </div>
-
                                 <div class="profile-summary-card">
                                     <div class="summary-avatar" id="summaryAvatar">U</div>
                                     <div class="summary-info">
@@ -110,20 +86,13 @@
                                         <p id="summaryJoinDate">Joined: Today</p>
                                     </div>
                                 </div>
-
                                 <div class="activity-log">
                                     <h4>Recent Activity</h4>
-                                    <ul id="activityList">
-                                        <li style="color:#94a3b8;font-size:.9rem;">No recent activity.</li>
-                                    </ul>
+                                    <ul id="activityList"><li style="color:#94a3b8;font-size:.9rem;">No recent activity.</li></ul>
                                 </div>
                             </section>
-
-                            <!-- ===== TAB: SETTINGS ===== -->
                             <section id="tab-settings" class="tab-content" style="display:none;">
                                 <h2>Profile Settings</h2>
-
-                                <!-- Avatar Upload -->
                                 <div class="settings-card">
                                     <h4>Profile Picture</h4>
                                     <div class="avatar-upload-area">
@@ -135,27 +104,13 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Personal Info -->
                                 <div class="settings-card">
                                     <h4>Personal Information</h4>
                                     <form id="profileForm">
-                                        <div class="field-group">
-                                            <label for="editName">Full Name</label>
-                                            <input type="text" id="editName" placeholder="Your name" />
-                                        </div>
-                                        <div class="field-group">
-                                            <label for="editPhone">Phone</label>
-                                            <input type="tel" id="editPhone" placeholder="+91 9876543210" />
-                                        </div>
-                                        <div class="field-group">
-                                            <label for="editBio">Bio</label>
-                                            <textarea id="editBio" rows="2" placeholder="Tell us about yourself..."></textarea>
-                                        </div>
-                                        <div class="field-group">
-                                            <label for="editLocation">Location</label>
-                                            <input type="text" id="editLocation" placeholder="City, Country" />
-                                        </div>
+                                        <div class="field-group"><label for="editName">Full Name</label><input type="text" id="editName" placeholder="Your name" /></div>
+                                        <div class="field-group"><label for="editPhone">Phone</label><input type="tel" id="editPhone" placeholder="+91 9876543210" /></div>
+                                        <div class="field-group"><label for="editBio">Bio</label><textarea id="editBio" rows="2" placeholder="Tell us about yourself..."></textarea></div>
+                                        <div class="field-group"><label for="editLocation">Location</label><input type="text" id="editLocation" placeholder="City, Country" /></div>
                                         <div class="btn-group">
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                             <button type="reset" class="btn btn-secondary" id="cancelProfileEdit">Cancel</button>
@@ -164,61 +119,36 @@
                                         <div id="profileSuccess" class="success-msg" style="display:none;">Profile updated!</div>
                                     </form>
                                 </div>
-
-                                <!-- Email Update -->
                                 <div class="settings-card">
                                     <h4>Email Address</h4>
                                     <form id="emailForm">
-                                        <div class="field-group">
-                                            <label for="newEmail">New Email</label>
-                                            <input type="email" id="newEmail" placeholder="new@example.com" />
-                                        </div>
-                                        <div class="field-group">
-                                            <label for="emailPassword">Current Password</label>
-                                            <input type="password" id="emailPassword" placeholder="Required for verification" />
-                                        </div>
+                                        <div class="field-group"><label for="newEmail">New Email</label><input type="email" id="newEmail" placeholder="new@example.com" /></div>
+                                        <div class="field-group"><label for="emailPassword">Current Password</label><input type="password" id="emailPassword" placeholder="Required for verification" /></div>
                                         <button type="submit" class="btn btn-primary">Update Email</button>
                                         <div id="emailError" class="error-msg"></div>
                                         <div id="emailSuccess" class="success-msg" style="display:none;">Verification email sent!</div>
                                     </form>
                                 </div>
                             </section>
-
-                            <!-- ===== TAB: SECURITY ===== -->
                             <section id="tab-security" class="tab-content" style="display:none;">
                                 <h2>Security & Privacy</h2>
-
-                                <!-- Change Password -->
                                 <div class="settings-card">
                                     <h4>Change Password</h4>
                                     <form id="passwordForm">
-                                        <div class="field-group">
-                                            <label for="currentPassword">Current Password</label>
-                                            <input type="password" id="currentPassword" placeholder="Enter current password" />
-                                        </div>
-                                        <div class="field-group">
-                                            <label for="newPassword">New Password</label>
-                                            <input type="password" id="newPassword" placeholder="Min 6 characters" />
-                                        </div>
-                                        <div class="field-group">
-                                            <label for="confirmPassword">Confirm Password</label>
-                                            <input type="password" id="confirmPassword" placeholder="Re-enter new password" />
-                                        </div>
+                                        <div class="field-group"><label for="currentPassword">Current Password</label><input type="password" id="currentPassword" placeholder="Enter current password" /></div>
+                                        <div class="field-group"><label for="newPassword">New Password</label><input type="password" id="newPassword" placeholder="Min 6 characters" /></div>
+                                        <div class="field-group"><label for="confirmPassword">Confirm Password</label><input type="password" id="confirmPassword" placeholder="Re-enter new password" /></div>
                                         <button type="submit" class="btn btn-primary">Update Password</button>
                                         <div id="passwordError" class="error-msg"></div>
                                         <div id="passwordSuccess" class="success-msg" style="display:none;">Password updated!</div>
                                     </form>
                                 </div>
-
-                                <!-- Session Management -->
                                 <div class="settings-card">
                                     <h4>Session Management</h4>
                                     <p style="font-size:.9rem;color:#94a3b8;">Revoke all sessions except this one.</p>
                                     <button class="btn btn-secondary" id="logoutDevicesBtn">Logout from all other devices</button>
                                     <div id="deviceError" class="error-msg"></div>
                                 </div>
-
-                                <!-- Danger Zone -->
                                 <div class="settings-card danger-zone">
                                     <h4 style="color:#dc2626;">Danger Zone</h4>
                                     <p style="font-size:.9rem;">Permanently delete your account and all associated data.</p>
@@ -226,8 +156,6 @@
                                     <div id="deleteError" class="error-msg"></div>
                                 </div>
                             </section>
-
-                            <!-- ===== TAB: HELP ===== -->
                             <section id="tab-help" class="tab-content" style="display:none;">
                                 <h2>Help & Support</h2>
                                 <div class="settings-card">
@@ -236,46 +164,14 @@
                                     <p>Make sure you have verified your email for full access.</p>
                                 </div>
                             </section>
-
                         </main>
-
                     </div>
-
                 </div>
             </div>
         </section>
-
         <div class="spacer"></div>
     </main>
 
-    <!-- ============================================================
-    MODALS
-    ============================================================ -->
-
-    <!-- ===== USER NOT FOUND MODAL ===== -->
-    <div id="userNotFoundModal" class="modal-overlay" style="display:none;">
-        <div class="modal-box">
-            <h3>No user found</h3>
-            <p>Please sign up to create an account.</p>
-            <a href="/auth-project/signup.html" class="btn btn-brown">Sign Up</a>
-        </div>
-    </div>
-
-    <!-- ===== LOGOUT CONFIRMATION MODAL ===== -->
-    <div id="logoutModal" class="modal-overlay" style="display:none;">
-        <div class="modal-box">
-            <h3>Are you sure?</h3>
-            <p>You are about to log out of your account.</p>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="logoutNoBtn">No</button>
-                <button class="btn btn-danger" id="logoutYesBtn">Yes, Logout</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================
-    FOOTER (Legal → 404)
-    ============================================================ -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -286,7 +182,6 @@
                 <a href="/auth-project/index.html">Home</a>
                 <a href="/auth-project/login.html">Login</a>
                 <a href="/auth-project/signup.html">Sign Up</a>
-                <a href="/auth-project/dashboard.html">Dashboard</a>
             </div>
             <div class="footer-legal">
                 <a href="/auth-project/404.html">Privacy</a>
@@ -299,78 +194,10 @@
         </div>
     </footer>
 
-    <!-- ============================================================
-    SCRIPTS
-    ============================================================ -->
+    <script src="/auth-project/js/script.js"></script>
     <script src="/auth-project/js/firebase-config.js"></script>
     <script src="/auth-project/js/auth.js"></script>
     <script src="/auth-project/js/dashboard.js"></script>
-
-    <!-- ===== HAMBURGER SCRIPT (Inline for speed) ===== -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var hamburger = document.getElementById('hamburgerBtn');
-            var mobileNav = document.getElementById('mobileNav');
-
-            if (hamburger && mobileNav) {
-                hamburger.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    var isOpen = mobileNav.classList.toggle('open');
-                    hamburger.setAttribute('aria-expanded', isOpen);
-                });
-
-                // Close on outside click
-                document.addEventListener('click', function(e) {
-                    if (mobileNav.classList.contains('open') &&
-                        !mobileNav.contains(e.target) &&
-                        !hamburger.contains(e.target)) {
-                        mobileNav.classList.remove('open');
-                        hamburger.setAttribute('aria-expanded', 'false');
-                    }
-                });
-
-                // Close on Escape key
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
-                        mobileNav.classList.remove('open');
-                        hamburger.setAttribute('aria-expanded', 'false');
-                        hamburger.focus();
-                    }
-                });
-            }
-
-            // ===== Mobile nav links trigger tab switch =====
-            var mobileLinks = document.querySelectorAll('.mobile-nav-list a:not(.logout-link)');
-            mobileLinks.forEach(function(link) {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var tab = this.dataset.tab;
-                    if (tab) {
-                        // Close mobile nav
-                        mobileNav.classList.remove('open');
-                        hamburger.setAttribute('aria-expanded', 'false');
-                        // Trigger tab switch
-                        var desktopLink = document.querySelector('.sidebar-nav .nav-link[data-tab="' + tab + '"]');
-                        if (desktopLink) {
-                            desktopLink.click();
-                        }
-                    }
-                });
-            });
-
-            // ===== Mobile logout =====
-            var logoutMobile = document.getElementById('logoutBtnMobile');
-            if (logoutMobile) {
-                logoutMobile.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    mobileNav.classList.remove('open');
-                    hamburger.setAttribute('aria-expanded', 'false');
-                    var logoutBtn = document.getElementById('logoutBtnSidebar');
-                    if (logoutBtn) logoutBtn.click();
-                });
-            }
-        });
-    </script>
 
 </body>
 </html>
