@@ -13,7 +13,9 @@
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
+    <!-- ============================================================
+    HEADER (Horizontal Nav + Hamburger – Same as all pages)
+    ============================================================ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
@@ -25,6 +27,20 @@
                 </button>
             </div>
         </div>
+
+        <!-- ===== HORIZONTAL NAV (Desktop) ===== -->
+        <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary navigation">
+            <ul class="nav-list">
+                <li><a href="/auth-project/index.html" class="nav-link">Home</a></li>
+                <li><a href="/auth-project/login.html" class="nav-link">Login</a></li>
+                <li><a href="/auth-project/signup.html" class="nav-link" aria-current="page">Sign Up</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link">Privacy</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link">Terms</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- ===== MOBILE NAV (Slide-down) ===== -->
         <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
             <ul class="mobile-nav-list">
                 <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
@@ -38,7 +54,9 @@
         </nav>
     </header>
 
-    <!-- ===== MAIN ===== -->
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
     <main id="main-content">
         <section class="section auth-section">
             <div class="section-title-bar"><h2>Create Account</h2></div>
@@ -88,7 +106,9 @@
         <div class="spacer"></div>
     </main>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -111,7 +131,9 @@
         </div>
     </footer>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
     <script src="/auth-project/js/script.js"></script>
     <script src="/auth-project/js/firebase-config.js"></script>
     <script src="/auth-project/js/auth.js"></script>
