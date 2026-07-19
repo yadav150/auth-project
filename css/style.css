@@ -1,6 +1,6 @@
 /* ============================================================
    YADAV AUTHENTICATION PROJECT – COMPLETE STYLESHEET
-   Primary: #2563eb  |  No Dark Mode  |  Hamburger Always Visible
+   Primary: #2563eb  |  Horizontal Nav (Desktop) + Hamburger (Mobile)
    ============================================================ */
 
 :root {
@@ -76,7 +76,7 @@ ul {
     margin: 0;
 }
 
-/* ===== HEADER (Hamburger Always Visible) ===== */
+/* ===== HEADER ===== */
 .site-header {
     background: var(--bg-card);
     border-bottom: 1px solid var(--border);
@@ -109,9 +109,15 @@ ul {
     text-decoration: none;
 }
 
-/* ===== HAMBURGER – ALWAYS VISIBLE (Desktop + Mobile) ===== */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ===== HAMBURGER (Mobile only) ===== */
 .hamburger {
-    display: flex !important; /* Override any hidden state */
+    display: none;
     flex-direction: column;
     gap: 4px;
     background: none;
@@ -138,6 +144,50 @@ ul {
 }
 .hamburger[aria-expanded="true"] .hamburger-line:nth-child(3) {
     transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ===== HORIZONTAL NAV (Desktop) – Like Yadav Web Tools ===== */
+.primary-nav {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-list {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    padding: 6px 24px 10px;
+    gap: 4px 18px;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.nav-list li {
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list a {
+    display: block;
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-list a:hover {
+    background: var(--bg-sidebar);
+    text-decoration: none;
+}
+
+.nav-list a[aria-current="page"] {
+    background: var(--primary);
+    color: #fff;
 }
 
 /* ===== MOBILE NAV (Slide-down) ===== */
@@ -189,7 +239,32 @@ ul {
     list-style: none;
 }
 
-/* ===== FOOTER (No Dashboard Link) ===== */
+/* ===== NAV CONTROLS: Show/Hide based on screen ===== */
+@media (max-width: 768px) {
+    .primary-nav {
+        display: none;
+    }
+    .hamburger {
+        display: flex !important;
+    }
+    .mobile-nav {
+        display: block;
+    }
+}
+
+@media (min-width: 769px) {
+    .primary-nav {
+        display: block;
+    }
+    .hamburger {
+        display: none !important;
+    }
+    .mobile-nav {
+        display: none !important;
+    }
+}
+
+/* ===== FOOTER ===== */
 .site-footer {
     background: var(--bg-card);
     border-top: 1px solid var(--border);
@@ -290,8 +365,7 @@ main {
 .content-box {
     max-width: 700px;
     margin: 0 auto;
-    /* CLS Fix */
-    min-height: 400px;
+    min-height: 400px; /* CLS Fix */
 }
 
 .spacer {
@@ -723,17 +797,12 @@ main {
     stroke: #fff;
 }
 
-/* ===== SIDEBAR ICONS – CONSISTENT 18px ===== */
 .sidebar-nav .nav-link svg {
     width: 18px !important;
     height: 18px !important;
     flex-shrink: 0;
     stroke: currentColor;
     stroke-width: 2;
-}
-
-.sidebar-nav .nav-link.active svg {
-    stroke: #fff;
 }
 
 .sidebar-nav .logout-link {
@@ -985,7 +1054,7 @@ main {
     }
 }
 
-/* Mobile (≤ 768px) – sidebar hidden, hamburger still visible */
+/* Mobile (≤ 768px) – sidebar hidden, hamburger visible */
 @media (max-width: 768px) {
     .dashboard-sidebar {
         display: none;
