@@ -1146,3 +1146,10 @@ main {
         font-size: 1.5rem;
     }
 }
+/* ===== TEXT JUSTIFY ===== */
+.hero-desc,
+.footer-desc,
+.auth-subtitle,
+.content-box p {
+    text-align: justify;
+}
