@@ -13,9 +13,7 @@
 </head>
 <body>
 
-    <!-- ============================================================
-    HEADER (Horizontal Nav + Hamburger – Same as all pages)
-    ============================================================ -->
+    <!-- ===== HEADER ===== -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
@@ -28,7 +26,6 @@
             </div>
         </div>
 
-        <!-- ===== HORIZONTAL NAV (Desktop) ===== -->
         <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary navigation">
             <ul class="nav-list">
                 <li><a href="/auth-project/index.html" class="nav-link">Home</a></li>
@@ -40,7 +37,6 @@
             </ul>
         </nav>
 
-        <!-- ===== MOBILE NAV (Slide-down) ===== -->
         <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
             <ul class="mobile-nav-list">
                 <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
@@ -54,9 +50,7 @@
         </nav>
     </header>
 
-    <!-- ============================================================
-    MAIN CONTENT
-    ============================================================ -->
+    <!-- ===== MAIN ===== -->
     <main id="main-content">
         <section class="section auth-section">
             <div class="section-title-bar"><h2>Sign In</h2></div>
@@ -66,7 +60,6 @@
                         <h3>Welcome Back</h3>
                         <p class="auth-subtitle">Sign in to access your dashboard.</p>
 
-                        <!-- ===== SUCCESS MESSAGE (from signup) ===== -->
                         <div id="signupSuccessMsg" style="display:none;padding:10px 14px;background:#dcfce7;border:1px solid #bbf7d0;border-radius:8px;color:#166534;font-size:.9rem;margin-bottom:16px;">
                             Account created successfully! Please sign in.
                         </div>
@@ -119,9 +112,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    FOOTER
-    ============================================================ -->
+    <!-- ===== FOOTER ===== -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -144,12 +135,20 @@
         </div>
     </footer>
 
-    <!-- ============================================================
-    SCRIPTS
-    ============================================================ -->
+    <!-- ===== SCRIPTS ===== -->
     <script src="/auth-project/js/script.js"></script>
     <script src="/auth-project/js/firebase-config.js"></script>
     <script src="/auth-project/js/auth.js"></script>
+
+    <!-- ===== ENSURE HAMBURGER STARTS COLLAPSED ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var mobileNav = document.getElementById('mobileNav');
+            var hamburger = document.getElementById('hamburgerBtn');
+            if (mobileNav) mobileNav.classList.remove('open');
+            if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+        });
+    </script>
 
 </body>
 </html>
