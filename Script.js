@@ -498,3 +498,64 @@
     });
 
 })();
+// ===== HAMBURGER MENU (with Active State) =====
+(function() {
+    'use strict';
+
+    function initHamburger() {
+        var hamburger = document.getElementById('hamburgerBtn');
+        var mobileNav = document.getElementById('mobileNav');
+
+        if (!hamburger || !mobileNav) return;
+
+        // Toggle hamburger
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = mobileNav.classList.toggle('open');
+            hamburger.setAttribute('aria-expanded', isOpen);
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (mobileNav.classList.contains('open') &&
+                !mobileNav.contains(e.target) &&
+                !hamburger.contains(e.target)) {
+                mobileNav.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+                mobileNav.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                hamburger.focus();
+            }
+        });
+
+        // ===== ACTIVE STATE ON CLICK (including legal links) =====
+        document.querySelectorAll('.mobile-nav-list a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                // Remove active from all
+                document.querySelectorAll('.mobile-nav-list a').forEach(function(l) {
+                    l.classList.remove('active');
+                });
+                // Add active to clicked
+                this.classList.add('active');
+
+                // Close nav after click
+                mobileNav.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHamburger);
+    } else {
+        initHamburger();
+    }
+
+})();
