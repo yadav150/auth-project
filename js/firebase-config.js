@@ -1,6 +1,5 @@
 // ============================================================
 //  FIREBASE CONFIG – Yadav Authentication Project
-//  Replace with your own Firebase project credentials
 // ============================================================
 
 const firebaseConfig = {
@@ -18,10 +17,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// ============================================================
-//  AUTHENTICATION FUNCTIONS
-// ============================================================
-
+// ===== AUTH =====
 async function signupUser(email, password, displayName) {
   const cred = await auth.createUserWithEmailAndPassword(email, password);
   await cred.user.updateProfile({ displayName });
@@ -51,10 +47,7 @@ function initAuthListener(callback) {
   auth.onAuthStateChanged(user => callback(user));
 }
 
-// ============================================================
-//  FIRESTORE HELPERS
-// ============================================================
-
+// ===== FIRESTORE =====
 async function saveUserProfile(uid, data) {
   await db.collection('users').doc(uid).set(data, { merge: true });
 }
@@ -79,10 +72,7 @@ async function getActivityLog(uid, limit = 10) {
   return logs;
 }
 
-// ============================================================
-//  STORAGE HELPERS
-// ============================================================
-
+// ===== STORAGE =====
 async function uploadAvatar(uid, file) {
   const ref = storage.ref().child('avatars/' + uid + '/' + Date.now() + '.jpg');
   const snapshot = await ref.put(file);
@@ -97,10 +87,7 @@ async function deleteAvatar(uid) {
   } catch (e) { /* ignore */ }
 }
 
-// ============================================================
-//  EXPOSE TO WINDOW
-// ============================================================
-
+// ===== EXPOSE =====
 window.signupUser = signupUser;
 window.loginUser = loginUser;
 window.signInWithGoogle = signInWithGoogle;
