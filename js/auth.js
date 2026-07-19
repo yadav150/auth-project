@@ -125,27 +125,28 @@
             }
 
             try {
-                var user = await window.signupUser(email, password, name);
-                await window.saveUserProfile(user.uid, {
-                    name: name,
-                    email: user.email,
-                    role: 'Member',
-                    joinDate: new Date().toISOString(),
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                await window.addActivityLog(user.uid, { device: 'Browser (Signup)' });
-                redirectToDashboard();
-            } catch (err) {
-                if (err.code === 'auth/email-already-in-use') {
-                    setError(signupError, 'This email is already registered. Please sign in.');
-                } else if (err.code === 'auth/weak-password') {
-                    setError(signupError, 'Password is too weak. Use at least 6 characters.');
-                } else {
-                    setError(signupError, 'Signup failed. Please try again.');
-                }
-            }
-        });
+    var user = await window.signupUser(email, password, name);
+    await window.saveUserProfile(user.uid, {
+        name: name,
+        email: user.email,
+        role: 'Member',
+        joinDate: new Date().toISOString(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await window.addActivityLog(user.uid, { device: 'Browser (Signup)' });
+
+    // ✅ Redirect to login with success message
+    window.location.href = '/auth-project/login.html?signup=success';
+
+} catch (err) {
+    if (err.code === 'auth/email-already-in-use') {
+        setError(signupError, 'This email is already registered. Please sign in.');
+    } else if (err.code === 'auth/weak-password') {
+        setError(signupError, 'Password is too weak. Use at least 6 characters.');
+    } else {
+        setError(signupError, 'Signup failed. Please try again.');
     }
+}
 
     // ---- Forgot Password ----
     if (forgotPasswordLink) {
