@@ -1,6 +1,7 @@
 // ============================================================
-//  DASHBOARD.JS – Yadav Authentication Project
-//  Profile, avatar, settings, security, activity log
+//  DASHBOARD.JS – Yadav Authentication Project (FIXED)
+//  Fixes: No infinite reload loop, Logout confirmation modal,
+//  Google user data loading, Proper profile display.
 // ============================================================
 
 (function() {
@@ -9,51 +10,56 @@
     // ============================================================
     //  DOM REFS
     // ============================================================
-    const sidebarName = document.getElementById('sidebarName');
-    const sidebarEmail = document.getElementById('sidebarEmail');
-    const sidebarAvatar = document.getElementById('sidebarAvatar');
-    const summaryName = document.getElementById('summaryName');
-    const summaryRole = document.getElementById('summaryRole');
-    const summaryJoinDate = document.getElementById('summaryJoinDate');
-    const summaryAvatar = document.getElementById('summaryAvatar');
-    const dashboardGreeting = document.getElementById('dashboardGreeting');
-    const activityList = document.getElementById('activityList');
+    var sidebarName = document.getElementById('sidebarName');
+    var sidebarEmail = document.getElementById('sidebarEmail');
+    var sidebarAvatar = document.getElementById('sidebarAvatar');
+    var summaryName = document.getElementById('summaryName');
+    var summaryRole = document.getElementById('summaryRole');
+    var summaryJoinDate = document.getElementById('summaryJoinDate');
+    var summaryAvatar = document.getElementById('summaryAvatar');
+    var dashboardGreeting = document.getElementById('dashboardGreeting');
+    var activityList = document.getElementById('activityList');
 
-    const editName = document.getElementById('editName');
-    const editPhone = document.getElementById('editPhone');
-    const editBio = document.getElementById('editBio');
-    const editLocation = document.getElementById('editLocation');
-    const profileForm = document.getElementById('profileForm');
-    const profileError = document.getElementById('profileError');
-    const profileSuccess = document.getElementById('profileSuccess');
-    const cancelProfileEdit = document.getElementById('cancelProfileEdit');
+    var editName = document.getElementById('editName');
+    var editPhone = document.getElementById('editPhone');
+    var editBio = document.getElementById('editBio');
+    var editLocation = document.getElementById('editLocation');
+    var profileForm = document.getElementById('profileForm');
+    var profileError = document.getElementById('profileError');
+    var profileSuccess = document.getElementById('profileSuccess');
+    var cancelProfileEdit = document.getElementById('cancelProfileEdit');
 
-    const avatarInput = document.getElementById('avatarInput');
-    const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
-    const removeAvatarBtn = document.getElementById('removeAvatarBtn');
-    const avatarPreview = document.getElementById('avatarPreview');
+    var avatarInput = document.getElementById('avatarInput');
+    var uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+    var removeAvatarBtn = document.getElementById('removeAvatarBtn');
+    var avatarPreview = document.getElementById('avatarPreview');
 
-    const emailForm = document.getElementById('emailForm');
-    const newEmail = document.getElementById('newEmail');
-    const emailPassword = document.getElementById('emailPassword');
-    const emailError = document.getElementById('emailError');
-    const emailSuccess = document.getElementById('emailSuccess');
+    var emailForm = document.getElementById('emailForm');
+    var newEmail = document.getElementById('newEmail');
+    var emailPassword = document.getElementById('emailPassword');
+    var emailError = document.getElementById('emailError');
+    var emailSuccess = document.getElementById('emailSuccess');
 
-    const passwordForm = document.getElementById('passwordForm');
-    const currentPassword = document.getElementById('currentPassword');
-    const newPassword = document.getElementById('newPassword');
-    const confirmPassword = document.getElementById('confirmPassword');
-    const passwordError = document.getElementById('passwordError');
-    const passwordSuccess = document.getElementById('passwordSuccess');
-    const logoutDevicesBtn = document.getElementById('logoutDevicesBtn');
-    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-    const deleteError = document.getElementById('deleteError');
-    const deviceError = document.getElementById('deviceError');
+    var passwordForm = document.getElementById('passwordForm');
+    var currentPassword = document.getElementById('currentPassword');
+    var newPassword = document.getElementById('newPassword');
+    var confirmPassword = document.getElementById('confirmPassword');
+    var passwordError = document.getElementById('passwordError');
+    var passwordSuccess = document.getElementById('passwordSuccess');
+    var logoutDevicesBtn = document.getElementById('logoutDevicesBtn');
+    var deleteAccountBtn = document.getElementById('deleteAccountBtn');
+    var deleteError = document.getElementById('deleteError');
+    var deviceError = document.getElementById('deviceError');
 
-    const logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
+    // ---- Logout buttons ----
+    var logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
 
-    const navLinks = document.querySelectorAll('.sidebar-nav .nav-link:not(.logout-link)');
-    const tabContents = {
+    // ---- MODALS ----
+    var logoutModal = document.getElementById('logoutModal');
+
+    // ---- Tabs ----
+    var navLinks = document.querySelectorAll('.sidebar-nav .nav-link:not(.logout-link)');
+    var tabContents = {
         dashboard: document.getElementById('tab-dashboard'),
         settings: document.getElementById('tab-settings'),
         security: document.getElementById('tab-security'),
@@ -65,14 +71,14 @@
     // ============================================================
     function getInitials(name) {
         if (!name) return '?';
-        const parts = name.trim().split(' ');
+        var parts = name.trim().split(' ');
         if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
         return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
     }
 
     function formatDate(timestamp) {
         if (!timestamp) return 'Today';
-        const d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        var d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
         return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
@@ -97,12 +103,22 @@
         }, 5000);
     }
 
+    function showModal(modal) {
+        if (!modal) return;
+        modal.style.display = 'flex';
+    }
+
+    function hideModal(modal) {
+        if (!modal) return;
+        modal.style.display = 'none';
+    }
+
     // ============================================================
     //  UPDATE AVATAR UI
     // ============================================================
     function updateAvatarUI(photoURL, displayName) {
-        const initials = getInitials(displayName);
-        const elements = [sidebarAvatar, summaryAvatar, avatarPreview];
+        var initials = getInitials(displayName);
+        var elements = [sidebarAvatar, summaryAvatar, avatarPreview];
         elements.forEach(function(el) {
             if (!el) return;
             el.innerHTML = '';
@@ -129,23 +145,34 @@
             var location = data.location || '';
             var role = data.role || 'Member';
             var joinDate = data.joinDate || user.metadata.creationTime || new Date().toISOString();
+            var photoURL = user.photoURL || data.photoURL || null;
 
+            // Update UI
             sidebarName.textContent = displayName;
-            sidebarEmail.textContent = user.email;
+            sidebarEmail.textContent = user.email || 'No email';
             summaryName.textContent = displayName;
             summaryRole.textContent = role;
             summaryJoinDate.textContent = 'Joined: ' + formatDate(joinDate);
-            dashboardGreeting.textContent = 'Hi, ' + displayName.split(' ')[0] + '!';
 
-            var photoURL = user.photoURL || data.photoURL || null;
+            var firstName = displayName.split(' ')[0] || 'User';
+            dashboardGreeting.textContent = 'Hi, ' + firstName + '!';
+
             updateAvatarUI(photoURL, displayName);
 
+            // Populate edit fields
             editName.value = displayName;
             editPhone.value = phone;
             editBio.value = bio;
             editLocation.value = location;
 
-            window._profileData = { displayName: displayName, phone: phone, bio: bio, location: location, photoURL: photoURL };
+            // Store for cancel
+            window._profileData = {
+                displayName: displayName,
+                phone: phone,
+                bio: bio,
+                location: location,
+                photoURL: photoURL
+            };
 
         } catch (err) {
             console.warn('Error loading profile:', err);
@@ -176,13 +203,15 @@
     }
 
     // ============================================================
-    //  CHECK AUTH STATE
+    //  AUTH STATE LISTENER – NO RELOAD LOOP
     // ============================================================
     window.initAuthListener(function(user) {
         if (user) {
+            // Load profile and activity
             loadUserProfile(user);
             loadActivityLog(user.uid);
         } else {
+            // If not logged in, redirect to login
             window.location.href = '/auth-project/login.html';
         }
     });
@@ -211,16 +240,30 @@
 
             try {
                 await user.updateProfile({ displayName: name });
-                await window.saveUserProfile(user.uid, { name: name, phone: phone, bio: bio, location: location });
+                await window.saveUserProfile(user.uid, {
+                    name: name,
+                    phone: phone,
+                    bio: bio,
+                    location: location
+                });
 
+                // Update UI
                 sidebarName.textContent = name;
                 summaryName.textContent = name;
-                dashboardGreeting.textContent = 'Hi, ' + name.split(' ')[0] + '!';
+                var firstName = name.split(' ')[0] || 'User';
+                dashboardGreeting.textContent = 'Hi, ' + firstName + '!';
+
                 var photoURL = user.photoURL || window._profileData?.photoURL || null;
                 updateAvatarUI(photoURL, name);
 
                 showSuccess(profileSuccess, 'Profile updated successfully!');
-                window._profileData = { displayName: name, phone: phone, bio: bio, location: location, photoURL: photoURL };
+                window._profileData = {
+                    displayName: name,
+                    phone: phone,
+                    bio: bio,
+                    location: location,
+                    photoURL: photoURL
+                };
 
             } catch (err) {
                 setError(profileError, err.message);
@@ -376,6 +419,52 @@
     }
 
     // ============================================================
+    //  LOGOUT CONFIRMATION MODAL
+    // ============================================================
+    function handleLogoutClick(e) {
+        e.preventDefault();
+        showModal(logoutModal);
+    }
+
+    // Sidebar logout
+    if (logoutBtnSidebar) {
+        logoutBtnSidebar.addEventListener('click', handleLogoutClick);
+    }
+
+    // ---- Logout Modal: No button ----
+    var logoutNoBtn = document.getElementById('logoutNoBtn');
+    if (logoutNoBtn) {
+        logoutNoBtn.addEventListener('click', function() {
+            hideModal(logoutModal);
+        });
+    }
+
+    // ---- Logout Modal: Yes button ----
+    var logoutYesBtn = document.getElementById('logoutYesBtn');
+    if (logoutYesBtn) {
+        logoutYesBtn.addEventListener('click', function() {
+            hideModal(logoutModal);
+            window.logoutUser();
+            window.location.href = '/auth-project/login.html';
+        });
+    }
+
+    // ---- Close modal on outside click ----
+    if (logoutModal) {
+        logoutModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideModal(this);
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
+                hideModal(logoutModal);
+            }
+        });
+    }
+
+    // ============================================================
     //  LOGOUT OTHER DEVICES
     // ============================================================
     if (logoutDevicesBtn) {
@@ -393,7 +482,7 @@
             if (!user) return;
 
             var confirmDelete = confirm(
-                '⚠️ Are you sure you want to delete your account?\nThis action is PERMANENT and cannot be undone.'
+                'Are you sure you want to delete your account?\nThis action is PERMANENT and cannot be undone.'
             );
             if (!confirmDelete) return;
 
@@ -417,18 +506,6 @@
     }
 
     // ============================================================
-    //  LOGOUT
-    // ============================================================
-    if (logoutBtnSidebar) {
-        logoutBtnSidebar.addEventListener('click', function() {
-            if (confirm('Are you sure you want to sign out?')) {
-                window.logoutUser();
-                window.location.href = '/auth-project/login.html';
-            }
-        });
-    }
-
-    // ============================================================
     //  TAB SWITCHING
     // ============================================================
     navLinks.forEach(function(link) {
@@ -439,7 +516,9 @@
 
             var tab = this.dataset.tab;
             Object.keys(tabContents).forEach(function(key) {
-                tabContents[key].style.display = (key === tab) ? 'block' : 'none';
+                if (tabContents[key]) {
+                    tabContents[key].style.display = (key === tab) ? 'block' : 'none';
+                }
             });
         });
     });
