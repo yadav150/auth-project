@@ -10,12 +10,6 @@
 
     <!-- ===== GOOGLE FONTS ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
-
-    <!-- ===== FIREBASE SDKs ===== -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
@@ -23,33 +17,33 @@
     UNIVERSAL HEADER – YADAV AUTHENTICATION PROJECT
     (Includes Hamburger Menu – Consistent Across All Pages)
     ============================================================ -->
-<header class="site-header" role="banner">
-    <div class="header-inner">
-        <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
-        <div class="header-actions">
-            <!-- ===== HAMBURGER (Mobile) ===== -->
-            <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
+    <header class="site-header" role="banner">
+        <div class="header-inner">
+            <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
+            <div class="header-actions">
+                <!-- ===== HAMBURGER (Mobile) ===== -->
+                <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <!-- ===== MOBILE NAV (Hamburger Dropdown) ===== -->
-    <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
-        <ul class="mobile-nav-list">
-            <li><a href="/auth-project/index.html" class="nav-link-mobile" id="mobileHome">Home</a></li>
-            <li><a href="/auth-project/dashboard.html" class="nav-link-mobile" id="mobileDashboard">Dashboard</a></li>
-            <li><a href="/auth-project/login.html" class="nav-link-mobile" id="mobileLogin">Login</a></li>
-            <li><a href="/auth-project/signup.html" class="nav-link-mobile" id="mobileSignup">Sign Up</a></li>
-            <li class="nav-divider"></li>
-            <li><a href="/auth-project/404.html" class="nav-link-mobile">Privacy</a></li>
-            <li><a href="/auth-project/404.html" class="nav-link-mobile">Terms</a></li>
-            <li><a href="/auth-project/404.html" class="nav-link-mobile">Contact</a></li>
-        </ul>
-    </nav>
-</header>
+        <!-- ===== MOBILE NAV (Hamburger Dropdown) ===== -->
+        <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list">
+                <li><a href="/auth-project/index.html" class="nav-link-mobile" id="mobileHome">Home</a></li>
+                <li><a href="/auth-project/dashboard.html" class="nav-link-mobile" id="mobileDashboard">Dashboard</a></li>
+                <li><a href="/auth-project/login.html" class="nav-link-mobile" id="mobileLogin">Login</a></li>
+                <li><a href="/auth-project/signup.html" class="nav-link-mobile" id="mobileSignup">Sign Up</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Privacy</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Terms</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link-mobile">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <!-- ============================================================
     MAIN
@@ -143,11 +137,51 @@
     </footer>
 
     <!-- ============================================================
-    SCRIPTS
+    SCRIPTS (Only Hamburger – No Firebase)
     ============================================================ -->
-    <script src="/auth-project/js/firebase-config.js"></script>
-    <script src="/auth-project/js/auth.js"></script>
-    <script src="/auth-project/js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var hamburger = document.getElementById('hamburgerBtn');
+            var mobileNav = document.getElementById('mobileNav');
+
+            if (hamburger && mobileNav) {
+                hamburger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var isOpen = mobileNav.classList.toggle('open');
+                    hamburger.setAttribute('aria-expanded', isOpen);
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (mobileNav.classList.contains('open') &&
+                        !mobileNav.contains(e.target) &&
+                        !hamburger.contains(e.target)) {
+                        mobileNav.classList.remove('open');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+                        mobileNav.classList.remove('open');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                        hamburger.focus();
+                    }
+                });
+
+                // ===== ACTIVE STATE ON CLICK =====
+                document.querySelectorAll('.mobile-nav-list a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        document.querySelectorAll('.mobile-nav-list a').forEach(function(l) {
+                            l.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        mobileNav.classList.remove('open');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
