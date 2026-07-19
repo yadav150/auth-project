@@ -1,6 +1,6 @@
 // ============================================================
-//  AUTH.JS – Login & Signup Logic (Fixed)
-//  Fixes: User Not Found Modal, Google Auth Save, No Reload Loop
+//  AUTH.JS – Login & Signup Logic (Fixed Error Messages)
+//  Fixes: User-friendly error messages for invalid login
 // ============================================================
 
 (function() {
@@ -75,7 +75,7 @@
     });
 
     // ============================================================
-    //  LOGIN FORM
+    //  LOGIN FORM (FIXED ERROR HANDLING)
     // ============================================================
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
@@ -94,13 +94,21 @@
                 await window.loginUser(email, password);
                 redirectToDashboard();
             } catch (err) {
-                // ===== FIX: User Not Found Modal =====
+                // ===== USER-FRIENDLY ERROR MESSAGES =====
                 if (err.code === 'auth/user-not-found') {
-                    // Hide error message, show modal instead
+                    // Show modal for "No user found"
                     clearError(loginError);
                     showModal(userNotFoundModal);
+                } else if (err.code === 'auth/wrong-password') {
+                    setError(loginError, 'Incorrect password. Please try again.');
+                } else if (err.code === 'auth/invalid-login-credentials') {
+                    // Generic invalid credentials – show friendly message
+                    setError(loginError, 'Invalid email or password. Please try again.');
+                } else if (err.code === 'auth/too-many-requests') {
+                    setError(loginError, 'Too many failed attempts. Please try again later.');
                 } else {
-                    setError(loginError, err.message);
+                    // Fallback for any other error
+                    setError(loginError, 'Login failed. Please check your credentials and try again.');
                 }
             }
         });
@@ -140,7 +148,13 @@
                 await window.addActivityLog(user.uid, { device: 'Browser (Signup)' });
                 redirectToDashboard();
             } catch (err) {
-                setError(signupError, err.message);
+                if (err.code === 'auth/email-already-in-use') {
+                    setError(signupError, 'This email is already registered. Please sign in.');
+                } else if (err.code === 'auth/weak-password') {
+                    setError(signupError, 'Password is too weak. Use at least 6 characters.');
+                } else {
+                    setError(signupError, 'Signup failed. Please try again.');
+                }
             }
         });
     }
@@ -163,7 +177,11 @@
                 await window.sendPasswordReset(email);
                 alert('Password reset email sent. Check your inbox.');
             } catch (err) {
-                setError(loginError, err.message);
+                if (err.code === 'auth/user-not-found') {
+                    setError(loginError, 'No account found with this email.');
+                } else {
+                    setError(loginError, 'Failed to send reset email. Please try again.');
+                }
             }
         });
     }
@@ -194,7 +212,7 @@
 
         } catch (err) {
             var errorEl = isLoginPage ? loginError : signupError;
-            if (errorEl) setError(errorEl, err.message);
+            if (errorEl) setError(errorEl, 'Google sign-in failed. Please try again.');
         }
     }
 
