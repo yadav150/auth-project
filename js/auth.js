@@ -1,33 +1,36 @@
 // ============================================================
-//  AUTH.JS – Login & Signup Logic (Yadav Authentication Project)
-//  Uses functions from firebase-config.js
+//  AUTH.JS – Login & Signup Logic (Fixed)
+//  Fixes: User Not Found Modal, Google Auth Save, No Reload Loop
 // ============================================================
 
 (function() {
     'use strict';
 
     // ---- Determine which page we're on ----
-    const isLoginPage = document.getElementById('loginForm') !== null;
-    const isSignupPage = document.getElementById('signupForm') !== null;
+    var isLoginPage = document.getElementById('loginForm') !== null;
+    var isSignupPage = document.getElementById('signupForm') !== null;
 
     // ---- DOM REFS (Login Page) ----
-    const loginForm = document.getElementById('loginForm');
-    const loginEmail = document.getElementById('loginEmail');
-    const loginPassword = document.getElementById('loginPassword');
-    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-    const googleLoginBtn = document.getElementById('googleLoginBtn');
-    const loginError = document.getElementById('loginError');
+    var loginForm = document.getElementById('loginForm');
+    var loginEmail = document.getElementById('loginEmail');
+    var loginPassword = document.getElementById('loginPassword');
+    var forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    var googleLoginBtn = document.getElementById('googleLoginBtn');
+    var loginError = document.getElementById('loginError');
 
     // ---- DOM REFS (Signup Page) ----
-    const signupForm = document.getElementById('signupForm');
-    const signupName = document.getElementById('signupName');
-    const signupEmail = document.getElementById('signupEmail');
-    const signupPassword = document.getElementById('signupPassword');
-    const googleSignupBtn = document.getElementById('googleSignupBtn');
-    const signupError = document.getElementById('signupError');
+    var signupForm = document.getElementById('signupForm');
+    var signupName = document.getElementById('signupName');
+    var signupEmail = document.getElementById('signupEmail');
+    var signupPassword = document.getElementById('signupPassword');
+    var googleSignupBtn = document.getElementById('googleSignupBtn');
+    var signupError = document.getElementById('signupError');
+
+    // ---- MODAL (User Not Found) ----
+    var userNotFoundModal = document.getElementById('userNotFoundModal');
 
     // ============================================================
-    //  UTILITY: SHOW ERROR
+    //  UTILITY: SHOW/HIDE ERROR
     // ============================================================
     function setError(el, msg) {
         if (!el) return;
@@ -41,6 +44,16 @@
         el.textContent = '';
     }
 
+    function showModal(modal) {
+        if (!modal) return;
+        modal.style.display = 'flex';
+    }
+
+    function hideModal(modal) {
+        if (!modal) return;
+        modal.style.display = 'none';
+    }
+
     // ============================================================
     //  REDIRECT TO DASHBOARD
     // ============================================================
@@ -49,12 +62,15 @@
     }
 
     // ============================================================
-    //  CHECK AUTH STATE ON LOAD
+    //  CHECK AUTH STATE ON LOAD (NO RELOAD LOOP)
     // ============================================================
     window.initAuthListener(function(user) {
         if (user) {
-            // If already logged in, redirect to dashboard
-            redirectToDashboard();
+            // Only redirect if we are on login or signup page
+            if (isLoginPage || isSignupPage) {
+                redirectToDashboard();
+            }
+            // On dashboard, the listener in dashboard.js will handle loading profile
         }
     });
 
@@ -66,8 +82,8 @@
             e.preventDefault();
             clearError(loginError);
 
-            const email = loginEmail.value.trim();
-            const password = loginPassword.value;
+            var email = loginEmail.value.trim();
+            var password = loginPassword.value;
 
             if (!email || !password) {
                 setError(loginError, 'Please fill in all fields.');
@@ -78,7 +94,14 @@
                 await window.loginUser(email, password);
                 redirectToDashboard();
             } catch (err) {
-                setError(loginError, err.message);
+                // ===== FIX: User Not Found Modal =====
+                if (err.code === 'auth/user-not-found') {
+                    // Hide error message, show modal instead
+                    clearError(loginError);
+                    showModal(userNotFoundModal);
+                } else {
+                    setError(loginError, err.message);
+                }
             }
         });
     }
@@ -91,9 +114,9 @@
             e.preventDefault();
             clearError(signupError);
 
-            const name = signupName.value.trim();
-            const email = signupEmail.value.trim();
-            const password = signupPassword.value;
+            var name = signupName.value.trim();
+            var email = signupEmail.value.trim();
+            var password = signupPassword.value;
 
             if (!name || !email || !password) {
                 setError(signupError, 'Please fill in all fields.');
@@ -106,7 +129,7 @@
             }
 
             try {
-                const user = await window.signupUser(email, password, name);
+                var user = await window.signupUser(email, password, name);
                 await window.saveUserProfile(user.uid, {
                     name: name,
                     email: user.email,
@@ -130,7 +153,7 @@
             e.preventDefault();
             clearError(loginError);
 
-            const email = loginEmail.value.trim();
+            var email = loginEmail.value.trim();
             if (!email) {
                 setError(loginError, 'Please enter your email address first.');
                 return;
@@ -146,13 +169,14 @@
     }
 
     // ============================================================
-    //  GOOGLE SIGN-IN (Login & Signup)
+    //  GOOGLE SIGN-IN (FIXED: Save user data before redirect)
     // ============================================================
     async function handleGoogleSignIn() {
         try {
-            const user = await window.signInWithGoogle();
-            // Check if new user (profile may not exist)
-            const profile = await window.getUserProfile(user.uid);
+            var user = await window.signInWithGoogle();
+
+            // ===== FIX: Save user data BEFORE redirect =====
+            var profile = await window.getUserProfile(user.uid);
             if (!profile) {
                 await window.saveUserProfile(user.uid, {
                     name: user.displayName || 'User',
@@ -164,9 +188,12 @@
                 });
             }
             await window.addActivityLog(user.uid, { device: 'Google Sign-In' });
+
+            // Now redirect to dashboard
             redirectToDashboard();
+
         } catch (err) {
-            const errorEl = isLoginPage ? loginError : signupError;
+            var errorEl = isLoginPage ? loginError : signupError;
             if (errorEl) setError(errorEl, err.message);
         }
     }
@@ -177,6 +204,25 @@
 
     if (googleSignupBtn) {
         googleSignupBtn.addEventListener('click', handleGoogleSignIn);
+    }
+
+    // ============================================================
+    //  CLOSE MODAL ON OUTSIDE CLICK OR ESCAPE
+    // ============================================================
+    if (userNotFoundModal) {
+        // Close on overlay click
+        userNotFoundModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideModal(this);
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && userNotFoundModal.style.display === 'flex') {
+                hideModal(userNotFoundModal);
+            }
+        });
     }
 
 })();
