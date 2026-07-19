@@ -1,10 +1,5 @@
 // ============================================================
-//  DASHBOARD.JS – Profile, Settings, Security (FIXED)
-//  - Loads user profile from Firestore
-//  - Logout modal (no alert)
-//  - Delete account modal (no prompt)
-//  - Avatar upload/remove
-//  - Profile update, email update, password change
+//  DASHBOARD.JS – Profile, Settings, Security, Mobile Handlers
 // ============================================================
 
 (function() {
@@ -75,7 +70,7 @@
     };
 
     // ============================================================
-    //  UTILITY FUNCTIONS
+    //  UTILITY
     // ============================================================
     function getInitials(name) {
         if (!name) return '?';
@@ -120,7 +115,7 @@
     }
 
     // ============================================================
-    //  UPDATE AVATAR UI
+    //  AVATAR UI
     // ============================================================
     function updateAvatarUI(photoURL, displayName) {
         var initials = getInitials(displayName);
@@ -401,7 +396,7 @@
     }
 
     // ============================================================
-    //  LOGOUT MODAL (No alert)
+    //  LOGOUT MODAL
     // ============================================================
     if (logoutBtnSidebar) {
         logoutBtnSidebar.addEventListener('click', function(e) {
@@ -436,7 +431,7 @@
     }
 
     // ============================================================
-    //  LOGOUT OTHER DEVICES (instructional)
+    //  LOGOUT OTHER DEVICES
     // ============================================================
     if (logoutDevicesBtn) {
         logoutDevicesBtn.addEventListener('click', function() {
@@ -455,7 +450,7 @@
     }
 
     // ============================================================
-    //  DELETE ACCOUNT MODAL (No prompt, no alert)
+    //  DELETE ACCOUNT MODAL
     // ============================================================
     if (deleteAccountBtn) {
         deleteAccountBtn.addEventListener('click', function(e) {
@@ -539,5 +534,52 @@
             });
         });
     });
+
+    // ============================================================
+    //  MOBILE NAV HANDLERS (Added)
+    // ============================================================
+    function initMobileNav() {
+        // ---- Mobile tab links ----
+        var mobileTabLinks = document.querySelectorAll('.mobile-tab-link');
+        mobileTabLinks.forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var tab = this.dataset.tab;
+                var desktopLink = document.querySelector('.sidebar-nav .nav-link[data-tab="' + tab + '"]');
+                if (desktopLink) {
+                    desktopLink.click();
+                }
+                // Close mobile nav
+                var mobileNav = document.getElementById('mobileNav');
+                var hamburger = document.getElementById('hamburgerBtn');
+                if (mobileNav) mobileNav.classList.remove('open');
+                if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // ---- Mobile logout ----
+        var logoutMobile = document.getElementById('logoutBtnMobile');
+        if (logoutMobile) {
+            logoutMobile.addEventListener('click', function(e) {
+                e.preventDefault();
+                var sidebarLogout = document.getElementById('logoutBtnSidebar');
+                if (sidebarLogout) {
+                    sidebarLogout.click();
+                }
+                // Close mobile nav
+                var mobileNav = document.getElementById('mobileNav');
+                var hamburger = document.getElementById('hamburgerBtn');
+                if (mobileNav) mobileNav.classList.remove('open');
+                if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+            });
+        }
+    }
+
+    // Run after DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMobileNav);
+    } else {
+        initMobileNav();
+    }
 
 })();
