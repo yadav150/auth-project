@@ -20,12 +20,31 @@
 <body>
 
     <!-- ============================================================
-    HEADER
+    HEADER (WITH HAMBURGER – PRIMARY BLUE)
     ============================================================ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
+            <div class="header-actions">
+                <!-- ===== HAMBURGER (Mobile) ===== -->
+                <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
         </div>
+
+        <!-- ===== MOBILE NAV (Hamburger Dropdown) ===== -->
+        <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
+            <ul class="mobile-nav-list">
+                <li><a href="/auth-project/dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="#" data-tab="settings">Settings</a></li>
+                <li><a href="#" data-tab="security">Security</a></li>
+                <li><a href="#" data-tab="help">Help</a></li>
+                <li><a href="#" id="logoutBtnMobile" class="logout-link">Logout</a></li>
+            </ul>
+        </nav>
     </header>
 
     <!-- ============================================================
@@ -42,7 +61,7 @@
 
                     <div class="dashboard-layout">
 
-                        <!-- ===== SIDEBAR ===== -->
+                        <!-- ===== SIDEBAR (Desktop) ===== -->
                         <aside class="dashboard-sidebar">
                             <div class="sidebar-user">
                                 <div class="sidebar-avatar" id="sidebarAvatar">U</div>
@@ -230,7 +249,32 @@
     </main>
 
     <!-- ============================================================
-    FOOTER
+    MODALS
+    ============================================================ -->
+
+    <!-- ===== USER NOT FOUND MODAL ===== -->
+    <div id="userNotFoundModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h3>No user found</h3>
+            <p>Please sign up to create an account.</p>
+            <a href="/auth-project/signup.html" class="btn btn-brown">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- ===== LOGOUT CONFIRMATION MODAL ===== -->
+    <div id="logoutModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h3>Are you sure?</h3>
+            <p>You are about to log out of your account.</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="logoutNoBtn">No</button>
+                <button class="btn btn-danger" id="logoutYesBtn">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    FOOTER (Legal → 404)
     ============================================================ -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
@@ -261,6 +305,72 @@
     <script src="/auth-project/js/firebase-config.js"></script>
     <script src="/auth-project/js/auth.js"></script>
     <script src="/auth-project/js/dashboard.js"></script>
+
+    <!-- ===== HAMBURGER SCRIPT (Inline for speed) ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var hamburger = document.getElementById('hamburgerBtn');
+            var mobileNav = document.getElementById('mobileNav');
+
+            if (hamburger && mobileNav) {
+                hamburger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var isOpen = mobileNav.classList.toggle('open');
+                    hamburger.setAttribute('aria-expanded', isOpen);
+                });
+
+                // Close on outside click
+                document.addEventListener('click', function(e) {
+                    if (mobileNav.classList.contains('open') &&
+                        !mobileNav.contains(e.target) &&
+                        !hamburger.contains(e.target)) {
+                        mobileNav.classList.remove('open');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Close on Escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+                        mobileNav.classList.remove('open');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                        hamburger.focus();
+                    }
+                });
+            }
+
+            // ===== Mobile nav links trigger tab switch =====
+            var mobileLinks = document.querySelectorAll('.mobile-nav-list a:not(.logout-link)');
+            mobileLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var tab = this.dataset.tab;
+                    if (tab) {
+                        // Close mobile nav
+                        mobileNav.classList.remove('open');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                        // Trigger tab switch
+                        var desktopLink = document.querySelector('.sidebar-nav .nav-link[data-tab="' + tab + '"]');
+                        if (desktopLink) {
+                            desktopLink.click();
+                        }
+                    }
+                });
+            });
+
+            // ===== Mobile logout =====
+            var logoutMobile = document.getElementById('logoutBtnMobile');
+            if (logoutMobile) {
+                logoutMobile.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileNav.classList.remove('open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                    var logoutBtn = document.getElementById('logoutBtnSidebar');
+                    if (logoutBtn) logoutBtn.click();
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
