@@ -1,6 +1,6 @@
 // ============================================================
-//  AUTH.JS – Login & Signup Logic
-//  Fallback to error message if modal is missing.
+//  AUTH.JS – FINAL FIXED VERSION
+//  Prevents form reload, handles signup → login redirect
 // ============================================================
 
 (function() {
@@ -56,19 +56,21 @@
         window.location.href = '/auth-project/dashboard.html';
     }
 
-    // ---- Auth state check ----
+    // ---- Auth state check (redirect to dashboard if already logged in) ----
     if (typeof window.initAuthListener === 'function') {
         window.initAuthListener(function(user) {
             if (user && (isLoginPage || isSignupPage)) {
-                redirectToDashboard();
+                window.location.href = '/auth-project/dashboard.html';
             }
         });
     }
 
-    // ---- Login ----
+    // ============================================================
+    //  LOGIN FORM
+    // ============================================================
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+            e.preventDefault(); // CRITICAL: prevent page reload
             clearError(loginError);
 
             var email = loginEmail.value.trim();
@@ -85,7 +87,6 @@
             } catch (err) {
                 if (err.code === 'auth/user-not-found') {
                     clearError(loginError);
-                    // Try to show modal, fallback to error if not found
                     if (userNotFoundModal) {
                         showModal(userNotFoundModal);
                     } else {
@@ -104,10 +105,12 @@
         });
     }
 
-    // ---- Signup ----
+    // ============================================================
+    //  SIGNUP FORM – FIXED (prevent reload, redirect to login)
+    // ============================================================
     if (signupForm) {
         signupForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+            e.preventDefault(); // CRITICAL: prevent page reload
             clearError(signupError);
 
             var name = signupName.value.trim();
@@ -125,30 +128,34 @@
             }
 
             try {
-    var user = await window.signupUser(email, password, name);
-    await window.saveUserProfile(user.uid, {
-        name: name,
-        email: user.email,
-        role: 'Member',
-        joinDate: new Date().toISOString(),
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    await window.addActivityLog(user.uid, { device: 'Browser (Signup)' });
+                var user = await window.signupUser(email, password, name);
+                await window.saveUserProfile(user.uid, {
+                    name: name,
+                    email: user.email,
+                    role: 'Member',
+                    joinDate: new Date().toISOString(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await window.addActivityLog(user.uid, { device: 'Browser (Signup)' });
 
-    // ✅ Redirect to login with success message
-    window.location.href = '/auth-project/login.html?signup=success';
+                // ✅ Redirect to login with success message
+                window.location.href = '/auth-project/login.html?signup=success';
 
-} catch (err) {
-    if (err.code === 'auth/email-already-in-use') {
-        setError(signupError, 'This email is already registered. Please sign in.');
-    } else if (err.code === 'auth/weak-password') {
-        setError(signupError, 'Password is too weak. Use at least 6 characters.');
-    } else {
-        setError(signupError, 'Signup failed. Please try again.');
+            } catch (err) {
+                if (err.code === 'auth/email-already-in-use') {
+                    setError(signupError, 'This email is already registered. Please sign in.');
+                } else if (err.code === 'auth/weak-password') {
+                    setError(signupError, 'Password is too weak. Use at least 6 characters.');
+                } else {
+                    setError(signupError, 'Signup failed. Please try again.');
+                }
+            }
+        });
     }
-}
 
-    // ---- Forgot Password ----
+    // ============================================================
+    //  FORGOT PASSWORD
+    // ============================================================
     if (forgotPasswordLink) {
         forgotPasswordLink.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -173,7 +180,9 @@
         });
     }
 
-    // ---- Google ----
+    // ============================================================
+    //  GOOGLE SIGN-IN
+    // ============================================================
     async function handleGoogleSignIn() {
         try {
             var user = await window.signInWithGoogle();
@@ -199,7 +208,25 @@
     if (googleLoginBtn) googleLoginBtn.addEventListener('click', handleGoogleSignIn);
     if (googleSignupBtn) googleSignupBtn.addEventListener('click', handleGoogleSignIn);
 
-    // ---- Modal close (if present) ----
+    // ============================================================
+    //  SHOW SIGNUP SUCCESS MESSAGE ON LOGIN PAGE
+    // ============================================================
+    if (isLoginPage) {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('signup') === 'success') {
+            var msg = document.getElementById('signupSuccessMsg');
+            if (msg) {
+                msg.style.display = 'block';
+                // Clean URL
+                var cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            }
+        }
+    }
+
+    // ============================================================
+    //  CLOSE MODAL ON OUTSIDE CLICK OR ESCAPE
+    // ============================================================
     if (userNotFoundModal) {
         userNotFoundModal.addEventListener('click', function(e) {
             if (e.target === this) hideModal(this);
