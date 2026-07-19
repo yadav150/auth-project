@@ -1,6 +1,10 @@
 // ============================================================
-//  AUTH.JS – FINAL FIXED VERSION
-//  Prevents form reload, handles signup → login redirect
+//  AUTH.JS – Login & Signup Logic (Fixed)
+//  - Signup → Login with success message
+//  - Login → Dashboard
+//  - Logout → Login (handled by dashboard.js)
+//  - Password reset → inline message (no alert)
+//  - Error messages in error div, no browser alerts
 // ============================================================
 
 (function() {
@@ -26,7 +30,7 @@
     var googleSignupBtn = document.getElementById('googleSignupBtn');
     var signupError = document.getElementById('signupError');
 
-    // ---- Modal ----
+    // ---- Modal (User Not Found) ----
     var userNotFoundModal = document.getElementById('userNotFoundModal');
 
     // ---- Utilities ----
@@ -34,12 +38,26 @@
         if (!el) return;
         el.textContent = msg;
         el.classList.add('show');
+        // Ensure success message is hidden if error appears
+        var successMsg = document.getElementById('signupSuccessMsg');
+        if (successMsg) successMsg.style.display = 'none';
     }
 
     function clearError(el) {
         if (!el) return;
         el.classList.remove('show');
         el.textContent = '';
+    }
+
+    function setSuccess(el, msg) {
+        if (!el) return;
+        el.textContent = msg;
+        el.style.display = 'block';
+        // Hide error if present
+        if (loginError) loginError.classList.remove('show');
+        setTimeout(function() {
+            el.style.display = 'none';
+        }, 5000);
     }
 
     function showModal(modal) {
@@ -56,11 +74,15 @@
         window.location.href = '/auth-project/dashboard.html';
     }
 
-    // ---- Auth state check (redirect to dashboard if already logged in) ----
+    function redirectToLogin() {
+        window.location.href = '/auth-project/login.html';
+    }
+
+    // ---- Auth state check (if logged in, redirect away from login/signup) ----
     if (typeof window.initAuthListener === 'function') {
         window.initAuthListener(function(user) {
             if (user && (isLoginPage || isSignupPage)) {
-                window.location.href = '/auth-project/dashboard.html';
+                redirectToDashboard();
             }
         });
     }
@@ -70,7 +92,7 @@
     // ============================================================
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault(); // CRITICAL: prevent page reload
+            e.preventDefault();
             clearError(loginError);
 
             var email = loginEmail.value.trim();
@@ -106,11 +128,11 @@
     }
 
     // ============================================================
-    //  SIGNUP FORM – FIXED (prevent reload, redirect to login)
+    //  SIGNUP FORM
     // ============================================================
     if (signupForm) {
         signupForm.addEventListener('submit', async function(e) {
-            e.preventDefault(); // CRITICAL: prevent page reload
+            e.preventDefault();
             clearError(signupError);
 
             var name = signupName.value.trim();
@@ -138,7 +160,7 @@
                 });
                 await window.addActivityLog(user.uid, { device: 'Browser (Signup)' });
 
-                // ✅ Redirect to login with success message
+                // Redirect to login with success message
                 window.location.href = '/auth-project/login.html?signup=success';
 
             } catch (err) {
@@ -154,7 +176,7 @@
     }
 
     // ============================================================
-    //  FORGOT PASSWORD
+    //  FORGOT PASSWORD (no alert, uses inline message)
     // ============================================================
     if (forgotPasswordLink) {
         forgotPasswordLink.addEventListener('click', async function(e) {
@@ -169,7 +191,21 @@
 
             try {
                 await window.sendPasswordReset(email);
-                alert('Password reset email sent. Check your inbox.');
+                // Show success in error div (reuse as success)
+                loginError.classList.remove('show');
+                loginError.textContent = '';
+                var successDiv = document.getElementById('signupSuccessMsg');
+                if (successDiv) {
+                    setSuccess(successDiv, 'Password reset email sent. Check your inbox.');
+                } else {
+                    // Fallback: create a temporary success message
+                    var temp = document.createElement('div');
+                    temp.style.cssText = 'padding:10px 14px;background:#dcfce7;border:1px solid #bbf7d0;border-radius:8px;color:#166534;font-size:.9rem;margin-bottom:16px;';
+                    temp.textContent = 'Password reset email sent. Check your inbox.';
+                    var parent = forgotPasswordLink.closest('.auth-view');
+                    if (parent) parent.insertBefore(temp, loginForm);
+                    setTimeout(function() { temp.remove(); }, 5000);
+                }
             } catch (err) {
                 if (err.code === 'auth/user-not-found') {
                     setError(loginError, 'No account found with this email.');
