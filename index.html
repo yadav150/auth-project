@@ -3,146 +3,141 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yadav Authentication Project</title>
-    <link rel="stylesheet" href="/auth-project/css/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <title>AuthProject · Home</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+    </script>
 </head>
 <body>
 
-    <!-- ============================================================
-    HEADER (Same on ALL pages)
-    ============================================================ -->
-    <header class="site-header" role="banner">
+    <!-- ===== HEADER ===== -->
+    <header class="site-header">
         <div class="header-inner">
-            <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
-            <div class="header-actions">
-                <!-- ===== HAMBURGER (Mobile only) ===== -->
-                <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                </button>
+            <div class="logo-area">
+                <!-- SVG logo – primary color #000 -->
+                <svg class="logo-svg" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="32" height="32" rx="3" stroke="#000000" stroke-width="2.5" />
+                    <path d="M10 10L26 10L26 14L10 14L10 10Z" fill="#000000" />
+                    <path d="M10 18L22 18L22 22L10 22L10 18Z" fill="#000000" />
+                    <path d="M10 26L18 26L18 30L10 30L10 26Z" fill="#000000" />
+                </svg>
+                <span class="site-name">AuthProject</span>
             </div>
+
+            <!-- 3‑dot hamburger (nav toggle) -->
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </button>
         </div>
 
-        <!-- ===== HORIZONTAL NAV (Desktop) ===== -->
-        <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary navigation">
-            <ul class="nav-list">
-                <li><a href="/auth-project/index.html" class="nav-link" aria-current="page">Home</a></li>
-                <li><a href="/auth-project/login.html" class="nav-link">Login</a></li>
-                <li><a href="/auth-project/signup.html" class="nav-link">Sign Up</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link">Privacy</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link">Terms</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link">Contact</a></li>
-            </ul>
-        </nav>
-
-        <!-- ===== MOBILE NAV (Slide-down) ===== -->
-        <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
-            <ul class="mobile-nav-list">
-                <li><a href="/auth-project/index.html" class="nav-link-mobile active">Home</a></li>
-                <li><a href="/auth-project/login.html" class="nav-link-mobile">Login</a></li>
-                <li><a href="/auth-project/signup.html" class="nav-link-mobile">Sign Up</a></li>
-                <li class="nav-divider"></li>
-                <li><a href="/auth-project/404.html" class="nav-link-mobile">Privacy</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link-mobile">Terms</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link-mobile">Contact</a></li>
-            </ul>
+        <!-- Expandable nav links (hidden by default) -->
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html" class="active">Home</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="disclaimer.html">Disclaimer</a>
+            <a href="about.html">About</a>
         </nav>
     </header>
 
-    <!-- ============================================================
-    MAIN CONTENT
-    ============================================================ -->
-    <main id="main-content">
-        <section class="section auth-section" aria-labelledby="auth-heading">
-            <div class="section-title-bar">
-                <h2 id="auth-heading">Welcome</h2>
-            </div>
-            <div class="section-body">
-                <div class="content-box">
-
-                    <!-- ===== HERO ===== -->
-                    <div class="hero-content">
-                        <div class="hero-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                <path d="M2 17l10 5 10-5"/>
-                                <path d="M2 12l10 5 10-5"/>
-                            </svg>
-                        </div>
-                        <h1>Secure Authentication System</h1>
-                        <p class="hero-desc">
-                            A complete authentication solution built by <strong>Yadav Subba</strong>.
-                            This project includes Email/Password login, Google OAuth, phone verification,
-                            profile management, avatar upload, and a full user dashboard with activity tracking.
-                            All data is powered by Firebase.
-                        </p>
-                        <div class="hero-actions">
-                            <a href="/auth-project/login.html" class="btn btn-primary">Sign In</a>
-                            <a href="/auth-project/signup.html" class="btn btn-secondary">Create Account</a>
-                        </div>
-                    </div>
-
-                    <!-- ===== FEATURES ===== -->
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                            <h4>Secure Auth</h4>
-                            <p>Email/Password &amp; Google OAuth</p>
-                        </div>
-                        <div class="feature-card">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            <h4>Privacy First</h4>
-                            <p>Your data, your control</p>
-                        </div>
-                        <div class="feature-card">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-                            <h4>Activity Log</h4>
-                            <p>Track your sessions</p>
-                        </div>
-                        <div class="feature-card">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <h4>Real-time</h4>
-                            <p>Firebase powered</p>
-                        </div>
-                    </div>
-
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-inner">
+                <h1 class="hero-title">Yadav Authenticarion Project</h1>
+                <p class="hero-desc">
+                    Full‑stack authentication with Firebase — email/password, Google sign‑in,
+                    password reset, and a secure dashboard.
+                </p>
+                <div class="hero-actions">
+                    <a href="login.html" class="btn btn-primary">Login</a>
+                    <a href="signup.html" class="btn btn-secondary">Sign Up</a>
+                </div>
+                <div class="hero-support">
+                    <!-- No emojis, plain text -->
+                    <span>support@authproject.dev</span>
+                    <span>+1 (555) 000‑9999</span>
                 </div>
             </div>
         </section>
-        <div class="spacer"></div>
+
+        <section class="features-section">
+            <div class="section-title">
+                <h2>Why AuthProject</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <!-- SVG icon instead of emoji -->
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="8" width="32" height="24" rx="2" stroke="#000000" stroke-width="2" />
+                        <path d="M8 12L20 22L32 12" stroke="#000000" stroke-width="2" stroke-linejoin="round" />
+                        <circle cx="20" cy="20" r="2" fill="#000000" />
+                    </svg>
+                    <h3>Secure Login</h3>
+                    <p>Email + password with Firebase Auth, plus "Continue with Google".</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 26L16 18L24 24L32 12" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="8" cy="26" r="2" fill="#000000" />
+                        <circle cx="16" cy="18" r="2" fill="#000000" />
+                        <circle cx="24" cy="24" r="2" fill="#000000" />
+                        <circle cx="32" cy="12" r="2" fill="#000000" />
+                    </svg>
+                    <h3>Password Reset</h3>
+                    <p>Forgot password flow with a dedicated update page.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="14" r="6" stroke="#000000" stroke-width="2" />
+                        <path d="M6 34C6 26 12 20 20 20C28 20 34 26 34 34" stroke="#000000" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <h3>User Dashboard</h3>
+                    <p>Personalised welcome, profile placeholder, settings &amp; logout.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="14" stroke="#000000" stroke-width="2" />
+                        <path d="M20 6V20L28 28" stroke="#000000" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <h3>Auto‑Logout</h3>
+                    <p>Inactive? We sign you out automatically after a short timeout.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- ============================================================
-    FOOTER (Same on ALL pages)
-    ============================================================ -->
-    <footer class="site-footer" role="contentinfo">
+    <!-- ===== FOOTER ===== -->
+    <footer class="site-footer">
         <div class="footer-inner">
-            <div class="footer-brand">
-                <span class="footer-title">Yadav Authentication Project</span>
-                <p class="footer-desc">A complete, secure authentication system built with Firebase.</p>
+            <div class="footer-left">
+                <span class="footer-brand">AuthProject © 2026</span>
             </div>
-            <div class="footer-links">
-                <a href="/auth-project/index.html">Home</a>
-                <a href="/auth-project/login.html">Login</a>
-                <a href="/auth-project/signup.html">Sign Up</a>
-            </div>
-            <div class="footer-legal">
-                <a href="/auth-project/404.html">Privacy</a>
-                <a href="/auth-project/404.html">Terms</a>
-                <a href="/auth-project/404.html">Contact</a>
-            </div>
-            <div class="footer-bottom">
-                <p class="footer-copy">&copy; 2026 Yadav Authentication Project. Built by <strong>Yadav Subba</strong>. All Rights Reserved.</p>
-            </div>
+            <button class="footer-toggle" id="footerToggle" aria-label="Expand footer links">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </button>
+        </div>
+        <!-- Expandable footer links (hidden by default) -->
+        <div class="footer-links" id="footerLinks">
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="disclaimer.html">Disclaimer</a>
+            <a href="about.html">About</a>
         </div>
     </footer>
 
-    <!-- ============================================================
-    SCRIPTS
-    ============================================================ -->
-    <script src="/auth-project/js/script.js"></script>
-
+    <!-- ===== SHARED JS ===== -->
+    <script src="js/common.js"></script>
+    <!-- Page‑specific JS -->
+    <script src="js/index.js"></script>
 </body>
 </html>
