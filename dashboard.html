@@ -6,14 +6,12 @@
     <title>Dashboard · Yadav Authentication Project</title>
     <link rel="stylesheet" href="/auth-project/css/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
+    <!-- ============================================================
+    HEADER (Same on ALL pages)
+    ============================================================ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
@@ -25,7 +23,18 @@
                 </button>
             </div>
         </div>
-        <!-- ===== MOBILE NAV (Only Global Links – NO Dashboard Links) ===== -->
+
+        <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary navigation">
+            <ul class="nav-list">
+                <li><a href="/auth-project/index.html" class="nav-link">Home</a></li>
+                <li><a href="/auth-project/login.html" class="nav-link">Login</a></li>
+                <li><a href="/auth-project/signup.html" class="nav-link">Sign Up</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link">Privacy</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link">Terms</a></li>
+                <li><a href="/auth-project/404.html" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+
         <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
             <ul class="mobile-nav-list">
                 <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
@@ -39,15 +48,20 @@
         </nav>
     </header>
 
-    <!-- ===== MAIN ===== -->
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
     <main id="main-content">
-        <section class="section auth-section">
-            <div class="section-title-bar"><h2>Dashboard</h2></div>
+        <section class="section auth-section" aria-labelledby="auth-heading">
+            <div class="section-title-bar">
+                <h2 id="auth-heading">Dashboard</h2>
+            </div>
             <div class="section-body">
                 <div class="content-box" style="max-width:100%;">
+
                     <div class="dashboard-layout">
 
-                        <!-- ===== SIDEBAR (Dashboard Links ONLY) ===== -->
+                        <!-- ===== SIDEBAR ===== -->
                         <aside class="dashboard-sidebar">
                             <div class="sidebar-user">
                                 <div class="sidebar-avatar" id="sidebarAvatar">U</div>
@@ -81,10 +95,10 @@
                         <!-- ===== CONTENT ===== -->
                         <main class="dashboard-content">
 
-                            <!-- TAB: DASHBOARD -->
+                            <!-- ===== TAB: DASHBOARD ===== -->
                             <section id="tab-dashboard" class="tab-content active">
                                 <div class="dashboard-header">
-                                    <h1 id="dashboardGreeting">Hi, User!</h1>
+                                    <h1>Hi, User!</h1>
                                     <p>Welcome to your Yadav Authentication Project dashboard.</p>
                                 </div>
                                 <div class="profile-summary-card">
@@ -97,11 +111,13 @@
                                 </div>
                                 <div class="activity-log">
                                     <h4>Recent Activity</h4>
-                                    <ul id="activityList"><li style="color:#94a3b8;font-size:.9rem;">No recent activity.</li></ul>
+                                    <ul id="activityList">
+                                        <li style="color:var(--text-muted);font-size:.9rem;">No recent activity.</li>
+                                    </ul>
                                 </div>
                             </section>
 
-                            <!-- TAB: SETTINGS -->
+                            <!-- ===== TAB: SETTINGS ===== -->
                             <section id="tab-settings" class="tab-content" style="display:none;">
                                 <h2>Profile Settings</h2>
                                 <div class="settings-card">
@@ -109,7 +125,6 @@
                                     <div class="avatar-upload-area">
                                         <div class="avatar-preview" id="avatarPreview">U</div>
                                         <div class="avatar-actions">
-                                            <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
                                             <button class="btn btn-secondary" id="uploadAvatarBtn">Upload</button>
                                             <button class="btn btn-secondary btn-danger" id="removeAvatarBtn">Remove</button>
                                         </div>
@@ -142,7 +157,7 @@
                                 </div>
                             </section>
 
-                            <!-- TAB: SECURITY -->
+                            <!-- ===== TAB: SECURITY ===== -->
                             <section id="tab-security" class="tab-content" style="display:none;">
                                 <h2>Security & Privacy</h2>
                                 <div class="settings-card">
@@ -158,66 +173,40 @@
                                 </div>
                                 <div class="settings-card">
                                     <h4>Session Management</h4>
-                                    <p style="font-size:.9rem;color:#94a3b8;">Revoke all sessions except this one.</p>
+                                    <p style="font-size:.9rem;color:var(--text-muted);">Revoke all sessions except this one.</p>
                                     <button class="btn btn-secondary" id="logoutDevicesBtn">Logout from all other devices</button>
                                     <div id="deviceError" class="error-msg"></div>
                                 </div>
                                 <div class="settings-card danger-zone">
-                                    <h4 style="color:#dc2626;">Danger Zone</h4>
+                                    <h4 style="color:var(--danger);">Danger Zone</h4>
                                     <p style="font-size:.9rem;">Permanently delete your account and all associated data.</p>
                                     <button class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
                                     <div id="deleteError" class="error-msg"></div>
                                 </div>
                             </section>
 
-                            <!-- TAB: HELP -->
+                            <!-- ===== TAB: HELP ===== -->
                             <section id="tab-help" class="tab-content" style="display:none;">
                                 <h2>Help & Support</h2>
                                 <div class="settings-card">
                                     <h4>Need Assistance?</h4>
-                                    <p>Built by <strong>Yadav Subba</strong>. For support, reach out via the <a href="/auth-project/404.html" style="color:#2563eb;">Contact</a> page.</p>
+                                    <p>Built by <strong>Yadav Subba</strong>. For support, reach out via the <a href="/auth-project/404.html" style="color:var(--primary);">Contact</a> page.</p>
                                     <p>Make sure you have verified your email for full access.</p>
                                 </div>
                             </section>
 
                         </main>
                     </div>
+
                 </div>
             </div>
         </section>
         <div class="spacer"></div>
     </main>
 
-    <!-- ===== MODALS ===== -->
-    <div id="logoutModal" class="modal-overlay" style="display:none;">
-        <div class="modal-box">
-            <h3>Are you sure?</h3>
-            <p>You are about to log out of your account.</p>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="logoutNoBtn">No</button>
-                <button class="btn btn-danger" id="logoutYesBtn">Yes, Logout</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="deleteModal" class="modal-overlay" style="display:none;">
-        <div class="modal-box" style="text-align:left;">
-            <h3 style="text-align:center;">Delete Account</h3>
-            <p style="text-align:center;color:#dc2626;font-weight:600;">This action is permanent and cannot be undone.</p>
-            <p style="text-align:center;">Enter your password to confirm.</p>
-            <div class="field-group" style="margin-top:12px;">
-                <label for="deletePasswordInput" style="min-width:auto;font-weight:500;">Password</label>
-                <input type="password" id="deletePasswordInput" placeholder="Enter your password" style="flex:1;width:100%;" />
-            </div>
-            <div id="deleteModalError" class="error-msg" style="margin-top:8px;"></div>
-            <div class="modal-actions" style="margin-top:12px;">
-                <button class="btn btn-secondary" id="deleteCancelBtn">Cancel</button>
-                <button class="btn btn-danger" id="deleteConfirmBtn">Delete Account</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== FOOTER ===== -->
+    <!-- ============================================================
+    FOOTER (Same on ALL pages)
+    ============================================================ -->
     <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -240,25 +229,10 @@
         </div>
     </footer>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
     <script src="/auth-project/js/script.js"></script>
-    <script src="/auth-project/js/firebase-config.js"></script>
-    <script src="/auth-project/js/auth.js"></script>
-    <script src="/auth-project/js/dashboard.js"></script>
-
-    <!-- ===== AUTO-LOGOUT ON BACK BUTTON ===== -->
-    <script>
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                // Page was loaded from cache (back button was pressed)
-                var user = window.auth.currentUser;
-                if (user) {
-                    window.logoutUser();
-                    window.location.href = '/auth-project/login.html';
-                }
-            }
-        });
-    </script>
 
 </body>
 </html>
