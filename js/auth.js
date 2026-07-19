@@ -1,6 +1,7 @@
 // ============================================================
-//  AUTH.JS – Login & Signup Logic (Fixed Error Messages)
+//  AUTH.JS – Login & Signup Logic (Fixed Error Handling)
 //  Fixes: User-friendly error messages for invalid login
+//  Also checks for modal existence to avoid errors.
 // ============================================================
 
 (function() {
@@ -64,18 +65,18 @@
     // ============================================================
     //  CHECK AUTH STATE ON LOAD (NO RELOAD LOOP)
     // ============================================================
-    window.initAuthListener(function(user) {
-        if (user) {
-            // Only redirect if we are on login or signup page
-            if (isLoginPage || isSignupPage) {
-                redirectToDashboard();
+    if (typeof window.initAuthListener === 'function') {
+        window.initAuthListener(function(user) {
+            if (user) {
+                if (isLoginPage || isSignupPage) {
+                    redirectToDashboard();
+                }
             }
-            // On dashboard, the listener in dashboard.js will handle loading profile
-        }
-    });
+        });
+    }
 
     // ============================================================
-    //  LOGIN FORM (FIXED ERROR HANDLING)
+    //  LOGIN FORM
     // ============================================================
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
@@ -94,20 +95,16 @@
                 await window.loginUser(email, password);
                 redirectToDashboard();
             } catch (err) {
-                // ===== USER-FRIENDLY ERROR MESSAGES =====
                 if (err.code === 'auth/user-not-found') {
-                    // Show modal for "No user found"
                     clearError(loginError);
                     showModal(userNotFoundModal);
                 } else if (err.code === 'auth/wrong-password') {
                     setError(loginError, 'Incorrect password. Please try again.');
                 } else if (err.code === 'auth/invalid-login-credentials') {
-                    // Generic invalid credentials – show friendly message
                     setError(loginError, 'Invalid email or password. Please try again.');
                 } else if (err.code === 'auth/too-many-requests') {
                     setError(loginError, 'Too many failed attempts. Please try again later.');
                 } else {
-                    // Fallback for any other error
                     setError(loginError, 'Login failed. Please check your credentials and try again.');
                 }
             }
@@ -187,13 +184,11 @@
     }
 
     // ============================================================
-    //  GOOGLE SIGN-IN (FIXED: Save user data before redirect)
+    //  GOOGLE SIGN-IN
     // ============================================================
     async function handleGoogleSignIn() {
         try {
             var user = await window.signInWithGoogle();
-
-            // ===== FIX: Save user data BEFORE redirect =====
             var profile = await window.getUserProfile(user.uid);
             if (!profile) {
                 await window.saveUserProfile(user.uid, {
@@ -206,10 +201,7 @@
                 });
             }
             await window.addActivityLog(user.uid, { device: 'Google Sign-In' });
-
-            // Now redirect to dashboard
             redirectToDashboard();
-
         } catch (err) {
             var errorEl = isLoginPage ? loginError : signupError;
             if (errorEl) setError(errorEl, 'Google sign-in failed. Please try again.');
@@ -228,14 +220,12 @@
     //  CLOSE MODAL ON OUTSIDE CLICK OR ESCAPE
     // ============================================================
     if (userNotFoundModal) {
-        // Close on overlay click
         userNotFoundModal.addEventListener('click', function(e) {
             if (e.target === this) {
                 hideModal(this);
             }
         });
 
-        // Close on Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && userNotFoundModal.style.display === 'flex') {
                 hideModal(userNotFoundModal);
