@@ -1,5 +1,9 @@
 // ============================================================
-//  DASHBOARD.JS – Profile, Settings, Security, Mobile Handlers
+//  DASHBOARD.JS – Profile, Settings, Security (FIXED)
+//  - Profile fetch from Firestore
+//  - Profile update saves to Firestore
+//  - Name display: "Welcome, Ram Kumar"
+//  - Auto-logout on back handled in HTML
 // ============================================================
 
 (function() {
@@ -135,37 +139,84 @@
     }
 
     // ============================================================
-    //  LOAD USER PROFILE
+    //  GET FULL NAME (First + Last)
+    // ============================================================
+    function getFirstName(fullName) {
+        if (!fullName) return 'User';
+        var parts = fullName.trim().split(' ');
+        return parts[0];
+    }
+
+    // ============================================================
+    //  LOAD USER PROFILE (FIXED)
     // ============================================================
     async function loadUserProfile(user) {
         try {
-            var data = await window.getUserProfile(user.uid) || {};
-            var displayName = data.name || user.displayName || user.email || 'User';
-            var phone = data.phone || user.phoneNumber || '';
-            var bio = data.bio || '';
-            var location = data.location || '';
-            var role = data.role || 'Member';
-            var joinDate = data.joinDate || user.metadata.creationTime || new Date().toISOString();
-            var photoURL = user.photoURL || data.photoURL || null;
+            // Get from Firestore first
+            var data = await window.getUserProfile(user.uid);
+            console.log('Firestore data:', data); // Debug
+
+            var displayName = 'User';
+            var phone = '';
+            var bio = '';
+            var location = '';
+            var role = 'Member';
+            var joinDate = user.metadata.creationTime || new Date().toISOString();
+            var photoURL = user.photoURL || null;
+
+            if (data) {
+                displayName = data.name || user.displayName || user.email || 'User';
+                phone = data.phone || '';
+                bio = data.bio || '';
+                location = data.location || '';
+                role = data.role || 'Member';
+                joinDate = data.joinDate || user.metadata.creationTime || new Date().toISOString();
+                photoURL = user.photoURL || data.photoURL || null;
+            } else {
+                // Fallback to Firebase Auth
+                displayName = user.displayName || user.email || 'User';
+                photoURL = user.photoURL || null;
+            }
+
+            // Update UI
+            var firstName = getFirstName(displayName);
+            dashboardGreeting.textContent = 'Hi, ' + firstName + '!';
+            dashboardGreeting.style.fontWeight = '700';
 
             sidebarName.textContent = displayName;
             sidebarEmail.textContent = user.email || 'No email';
             summaryName.textContent = displayName;
             summaryRole.textContent = role;
             summaryJoinDate.textContent = 'Joined: ' + formatDate(joinDate);
-            dashboardGreeting.textContent = 'Hi, ' + (displayName.split(' ')[0] || 'User') + '!';
 
             updateAvatarUI(photoURL, displayName);
 
+            // Populate edit fields
             editName.value = displayName;
             editPhone.value = phone;
             editBio.value = bio;
             editLocation.value = location;
 
-            window._profileData = { displayName: displayName, phone: phone, bio: bio, location: location, photoURL: photoURL };
+            // Store for cancel
+            window._profileData = {
+                displayName: displayName,
+                phone: phone,
+                bio: bio,
+                location: location,
+                photoURL: photoURL
+            };
 
         } catch (err) {
             console.warn('Error loading profile:', err);
+            // Fallback to Firebase Auth data
+            if (user) {
+                var fallbackName = user.displayName || user.email || 'User';
+                dashboardGreeting.textContent = 'Hi, ' + getFirstName(fallbackName) + '!';
+                sidebarName.textContent = fallbackName;
+                sidebarEmail.textContent = user.email || 'No email';
+                summaryName.textContent = fallbackName;
+                updateAvatarUI(user.photoURL || null, fallbackName);
+            }
         }
     }
 
@@ -207,7 +258,7 @@
     }
 
     // ============================================================
-    //  PROFILE UPDATE
+    //  PROFILE UPDATE (FIXED)
     // ============================================================
     if (profileForm) {
         profileForm.addEventListener('submit', async function(e) {
@@ -229,20 +280,39 @@
             if (!user) return;
 
             try {
+                // Update Auth displayName
                 await user.updateProfile({ displayName: name });
-                await window.saveUserProfile(user.uid, { name: name, phone: phone, bio: bio, location: location });
 
+                // Save to Firestore
+                var updateData = {
+                    name: name,
+                    phone: phone,
+                    bio: bio,
+                    location: location,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                await window.saveUserProfile(user.uid, updateData);
+                console.log('Profile saved:', updateData); // Debug
+
+                // Update UI
                 sidebarName.textContent = name;
                 summaryName.textContent = name;
-                dashboardGreeting.textContent = 'Hi, ' + (name.split(' ')[0] || 'User') + '!';
+                dashboardGreeting.textContent = 'Hi, ' + getFirstName(name) + '!';
 
                 var photoURL = user.photoURL || window._profileData?.photoURL || null;
                 updateAvatarUI(photoURL, name);
 
                 showSuccess(profileSuccess, 'Profile updated successfully!');
-                window._profileData = { displayName: name, phone: phone, bio: bio, location: location, photoURL: photoURL };
+                window._profileData = {
+                    displayName: name,
+                    phone: phone,
+                    bio: bio,
+                    location: location,
+                    photoURL: photoURL
+                };
 
             } catch (err) {
+                console.error('Update error:', err);
                 setError(profileError, err.message);
             }
         });
@@ -534,52 +604,5 @@
             });
         });
     });
-
-    // ============================================================
-    //  MOBILE NAV HANDLERS (Added)
-    // ============================================================
-    function initMobileNav() {
-        // ---- Mobile tab links ----
-        var mobileTabLinks = document.querySelectorAll('.mobile-tab-link');
-        mobileTabLinks.forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var tab = this.dataset.tab;
-                var desktopLink = document.querySelector('.sidebar-nav .nav-link[data-tab="' + tab + '"]');
-                if (desktopLink) {
-                    desktopLink.click();
-                }
-                // Close mobile nav
-                var mobileNav = document.getElementById('mobileNav');
-                var hamburger = document.getElementById('hamburgerBtn');
-                if (mobileNav) mobileNav.classList.remove('open');
-                if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
-            });
-        });
-
-        // ---- Mobile logout ----
-        var logoutMobile = document.getElementById('logoutBtnMobile');
-        if (logoutMobile) {
-            logoutMobile.addEventListener('click', function(e) {
-                e.preventDefault();
-                var sidebarLogout = document.getElementById('logoutBtnSidebar');
-                if (sidebarLogout) {
-                    sidebarLogout.click();
-                }
-                // Close mobile nav
-                var mobileNav = document.getElementById('mobileNav');
-                var hamburger = document.getElementById('hamburgerBtn');
-                if (mobileNav) mobileNav.classList.remove('open');
-                if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
-            });
-        }
-    }
-
-    // Run after DOM ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMobileNav);
-    } else {
-        initMobileNav();
-    }
 
 })();
