@@ -1,17 +1,16 @@
 // ============================================================
-//  AUTH.JS – Login & Signup Logic (Fixed Error Handling)
-//  Fixes: User-friendly error messages for invalid login
-//  Also checks for modal existence to avoid errors.
+//  AUTH.JS – Login & Signup Logic
+//  Fallback to error message if modal is missing.
 // ============================================================
 
 (function() {
     'use strict';
 
-    // ---- Determine which page we're on ----
+    // ---- Determine page ----
     var isLoginPage = document.getElementById('loginForm') !== null;
     var isSignupPage = document.getElementById('signupForm') !== null;
 
-    // ---- DOM REFS (Login Page) ----
+    // ---- Login DOM ----
     var loginForm = document.getElementById('loginForm');
     var loginEmail = document.getElementById('loginEmail');
     var loginPassword = document.getElementById('loginPassword');
@@ -19,7 +18,7 @@
     var googleLoginBtn = document.getElementById('googleLoginBtn');
     var loginError = document.getElementById('loginError');
 
-    // ---- DOM REFS (Signup Page) ----
+    // ---- Signup DOM ----
     var signupForm = document.getElementById('signupForm');
     var signupName = document.getElementById('signupName');
     var signupEmail = document.getElementById('signupEmail');
@@ -27,12 +26,10 @@
     var googleSignupBtn = document.getElementById('googleSignupBtn');
     var signupError = document.getElementById('signupError');
 
-    // ---- MODAL (User Not Found) ----
+    // ---- Modal ----
     var userNotFoundModal = document.getElementById('userNotFoundModal');
 
-    // ============================================================
-    //  UTILITY: SHOW/HIDE ERROR
-    // ============================================================
+    // ---- Utilities ----
     function setError(el, msg) {
         if (!el) return;
         el.textContent = msg;
@@ -55,29 +52,20 @@
         modal.style.display = 'none';
     }
 
-    // ============================================================
-    //  REDIRECT TO DASHBOARD
-    // ============================================================
     function redirectToDashboard() {
         window.location.href = '/auth-project/dashboard.html';
     }
 
-    // ============================================================
-    //  CHECK AUTH STATE ON LOAD (NO RELOAD LOOP)
-    // ============================================================
+    // ---- Auth state check ----
     if (typeof window.initAuthListener === 'function') {
         window.initAuthListener(function(user) {
-            if (user) {
-                if (isLoginPage || isSignupPage) {
-                    redirectToDashboard();
-                }
+            if (user && (isLoginPage || isSignupPage)) {
+                redirectToDashboard();
             }
         });
     }
 
-    // ============================================================
-    //  LOGIN FORM
-    // ============================================================
+    // ---- Login ----
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -97,7 +85,12 @@
             } catch (err) {
                 if (err.code === 'auth/user-not-found') {
                     clearError(loginError);
-                    showModal(userNotFoundModal);
+                    // Try to show modal, fallback to error if not found
+                    if (userNotFoundModal) {
+                        showModal(userNotFoundModal);
+                    } else {
+                        setError(loginError, 'No user found. Please sign up.');
+                    }
                 } else if (err.code === 'auth/wrong-password') {
                     setError(loginError, 'Incorrect password. Please try again.');
                 } else if (err.code === 'auth/invalid-login-credentials') {
@@ -111,9 +104,7 @@
         });
     }
 
-    // ============================================================
-    //  SIGNUP FORM
-    // ============================================================
+    // ---- Signup ----
     if (signupForm) {
         signupForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -156,9 +147,7 @@
         });
     }
 
-    // ============================================================
-    //  FORGOT PASSWORD
-    // ============================================================
+    // ---- Forgot Password ----
     if (forgotPasswordLink) {
         forgotPasswordLink.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -183,9 +172,7 @@
         });
     }
 
-    // ============================================================
-    //  GOOGLE SIGN-IN
-    // ============================================================
+    // ---- Google ----
     async function handleGoogleSignIn() {
         try {
             var user = await window.signInWithGoogle();
@@ -208,24 +195,14 @@
         }
     }
 
-    if (googleLoginBtn) {
-        googleLoginBtn.addEventListener('click', handleGoogleSignIn);
-    }
+    if (googleLoginBtn) googleLoginBtn.addEventListener('click', handleGoogleSignIn);
+    if (googleSignupBtn) googleSignupBtn.addEventListener('click', handleGoogleSignIn);
 
-    if (googleSignupBtn) {
-        googleSignupBtn.addEventListener('click', handleGoogleSignIn);
-    }
-
-    // ============================================================
-    //  CLOSE MODAL ON OUTSIDE CLICK OR ESCAPE
-    // ============================================================
+    // ---- Modal close (if present) ----
     if (userNotFoundModal) {
         userNotFoundModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                hideModal(this);
-            }
+            if (e.target === this) hideModal(this);
         });
-
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && userNotFoundModal.style.display === 'flex') {
                 hideModal(userNotFoundModal);
