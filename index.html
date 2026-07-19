@@ -16,7 +16,7 @@
         <div class="header-inner">
             <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
             <div class="header-actions">
-                <!-- ===== HAMBURGER (Mobile only) ===== -->
+                <!-- ===== HAMBURGER (Mobile only – three lines) ===== -->
                 <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="hamburger-line"></span>
                     <span class="hamburger-line"></span>
@@ -37,7 +37,7 @@
             </ul>
         </nav>
 
-        <!-- ===== MOBILE NAV (Slide-down) ===== -->
+        <!-- ===== MOBILE NAV (Slide-down – collapsed by default) ===== -->
         <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
             <ul class="mobile-nav-list">
                 <li><a href="/auth-project/index.html" class="nav-link-mobile active">Home</a></li>
@@ -52,7 +52,7 @@
     </header>
 
     <!-- ============================================================
-    MAIN CONTENT (Same as before)
+    MAIN CONTENT
     ============================================================ -->
     <main id="main-content">
         <section class="section auth-section" aria-labelledby="auth-heading">
@@ -62,7 +62,6 @@
             <div class="section-body">
                 <div class="content-box">
 
-                    <!-- ===== HERO ===== -->
                     <div class="hero-content">
                         <div class="hero-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:64px;height:64px;">
@@ -84,7 +83,6 @@
                         </div>
                     </div>
 
-                    <!-- ===== FEATURES ===== -->
                     <div class="features-grid">
                         <div class="feature-card">
                             <svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
@@ -143,6 +141,16 @@
     SCRIPTS
     ============================================================ -->
     <script src="/auth-project/js/script.js"></script>
+
+    <!-- ===== ENSURE HAMBURGER STARTS COLLAPSED ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var mobileNav = document.getElementById('mobileNav');
+            var hamburger = document.getElementById('hamburgerBtn');
+            if (mobileNav) mobileNav.classList.remove('open');
+            if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+        });
+    </script>
 
 </body>
 </html>
