@@ -1,5 +1,6 @@
 // ============================================================
 //  FIREBASE CONFIG – Yadav Authentication Project
+//  All functions exposed to window for global access
 // ============================================================
 
 const firebaseConfig = {
@@ -17,7 +18,10 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// ===== AUTH =====
+// ============================================================
+//  AUTHENTICATION FUNCTIONS
+// ============================================================
+
 async function signupUser(email, password, displayName) {
   const cred = await auth.createUserWithEmailAndPassword(email, password);
   await cred.user.updateProfile({ displayName });
@@ -47,7 +51,10 @@ function initAuthListener(callback) {
   auth.onAuthStateChanged(user => callback(user));
 }
 
-// ===== FIRESTORE =====
+// ============================================================
+//  FIRESTORE HELPERS
+// ============================================================
+
 async function saveUserProfile(uid, data) {
   await db.collection('users').doc(uid).set(data, { merge: true });
 }
@@ -72,7 +79,10 @@ async function getActivityLog(uid, limit = 10) {
   return logs;
 }
 
-// ===== STORAGE =====
+// ============================================================
+//  STORAGE HELPERS
+// ============================================================
+
 async function uploadAvatar(uid, file) {
   const ref = storage.ref().child('avatars/' + uid + '/' + Date.now() + '.jpg');
   const snapshot = await ref.put(file);
@@ -87,19 +97,25 @@ async function deleteAvatar(uid) {
   } catch (e) { /* ignore */ }
 }
 
-// ===== EXPOSE =====
+// ============================================================
+//  EXPOSE ALL FUNCTIONS TO WINDOW (Global Access)
+// ============================================================
+
 window.signupUser = signupUser;
 window.loginUser = loginUser;
 window.signInWithGoogle = signInWithGoogle;
 window.logoutUser = logoutUser;
 window.sendPasswordReset = sendPasswordReset;
 window.initAuthListener = initAuthListener;
+
 window.saveUserProfile = saveUserProfile;
 window.getUserProfile = getUserProfile;
 window.addActivityLog = addActivityLog;
 window.getActivityLog = getActivityLog;
+
 window.uploadAvatar = uploadAvatar;
 window.deleteAvatar = deleteAvatar;
+
 window.auth = auth;
 window.db = db;
 window.storage = storage;
