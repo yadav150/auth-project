@@ -1,11 +1,16 @@
 // ============================================================
-//  DASHBOARD.JS – Profile, Settings, Security
+//  DASHBOARD.JS – Profile, Settings, Security (FIXED)
+//  - Loads user profile from Firestore
+//  - Logout modal (no alert)
+//  - Delete account modal (no prompt)
+//  - Avatar upload/remove
+//  - Profile update, email update, password change
 // ============================================================
 
 (function() {
     'use strict';
 
-    // ---- DOM REFS ----
+    // ===== DOM REFS =====
     var sidebarName = document.getElementById('sidebarName');
     var sidebarEmail = document.getElementById('sidebarEmail');
     var sidebarAvatar = document.getElementById('sidebarAvatar');
@@ -48,10 +53,19 @@
     var deviceError = document.getElementById('deviceError');
     var logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
 
+    // ---- Logout Modal ----
     var logoutModal = document.getElementById('logoutModal');
     var logoutNoBtn = document.getElementById('logoutNoBtn');
     var logoutYesBtn = document.getElementById('logoutYesBtn');
 
+    // ---- Delete Account Modal ----
+    var deleteModal = document.getElementById('deleteModal');
+    var deleteCancelBtn = document.getElementById('deleteCancelBtn');
+    var deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+    var deletePasswordInput = document.getElementById('deletePasswordInput');
+    var deleteModalError = document.getElementById('deleteModalError');
+
+    // ---- Tabs ----
     var navLinks = document.querySelectorAll('.sidebar-nav .nav-link:not(.logout-link)');
     var tabContents = {
         dashboard: document.getElementById('tab-dashboard'),
@@ -60,7 +74,9 @@
         help: document.getElementById('tab-help'),
     };
 
-    // ---- Utilities ----
+    // ============================================================
+    //  UTILITY FUNCTIONS
+    // ============================================================
     function getInitials(name) {
         if (!name) return '?';
         var parts = name.trim().split(' ');
@@ -103,6 +119,9 @@
         modal.style.display = 'none';
     }
 
+    // ============================================================
+    //  UPDATE AVATAR UI
+    // ============================================================
     function updateAvatarUI(photoURL, displayName) {
         var initials = getInitials(displayName);
         var elements = [sidebarAvatar, summaryAvatar, avatarPreview];
@@ -120,7 +139,9 @@
         });
     }
 
-    // ---- Load Profile ----
+    // ============================================================
+    //  LOAD USER PROFILE
+    // ============================================================
     async function loadUserProfile(user) {
         try {
             var data = await window.getUserProfile(user.uid) || {};
@@ -153,7 +174,9 @@
         }
     }
 
-    // ---- Load Activity ----
+    // ============================================================
+    //  LOAD ACTIVITY LOG
+    // ============================================================
     async function loadActivityLog(uid) {
         try {
             var logs = await window.getActivityLog(uid);
@@ -174,7 +197,9 @@
         }
     }
 
-    // ---- Auth State ----
+    // ============================================================
+    //  AUTH STATE LISTENER
+    // ============================================================
     if (typeof window.initAuthListener === 'function') {
         window.initAuthListener(function(user) {
             if (user) {
@@ -186,7 +211,9 @@
         });
     }
 
-    // ---- Profile Update ----
+    // ============================================================
+    //  PROFILE UPDATE
+    // ============================================================
     if (profileForm) {
         profileForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -198,7 +225,10 @@
             var bio = editBio.value.trim();
             var location = editLocation.value.trim();
 
-            if (!name) { setError(profileError, 'Name is required.'); return; }
+            if (!name) {
+                setError(profileError, 'Name is required.');
+                return;
+            }
 
             var user = window.auth.currentUser;
             if (!user) return;
@@ -235,9 +265,13 @@
         });
     }
 
-    // ---- Avatar ----
+    // ============================================================
+    //  AVATAR UPLOAD / REMOVE
+    // ============================================================
     if (uploadAvatarBtn) {
-        uploadAvatarBtn.addEventListener('click', function() { avatarInput.click(); });
+        uploadAvatarBtn.addEventListener('click', function() {
+            avatarInput.click();
+        });
     }
 
     if (avatarInput) {
@@ -284,7 +318,9 @@
         });
     }
 
-    // ---- Email ----
+    // ============================================================
+    //  EMAIL UPDATE
+    // ============================================================
     if (emailForm) {
         emailForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -319,7 +355,9 @@
         });
     }
 
-    // ---- Password ----
+    // ============================================================
+    //  CHANGE PASSWORD
+    // ============================================================
     if (passwordForm) {
         passwordForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -362,7 +400,9 @@
         });
     }
 
-    // ---- Logout Modal ----
+    // ============================================================
+    //  LOGOUT MODAL (No alert)
+    // ============================================================
     if (logoutBtnSidebar) {
         logoutBtnSidebar.addEventListener('click', function(e) {
             e.preventDefault();
@@ -371,7 +411,9 @@
     }
 
     if (logoutNoBtn) {
-        logoutNoBtn.addEventListener('click', function() { hideModal(logoutModal); });
+        logoutNoBtn.addEventListener('click', function() {
+            hideModal(logoutModal);
+        });
     }
 
     if (logoutYesBtn) {
@@ -393,23 +435,60 @@
         });
     }
 
-    // ---- Other device logout ----
+    // ============================================================
+    //  LOGOUT OTHER DEVICES (instructional)
+    // ============================================================
     if (logoutDevicesBtn) {
         logoutDevicesBtn.addEventListener('click', function() {
-            alert('To revoke all other sessions, please change your password. This will automatically invalidate all other tokens.');
+            var msg = document.createElement('div');
+            msg.style.cssText = 'padding:10px 14px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;color:#92400e;font-size:.9rem;margin-top:10px;';
+            msg.textContent = 'To revoke all other sessions, please change your password. This will automatically invalidate all other tokens.';
+            var parent = logoutDevicesBtn.parentNode;
+            if (parent) {
+                var existing = parent.querySelector('.device-msg');
+                if (existing) existing.remove();
+                msg.className = 'device-msg';
+                parent.appendChild(msg);
+                setTimeout(function() { msg.remove(); }, 5000);
+            }
         });
     }
 
-    // ---- Delete Account ----
+    // ============================================================
+    //  DELETE ACCOUNT MODAL (No prompt, no alert)
+    // ============================================================
     if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener('click', async function() {
+        deleteAccountBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showModal(deleteModal);
+            if (deletePasswordInput) deletePasswordInput.value = '';
+            if (deleteModalError) {
+                deleteModalError.classList.remove('show');
+                deleteModalError.textContent = '';
+            }
+        });
+    }
+
+    if (deleteCancelBtn) {
+        deleteCancelBtn.addEventListener('click', function() {
+            hideModal(deleteModal);
+        });
+    }
+
+    if (deleteConfirmBtn) {
+        deleteConfirmBtn.addEventListener('click', async function() {
+            var password = deletePasswordInput ? deletePasswordInput.value.trim() : '';
+            if (!password) {
+                if (deleteModalError) {
+                    setError(deleteModalError, 'Please enter your password to confirm deletion.');
+                }
+                return;
+            }
+
             var user = window.auth.currentUser;
             if (!user) return;
-            if (!confirm('Are you sure you want to delete your account?\nThis action is PERMANENT and cannot be undone.')) return;
 
             try {
-                var password = prompt('Enter your current password to confirm deletion:');
-                if (!password) return;
                 var credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
                 await user.reauthenticateWithCredential(credential);
 
@@ -417,16 +496,35 @@
                 await window.deleteAvatar(user.uid);
                 await user.delete();
 
-                alert('Account deleted successfully.');
+                hideModal(deleteModal);
                 window.location.href = '/auth-project/index.html';
 
             } catch (err) {
-                setError(deleteError, err.message);
+                if (deleteModalError) {
+                    if (err.code === 'auth/wrong-password') {
+                        setError(deleteModalError, 'Incorrect password. Please try again.');
+                    } else {
+                        setError(deleteModalError, err.message);
+                    }
+                }
             }
         });
     }
 
-    // ---- Tabs ----
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === this) hideModal(this);
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
+                hideModal(deleteModal);
+            }
+        });
+    }
+
+    // ============================================================
+    //  TAB SWITCHING
+    // ============================================================
     navLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
