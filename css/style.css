@@ -57,7 +57,7 @@ body {
     color: var(--primary);
 }
 
-/* 3-dot toggle */
+/* 3-dot toggle - ALWAYS VISIBLE */
 .nav-toggle,
 .footer-toggle {
     background: transparent;
@@ -80,9 +80,10 @@ body {
     border-radius: 50%;
 }
 
+/* Navigation links - hidden by default, toggled via JS */
 .nav-links,
 .footer-links {
-    display: none; /* hidden by default, toggled via JS */
+    display: none;
     flex-direction: column;
     background: #fff;
     padding: 0.5rem 1.5rem 1rem;
@@ -279,26 +280,26 @@ body {
 
 /* ===== RESPONSIVE ===== */
 @media (min-width: 768px) {
-    .nav-toggle,
-    .footer-toggle {
-        display: none; /* hide on large screens */
-    }
+    /* The toggle button remains VISIBLE on large screens.
+       It is NEVER hidden. */
 
-    .nav-links,
-    .footer-links {
-        display: flex !important; /* always visible */
+    /* When the nav is OPEN on large screens, display links horizontally */
+    .nav-links.open,
+    .footer-links.open {
         flex-direction: row;
-        border: none;
-        padding: 0.25rem 0;
-        background: transparent;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1.5rem;
+        border-top: 1px solid #eaeaea;
+        padding: 0.75rem 1.5rem;
+        background: #fff;
     }
 
-    .nav-links a,
-    .footer-links a {
-        border: none;
-        padding: 0.2rem 0;
-        font-size: 0.95rem;
+    /* Remove bottom borders on large screens for cleaner look */
+    .nav-links.open a,
+    .footer-links.open a {
+        border-bottom: none;
+        padding: 0.2rem 0.5rem;
     }
 
     .header-inner {
@@ -322,7 +323,8 @@ body {
         grid-template-columns: 1fr;
     }
 }
-/* Auth forms */
+
+/* ===== AUTH & DASHBOARD STYLES (added for completeness) ===== */
 .auth-section {
     max-width: 400px;
     margin: 2rem auto;
@@ -380,7 +382,6 @@ body {
     color: #060;
 }
 
-/* Dashboard */
 .dashboard-header {
     display: flex;
     align-items: center;
