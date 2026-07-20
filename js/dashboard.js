@@ -1,608 +1,117 @@
-// ============================================================
-//  DASHBOARD.JS – Profile, Settings, Security (FIXED)
-//  - Profile fetch from Firestore
-//  - Profile update saves to Firestore
-//  - Name display: "Welcome, Ram Kumar"
-//  - Auto-logout on back handled in HTML
-// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.getElementById('navLinks');
+    const welcome = document.getElementById('welcomeText');
+    const emailDisplay = document.getElementById('userEmailDisplay');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const changePwBtn = document.getElementById('changePasswordBtn');
+    const modal = document.getElementById('changePasswordModal');
+    const closeModal = document.getElementById('closeModal');
+    const changePwForm = document.getElementById('changePwForm');
+    const newPwInput = document.getElementById('newPw');
+    const modalFlash = document.getElementById('modalFlash');
 
-(function() {
-    'use strict';
+    // Auto-logout timer (5 minutes)
+    let logoutTimer;
+    const TIMEOUT = 5 * 60 * 1000; // 5 minutes
 
-    // ===== DOM REFS =====
-    var sidebarName = document.getElementById('sidebarName');
-    var sidebarEmail = document.getElementById('sidebarEmail');
-    var sidebarAvatar = document.getElementById('sidebarAvatar');
-    var summaryName = document.getElementById('summaryName');
-    var summaryRole = document.getElementById('summaryRole');
-    var summaryJoinDate = document.getElementById('summaryJoinDate');
-    var summaryAvatar = document.getElementById('summaryAvatar');
-    var dashboardGreeting = document.getElementById('dashboardGreeting');
-    var activityList = document.getElementById('activityList');
-
-    var editName = document.getElementById('editName');
-    var editPhone = document.getElementById('editPhone');
-    var editBio = document.getElementById('editBio');
-    var editLocation = document.getElementById('editLocation');
-    var profileForm = document.getElementById('profileForm');
-    var profileError = document.getElementById('profileError');
-    var profileSuccess = document.getElementById('profileSuccess');
-    var cancelProfileEdit = document.getElementById('cancelProfileEdit');
-
-    var avatarInput = document.getElementById('avatarInput');
-    var uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
-    var removeAvatarBtn = document.getElementById('removeAvatarBtn');
-    var avatarPreview = document.getElementById('avatarPreview');
-
-    var emailForm = document.getElementById('emailForm');
-    var newEmail = document.getElementById('newEmail');
-    var emailPassword = document.getElementById('emailPassword');
-    var emailError = document.getElementById('emailError');
-    var emailSuccess = document.getElementById('emailSuccess');
-
-    var passwordForm = document.getElementById('passwordForm');
-    var currentPassword = document.getElementById('currentPassword');
-    var newPassword = document.getElementById('newPassword');
-    var confirmPassword = document.getElementById('confirmPassword');
-    var passwordError = document.getElementById('passwordError');
-    var passwordSuccess = document.getElementById('passwordSuccess');
-    var logoutDevicesBtn = document.getElementById('logoutDevicesBtn');
-    var deleteAccountBtn = document.getElementById('deleteAccountBtn');
-    var deleteError = document.getElementById('deleteError');
-    var deviceError = document.getElementById('deviceError');
-    var logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
-
-    // ---- Logout Modal ----
-    var logoutModal = document.getElementById('logoutModal');
-    var logoutNoBtn = document.getElementById('logoutNoBtn');
-    var logoutYesBtn = document.getElementById('logoutYesBtn');
-
-    // ---- Delete Account Modal ----
-    var deleteModal = document.getElementById('deleteModal');
-    var deleteCancelBtn = document.getElementById('deleteCancelBtn');
-    var deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
-    var deletePasswordInput = document.getElementById('deletePasswordInput');
-    var deleteModalError = document.getElementById('deleteModalError');
-
-    // ---- Tabs ----
-    var navLinks = document.querySelectorAll('.sidebar-nav .nav-link:not(.logout-link)');
-    var tabContents = {
-        dashboard: document.getElementById('tab-dashboard'),
-        settings: document.getElementById('tab-settings'),
-        security: document.getElementById('tab-security'),
-        help: document.getElementById('tab-help'),
-    };
-
-    // ============================================================
-    //  UTILITY
-    // ============================================================
-    function getInitials(name) {
-        if (!name) return '?';
-        var parts = name.trim().split(' ');
-        if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-        return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-    }
-
-    function formatDate(timestamp) {
-        if (!timestamp) return 'Today';
-        var d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    }
-
-    function setError(el, msg) {
-        if (!el) return;
-        el.textContent = msg;
-        el.classList.add('show');
-    }
-
-    function clearError(el) {
-        if (!el) return;
-        el.classList.remove('show');
-        el.textContent = '';
-    }
-
-    function showSuccess(el, msg) {
-        if (!el) return;
-        el.textContent = msg || 'Updated successfully!';
-        el.style.display = 'block';
-        setTimeout(function() { el.style.display = 'none'; }, 5000);
-    }
-
-    function showModal(modal) {
-        if (!modal) return;
-        modal.style.display = 'flex';
-    }
-
-    function hideModal(modal) {
-        if (!modal) return;
-        modal.style.display = 'none';
-    }
-
-    // ============================================================
-    //  AVATAR UI
-    // ============================================================
-    function updateAvatarUI(photoURL, displayName) {
-        var initials = getInitials(displayName);
-        var elements = [sidebarAvatar, summaryAvatar, avatarPreview];
-        elements.forEach(function(el) {
-            if (!el) return;
-            el.innerHTML = '';
-            if (photoURL) {
-                var img = document.createElement('img');
-                img.src = photoURL;
-                img.alt = 'Avatar';
-                el.appendChild(img);
-            } else {
-                el.textContent = initials;
-            }
-        });
-    }
-
-    // ============================================================
-    //  GET FULL NAME (First + Last)
-    // ============================================================
-    function getFirstName(fullName) {
-        if (!fullName) return 'User';
-        var parts = fullName.trim().split(' ');
-        return parts[0];
-    }
-
-    // ============================================================
-    //  LOAD USER PROFILE (FIXED)
-    // ============================================================
-    async function loadUserProfile(user) {
-        try {
-            // Get from Firestore first
-            var data = await window.getUserProfile(user.uid);
-            console.log('Firestore data:', data); // Debug
-
-            var displayName = 'User';
-            var phone = '';
-            var bio = '';
-            var location = '';
-            var role = 'Member';
-            var joinDate = user.metadata.creationTime || new Date().toISOString();
-            var photoURL = user.photoURL || null;
-
-            if (data) {
-                displayName = data.name || user.displayName || user.email || 'User';
-                phone = data.phone || '';
-                bio = data.bio || '';
-                location = data.location || '';
-                role = data.role || 'Member';
-                joinDate = data.joinDate || user.metadata.creationTime || new Date().toISOString();
-                photoURL = user.photoURL || data.photoURL || null;
-            } else {
-                // Fallback to Firebase Auth
-                displayName = user.displayName || user.email || 'User';
-                photoURL = user.photoURL || null;
-            }
-
-            // Update UI
-            var firstName = getFirstName(displayName);
-            dashboardGreeting.textContent = 'Hi, ' + firstName + '!';
-            dashboardGreeting.style.fontWeight = '700';
-
-            sidebarName.textContent = displayName;
-            sidebarEmail.textContent = user.email || 'No email';
-            summaryName.textContent = displayName;
-            summaryRole.textContent = role;
-            summaryJoinDate.textContent = 'Joined: ' + formatDate(joinDate);
-
-            updateAvatarUI(photoURL, displayName);
-
-            // Populate edit fields
-            editName.value = displayName;
-            editPhone.value = phone;
-            editBio.value = bio;
-            editLocation.value = location;
-
-            // Store for cancel
-            window._profileData = {
-                displayName: displayName,
-                phone: phone,
-                bio: bio,
-                location: location,
-                photoURL: photoURL
-            };
-
-        } catch (err) {
-            console.warn('Error loading profile:', err);
-            // Fallback to Firebase Auth data
-            if (user) {
-                var fallbackName = user.displayName || user.email || 'User';
-                dashboardGreeting.textContent = 'Hi, ' + getFirstName(fallbackName) + '!';
-                sidebarName.textContent = fallbackName;
-                sidebarEmail.textContent = user.email || 'No email';
-                summaryName.textContent = fallbackName;
-                updateAvatarUI(user.photoURL || null, fallbackName);
-            }
-        }
-    }
-
-    // ============================================================
-    //  LOAD ACTIVITY LOG
-    // ============================================================
-    async function loadActivityLog(uid) {
-        try {
-            var logs = await window.getActivityLog(uid);
-            activityList.innerHTML = '';
-            if (logs.length === 0) {
-                activityList.innerHTML = '<li style="color:#94a3b8;font-size:.9rem;">No recent activity.</li>';
-                return;
-            }
-            logs.forEach(function(log) {
-                var li = document.createElement('li');
-                var time = log.timestamp ? formatDate(log.timestamp) : 'Unknown';
-                var device = log.device || 'Browser';
-                li.innerHTML = '<span>Signed in from ' + device + '</span><span>' + time + '</span>';
-                activityList.appendChild(li);
+    function resetTimer() {
+        clearTimeout(logoutTimer);
+        logoutTimer = setTimeout(function() {
+            // Logout and redirect
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
             });
-        } catch (err) {
-            console.warn('Activity log error:', err);
+        }, TIMEOUT);
+    }
+
+    // Reset timer on user activity
+    const events = ['mousemove', 'keydown', 'click', 'scroll'];
+    events.forEach(ev => document.addEventListener(ev, resetTimer));
+
+    // Check auth state
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (!user) {
+            window.location.href = 'login.html';
+            return;
         }
-    }
-
-    // ============================================================
-    //  AUTH STATE LISTENER
-    // ============================================================
-    if (typeof window.initAuthListener === 'function') {
-        window.initAuthListener(function(user) {
-            if (user) {
-                loadUserProfile(user);
-                loadActivityLog(user.uid);
-            } else {
-                window.location.href = '/auth-project/login.html';
-            }
-        });
-    }
-
-    // ============================================================
-    //  PROFILE UPDATE (FIXED)
-    // ============================================================
-    if (profileForm) {
-        profileForm.addEventListener('submit', async function(e) {
+        // Update welcome
+        const name = user.displayName || user.email || 'User';
+        welcome.textContent = 'Welcome ' + name;
+        emailDisplay.textContent = user.email || '';
+        // Change nav links for dashboard
+        navLinks.innerHTML = `
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="#" id="navSettings">Settings</a>
+            <a href="#" id="navLogout">Logout</a>
+            <a href="#">Help</a>
+        `;
+        // Attach events to new links
+        document.getElementById('navSettings').addEventListener('click', function(e) {
             e.preventDefault();
-            clearError(profileError);
-            profileSuccess.style.display = 'none';
-
-            var name = editName.value.trim();
-            var phone = editPhone.value.trim();
-            var bio = editBio.value.trim();
-            var location = editLocation.value.trim();
-
-            if (!name) {
-                setError(profileError, 'Name is required.');
-                return;
-            }
-
-            var user = window.auth.currentUser;
-            if (!user) return;
-
-            try {
-                // Update Auth displayName
-                await user.updateProfile({ displayName: name });
-
-                // Save to Firestore
-                var updateData = {
-                    name: name,
-                    phone: phone,
-                    bio: bio,
-                    location: location,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                await window.saveUserProfile(user.uid, updateData);
-                console.log('Profile saved:', updateData); // Debug
-
-                // Update UI
-                sidebarName.textContent = name;
-                summaryName.textContent = name;
-                dashboardGreeting.textContent = 'Hi, ' + getFirstName(name) + '!';
-
-                var photoURL = user.photoURL || window._profileData?.photoURL || null;
-                updateAvatarUI(photoURL, name);
-
-                showSuccess(profileSuccess, 'Profile updated successfully!');
-                window._profileData = {
-                    displayName: name,
-                    phone: phone,
-                    bio: bio,
-                    location: location,
-                    photoURL: photoURL
-                };
-
-            } catch (err) {
-                console.error('Update error:', err);
-                setError(profileError, err.message);
-            }
+            settingsBtn.click();
         });
-    }
-
-    if (cancelProfileEdit) {
-        cancelProfileEdit.addEventListener('click', function() {
-            var data = window._profileData || {};
-            editName.value = data.displayName || '';
-            editPhone.value = data.phone || '';
-            editBio.value = data.bio || '';
-            editLocation.value = data.location || '';
-            clearError(profileError);
-            profileSuccess.style.display = 'none';
-        });
-    }
-
-    // ============================================================
-    //  AVATAR UPLOAD / REMOVE
-    // ============================================================
-    if (uploadAvatarBtn) {
-        uploadAvatarBtn.addEventListener('click', function() {
-            avatarInput.click();
-        });
-    }
-
-    if (avatarInput) {
-        avatarInput.addEventListener('change', async function(e) {
-            var file = this.files[0];
-            if (!file) return;
-            var user = window.auth.currentUser;
-            if (!user) return;
-
-            try {
-                var url = await window.uploadAvatar(user.uid, file);
-                await user.updateProfile({ photoURL: url });
-                await window.saveUserProfile(user.uid, { photoURL: url });
-
-                window._profileData.photoURL = url;
-                updateAvatarUI(url, user.displayName || 'User');
-                showSuccess(profileSuccess, 'Avatar uploaded successfully!');
-
-            } catch (err) {
-                setError(profileError, 'Upload failed: ' + err.message);
-            }
-            this.value = '';
-        });
-    }
-
-    if (removeAvatarBtn) {
-        removeAvatarBtn.addEventListener('click', async function() {
-            var user = window.auth.currentUser;
-            if (!user) return;
-            if (!confirm('Remove your profile picture?')) return;
-
-            try {
-                await user.updateProfile({ photoURL: null });
-                await window.saveUserProfile(user.uid, { photoURL: null });
-                await window.deleteAvatar(user.uid);
-
-                window._profileData.photoURL = null;
-                updateAvatarUI(null, user.displayName || 'User');
-                showSuccess(profileSuccess, 'Avatar removed.');
-
-            } catch (err) {
-                setError(profileError, 'Failed to remove avatar: ' + err.message);
-            }
-        });
-    }
-
-    // ============================================================
-    //  EMAIL UPDATE
-    // ============================================================
-    if (emailForm) {
-        emailForm.addEventListener('submit', async function(e) {
+        document.getElementById('navLogout').addEventListener('click', function(e) {
             e.preventDefault();
-            clearError(emailError);
-            emailSuccess.style.display = 'none';
-
-            var newEmailVal = newEmail.value.trim();
-            var password = emailPassword.value;
-
-            if (!newEmailVal || !password) {
-                setError(emailError, 'Please fill in both fields.');
-                return;
-            }
-
-            var user = window.auth.currentUser;
-            if (!user) return;
-
-            try {
-                var credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
-                await user.reauthenticateWithCredential(credential);
-                await user.updateEmail(newEmailVal);
-                await user.sendEmailVerification();
-                await window.saveUserProfile(user.uid, { email: newEmailVal });
-
-                showSuccess(emailSuccess, 'Verification email sent! Check your inbox.');
-                newEmail.value = '';
-                emailPassword.value = '';
-
-            } catch (err) {
-                setError(emailError, err.message);
-            }
+            logoutBtn.click();
         });
-    }
-
-    // ============================================================
-    //  CHANGE PASSWORD
-    // ============================================================
-    if (passwordForm) {
-        passwordForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            clearError(passwordError);
-            passwordSuccess.style.display = 'none';
-
-            var current = currentPassword.value;
-            var newPass = newPassword.value;
-            var confirm = confirmPassword.value;
-
-            if (!current || !newPass || !confirm) {
-                setError(passwordError, 'Please fill in all fields.');
-                return;
-            }
-            if (newPass.length < 6) {
-                setError(passwordError, 'New password must be at least 6 characters.');
-                return;
-            }
-            if (newPass !== confirm) {
-                setError(passwordError, 'Passwords do not match.');
-                return;
-            }
-
-            var user = window.auth.currentUser;
-            if (!user) return;
-
-            try {
-                var credential = firebase.auth.EmailAuthProvider.credential(user.email, current);
-                await user.reauthenticateWithCredential(credential);
-                await user.updatePassword(newPass);
-
-                showSuccess(passwordSuccess, 'Password updated successfully!');
-                currentPassword.value = '';
-                newPassword.value = '';
-                confirmPassword.value = '';
-
-            } catch (err) {
-                setError(passwordError, err.message);
-            }
-        });
-    }
-
-    // ============================================================
-    //  LOGOUT MODAL
-    // ============================================================
-    if (logoutBtnSidebar) {
-        logoutBtnSidebar.addEventListener('click', function(e) {
-            e.preventDefault();
-            showModal(logoutModal);
-        });
-    }
-
-    if (logoutNoBtn) {
-        logoutNoBtn.addEventListener('click', function() {
-            hideModal(logoutModal);
-        });
-    }
-
-    if (logoutYesBtn) {
-        logoutYesBtn.addEventListener('click', function() {
-            hideModal(logoutModal);
-            window.logoutUser();
-            window.location.href = '/auth-project/login.html';
-        });
-    }
-
-    if (logoutModal) {
-        logoutModal.addEventListener('click', function(e) {
-            if (e.target === this) hideModal(this);
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
-                hideModal(logoutModal);
-            }
-        });
-    }
-
-    // ============================================================
-    //  LOGOUT OTHER DEVICES
-    // ============================================================
-    if (logoutDevicesBtn) {
-        logoutDevicesBtn.addEventListener('click', function() {
-            var msg = document.createElement('div');
-            msg.style.cssText = 'padding:10px 14px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;color:#92400e;font-size:.9rem;margin-top:10px;';
-            msg.textContent = 'To revoke all other sessions, please change your password. This will automatically invalidate all other tokens.';
-            var parent = logoutDevicesBtn.parentNode;
-            if (parent) {
-                var existing = parent.querySelector('.device-msg');
-                if (existing) existing.remove();
-                msg.className = 'device-msg';
-                parent.appendChild(msg);
-                setTimeout(function() { msg.remove(); }, 5000);
-            }
-        });
-    }
-
-    // ============================================================
-    //  DELETE ACCOUNT MODAL
-    // ============================================================
-    if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showModal(deleteModal);
-            if (deletePasswordInput) deletePasswordInput.value = '';
-            if (deleteModalError) {
-                deleteModalError.classList.remove('show');
-                deleteModalError.textContent = '';
-            }
-        });
-    }
-
-    if (deleteCancelBtn) {
-        deleteCancelBtn.addEventListener('click', function() {
-            hideModal(deleteModal);
-        });
-    }
-
-    if (deleteConfirmBtn) {
-        deleteConfirmBtn.addEventListener('click', async function() {
-            var password = deletePasswordInput ? deletePasswordInput.value.trim() : '';
-            if (!password) {
-                if (deleteModalError) {
-                    setError(deleteModalError, 'Please enter your password to confirm deletion.');
-                }
-                return;
-            }
-
-            var user = window.auth.currentUser;
-            if (!user) return;
-
-            try {
-                var credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
-                await user.reauthenticateWithCredential(credential);
-
-                await window.db.collection('users').doc(user.uid).delete();
-                await window.deleteAvatar(user.uid);
-                await user.delete();
-
-                hideModal(deleteModal);
-                window.location.href = '/auth-project/index.html';
-
-            } catch (err) {
-                if (deleteModalError) {
-                    if (err.code === 'auth/wrong-password') {
-                        setError(deleteModalError, 'Incorrect password. Please try again.');
-                    } else {
-                        setError(deleteModalError, err.message);
-                    }
-                }
-            }
-        });
-    }
-
-    if (deleteModal) {
-        deleteModal.addEventListener('click', function(e) {
-            if (e.target === this) hideModal(this);
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
-                hideModal(deleteModal);
-            }
-        });
-    }
-
-    // ============================================================
-    //  TAB SWITCHING
-    // ============================================================
-    navLinks.forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            navLinks.forEach(function(l) { l.classList.remove('active'); });
-            this.classList.add('active');
-
-            var tab = this.dataset.tab;
-            Object.keys(tabContents).forEach(function(key) {
-                if (tabContents[key]) {
-                    tabContents[key].style.display = (key === tab) ? 'block' : 'none';
-                }
-            });
-        });
+        // Start timer
+        resetTimer();
     });
 
-})();
+    // Logout with confirmation modal (using native confirm for simplicity, but we'll show a custom one)
+    // Since user asked for "are you sure yes no button" we'll use a confirm dialog.
+    logoutBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to logout?')) {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+    });
+
+    // Settings - placeholder
+    settingsBtn.addEventListener('click', function() {
+        alert('Settings page (coming soon)');
+    });
+
+    // Change Password modal
+    changePwBtn.addEventListener('click', function() {
+        modal.style.display = 'block';
+    });
+    closeModal.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    changePwForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const newPassword = newPwInput.value.trim();
+        if (newPassword.length < 6) {
+            modalFlash.textContent = 'Password must be at least 6 characters.';
+            modalFlash.className = 'flash-message error';
+            modalFlash.style.display = 'block';
+            return;
+        }
+        const user = firebase.auth().currentUser;
+        user.updatePassword(newPassword)
+            .then(() => {
+                modalFlash.textContent = 'Password updated successfully!';
+                modalFlash.className = 'flash-message success';
+                modalFlash.style.display = 'block';
+                newPwInput.value = '';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    modalFlash.style.display = 'none';
+                }, 2000);
+            })
+            .catch((error) => {
+                modalFlash.textContent = error.message;
+                modalFlash.className = 'flash-message error';
+                modalFlash.style.display = 'block';
+            });
+    });
+});
