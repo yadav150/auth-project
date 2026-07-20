@@ -1,14 +1,15 @@
-// Firebase configuration – replace with your own
+// ===== Firebase Configuration (your new SDK) =====
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDFnxF_v-fXGiZeL_OEMzmKrPdR1PE3KfU",
+  authDomain: "auth-project-by-yadav.firebaseapp.com",
+  projectId: "auth-project-by-yadav",
+  storageBucket: "auth-project-by-yadav.firebasestorage.app",
+  messagingSenderId: "351339588417",
+  appId: "1:351339588417:web:37475410e0f70a6470cfc0",
+  measurementId: "G-788ZZB8CTB"  // (optional, not used here)
 };
 
-// Initialize Firebase
+// Initialize Firebase (compat mode)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
@@ -22,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             navLinks.classList.toggle('open');
         });
-        // Click outside to close
         document.addEventListener('click', function(e) {
             if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
                 navLinks.classList.remove('open');
