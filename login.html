@@ -3,141 +3,79 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In · Yadav Authentication Project</title>
-    <link rel="stylesheet" href="/auth-project/css/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <title>AuthProject · Login</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-
-    <!-- ============================================================
-    HEADER (Same on ALL pages)
-    ============================================================ -->
-    <header class="site-header" role="banner">
+    <header class="site-header">
         <div class="header-inner">
-            <a href="/auth-project/index.html" class="site-title">Yadav Authentication Project</a>
-            <div class="header-actions">
-                <button class="hamburger" id="hamburgerBtn" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                </button>
+            <div class="logo-area">
+                <svg class="logo-svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                    <rect x="2" y="2" width="32" height="32" rx="3" stroke="#000000" stroke-width="2.5" />
+                    <path d="M10 10L26 10L26 14L10 14L10 10Z" fill="#000000" />
+                    <path d="M10 18L22 18L22 22L10 22L10 18Z" fill="#000000" />
+                    <path d="M10 26L18 26L18 30L10 30L10 26Z" fill="#000000" />
+                </svg>
+                <span class="site-name">AuthProject</span>
             </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </button>
         </div>
-
-        <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary navigation">
-            <ul class="nav-list">
-                <li><a href="/auth-project/index.html" class="nav-link">Home</a></li>
-                <li><a href="/auth-project/login.html" class="nav-link" aria-current="page">Login</a></li>
-                <li><a href="/auth-project/signup.html" class="nav-link">Sign Up</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link">Privacy</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link">Terms</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link">Contact</a></li>
-            </ul>
-        </nav>
-
-        <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
-            <ul class="mobile-nav-list">
-                <li><a href="/auth-project/index.html" class="nav-link-mobile">Home</a></li>
-                <li><a href="/auth-project/login.html" class="nav-link-mobile active">Login</a></li>
-                <li><a href="/auth-project/signup.html" class="nav-link-mobile">Sign Up</a></li>
-                <li class="nav-divider"></li>
-                <li><a href="/auth-project/404.html" class="nav-link-mobile">Privacy</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link-mobile">Terms</a></li>
-                <li><a href="/auth-project/404.html" class="nav-link-mobile">Contact</a></li>
-            </ul>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="login.html" class="active">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="disclaimer.html">Disclaimer</a>
+            <a href="about.html">About</a>
         </nav>
     </header>
 
-    <!-- ============================================================
-    MAIN CONTENT
-    ============================================================ -->
-    <main id="main-content">
-        <section class="section auth-section" aria-labelledby="auth-heading">
-            <div class="section-title-bar">
-                <h2 id="auth-heading">Sign In</h2>
-            </div>
-            <div class="section-body">
-                <div class="content-box">
-
-                    <div class="auth-view">
-                        <h3>Welcome Back</h3>
-                        <p class="auth-subtitle">Sign in to access your dashboard.</p>
-
-                        <!-- ===== SUCCESS MESSAGE (from signup) ===== -->
-                        <div id="signupSuccessMsg" style="display:none;padding:8px 12px;background:#dcfce7;border:1px solid #bbf7d0;border-radius:3px;color:#166534;font-size:.85rem;margin-bottom:12px;">
-                            Account created successfully! Please sign in.
-                        </div>
-
-                        <!-- ===== LOGIN FORM ===== -->
-                        <form id="loginForm" novalidate>
-                            <div class="field-group">
-                                <label for="loginEmail">Email</label>
-                                <input type="email" id="loginEmail" placeholder="you@example.com" required />
-                            </div>
-                            <div class="field-group">
-                                <label for="loginPassword">Password</label>
-                                <input type="password" id="loginPassword" placeholder="••••••••" required />
-                            </div>
-                            <div class="field-group row-space-between">
-                                <a href="/auth-project/forgot-password.html" class="link-forgot">Forgot password?</a>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-full">Sign In</button>
-                        </form>
-
-                        <div class="auth-divider"><span>or continue with</span></div>
-
-                        <button id="googleLoginBtn" class="btn btn-secondary btn-full btn-google">
-                            <svg viewBox="0 0 24 24" width="20" height="20">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                            </svg>
-                            Sign in with Google
-                        </button>
-
-                        <div class="auth-switch">
-                            Don't have an account? <a href="/auth-project/signup.html">Sign Up</a>
-                        </div>
-
-                        <div id="loginError" class="error-msg"></div>
-                    </div>
-
+    <main class="main-content">
+        <section class="auth-section">
+            <h2 class="section-title">Login</h2>
+            <div id="flashMessage" class="flash-message"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required />
                 </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <div class="auth-extra">
+                <button id="googleLoginBtn" class="btn btn-secondary">Continue with Google</button>
+                <p><a href="forgot-password.html">Forgot password?</a></p>
             </div>
         </section>
-        <div class="spacer"></div>
     </main>
 
-    <!-- ============================================================
-    FOOTER (Same on ALL pages)
-    ============================================================ -->
-    <footer class="site-footer" role="contentinfo">
+    <footer class="site-footer">
         <div class="footer-inner">
-            <div class="footer-brand">
-                <span class="footer-title">Yadav Authentication Project</span>
-                <p class="footer-desc">A complete, secure authentication system built with Firebase.</p>
-            </div>
-            <div class="footer-links">
-                <a href="/auth-project/index.html">Home</a>
-                <a href="/auth-project/login.html">Login</a>
-                <a href="/auth-project/signup.html">Sign Up</a>
-            </div>
-            <div class="footer-legal">
-                <a href="/auth-project/404.html">Privacy</a>
-                <a href="/auth-project/404.html">Terms</a>
-                <a href="/auth-project/404.html">Contact</a>
-            </div>
-            <div class="footer-bottom">
-                <p class="footer-copy">&copy; 2026 Yadav Authentication Project. Built by <strong>Yadav Subba</strong>. All Rights Reserved.</p>
-            </div>
+            <div class="footer-left"><span class="footer-brand">AuthProject © 2026</span></div>
+            <button class="footer-toggle" id="footerToggle" aria-label="Expand footer links">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </button>
+        </div>
+        <div class="footer-links" id="footerLinks">
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="disclaimer.html">Disclaimer</a>
+            <a href="about.html">About</a>
         </div>
     </footer>
 
-    <!-- ============================================================
-    SCRIPTS
-    ============================================================ -->
-    <script src="/auth-project/js/script.js"></script>
-
+    <script src="js/common.js"></script>
+    <script src="js/login.js"></script>
 </body>
 </html>
